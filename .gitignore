@@ -1,0 +1,5 @@
+.hg/*
+.idea/*
+.hgignore
+templates/compile/*
+assets/.sass-cache/*

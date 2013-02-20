@@ -1,0 +1,403 @@
+$highlight: #3aa6ff;
+
+@mixin shadow {
+  box-shadow: 0px 1px 10px 0px rgba(0,0,0,1);
+  -webkit-box-shadow: 0px 1px 10px 0px rgba(0,0,0,1);
+  -moz-box-shadow: 0px 1px 10px 0px rgba(0,0,0,1);
+}
+
+@mixin mix-transition($property, $duration) {
+  -moz-transition-property: $property;
+  -moz-transition-duration: $duration;
+/* WebKit */
+  -webkit-transition-property: $property;
+  -webkit-transition-duration: $duration;
+/* Opera */
+  -o-transition-property: $property;
+  -o-transition-duration: $duration;
+/* Standard */
+  transition-property: $property;
+  transition-duration: $duration;
+}
+
+@mixin light_dark_color {
+  body.light & {color: black;}
+  body.dark & {color: $highlight;}
+}
+
+
+html, body {
+  font: normal 10pt/16pt Georgia, "DejaVu Serif", "Trebuchet MS", Times, serif;
+}
+
+#forum {
+  margin-top: 50px;
+
+  .badge-category, a.category {
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-weight: bold;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+  }
+
+  .nav_section {
+    color: black;
+    padding: 3px 8px;
+    font-size: 12px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    body.dark & {
+      color: white;
+    }
+  }
+
+  .nav_section.new_link {
+    float: right;
+    text-decoration: none;
+    span {
+      text-decoration: underline;
+    }
+    &::before {
+      font-size: 7pt;
+      padding-right: 5px;
+    }
+  }
+
+  #new_thread {
+    display: none;
+  }
+
+  &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat {
+    @extend .badge-category;
+    position: relative;
+    color: white;
+    background-color: $highlight;
+    border-color: darken($highlight, 20);
+    z-index: 1;
+    &.single {
+      position: relative;
+      right: 8px;
+      background-color: complement($highlight);
+      border-color: darken(complement($highlight), 10);
+      padding-left: 15px;
+      z-index: 0;
+    }
+  }
+
+  .category a, a.category {
+    padding: 3px 8px;
+    color: #fff;
+    font-size: 12px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    background-color: black;
+  }
+
+  #posts_table, .category_table {
+    margin-top: 10px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #bebebe;
+    -webkit-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+
+    body.dark & {
+      border: none;
+      -webkit-box-shadow: 0 0px 9px #3aa6ff;
+      box-shadow: 0 0px 9px #3aa6ff;;
+    }
+
+    thead tr th {
+      border-bottom: 1px solid #b5b5b5;
+      color: #534d4b;
+      font-weight: bold;
+      font-size: 13px;
+      text-shadow: 0 1px 0 #fff;
+      background-color: #f6f6f6;
+      -webkit-box-shadow: inset 0 1px 0 #fff;
+      box-shadow: inset 0 1px 0 #fff;
+      padding: 7px 5px;
+      line-height: 1.25;
+      text-align: center;
+      vertical-align: middle;
+      &.Title {
+        text-align: left;
+      }
+      body.dark & {
+        color: $highlight;
+        text-shadow: none;
+        background-color: transparent;
+        border-bottom: 1px solid #5f5f5f;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+      }
+    }
+    td {
+      text-align: center;
+    }
+
+    .id /* Topic name */
+    {
+      text-align: left;
+      padding-left: 5px;
+      width: 270px;
+    }
+
+    .author_name a img /* Author name */
+     {
+      margin-top: 5px;
+      border-radius: 2px;
+    }
+  }
+
+  #categories_page {
+    margin-top: 10px;
+  }
+
+  .category_table {
+    display: inline-block;
+    width: auto;
+    vertical-align: top;
+    margin-left: 10px;
+    margin-top: 10px;
+    .id {
+      width: 170px;
+    }
+    .description {
+      margin-left: 10px;
+    }
+  }
+
+/* Thread Styles */
+
+  .post_replies {
+    h2 a {
+      position: relative;
+      vertical-align: baseline;
+      bottom: 1px;
+      margin-left: 10px;
+    }
+
+    .post_container {
+      margin-bottom: 10px;
+
+      .post_user {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 68px;
+        margin-right: 20px;
+        img {
+          margin-top: 4px;
+          border-radius: 2px;
+        }
+        vertical-align: top;
+      }
+
+      .author_name, .post_time {
+        position: relative;
+        bottom: 8px;
+        body.dark & {
+          color: $highlight;
+        }
+      }
+      .post_time {
+        font-size: 8pt;
+        white-space: nowrap;
+        color: grey;
+        bottom: 16px;
+      }
+
+      .post_body.highlight {
+        box-shadow: 0px 0px 20px 4px transparentize($highlight, 0.5);
+        @include mix-transition(box-shadow, 2s);
+        &:hover {
+          box-shadow: 0px 0px 50px 4px transparentize($highlight, 0.5);
+          @include mix-transition(box-shadow, 2s);
+        }
+      }
+    }
+
+    .post_container .post_body, #submit_reply label {
+      position: relative;
+      display: inline-block;
+      border: 1px solid grey;
+      width: 70%;
+      min-height: 48px;
+      padding: 10px;
+      border-radius: 4px;
+
+      &:before, &:after {
+        position: absolute;
+        width: 0;
+        height: 0;
+        content: "";
+        border-style: solid;
+        border-color: transparent;
+        pointer-events: none;
+      }
+
+      &:before {
+        top: 12px;
+        left: -10px;
+        border-width: 10px 10px 10px 0;
+        border-right-color: grey;
+
+      }
+      &:after {
+        position: absolute;
+        width: 0;
+        height: 0;
+        content: "";
+        border-style: solid;
+        pointer-events: none;
+        top: 13px;
+        left: -9px;
+        border-width: 9px 9px 9px 0;
+        border-right-color: #fff;
+        body.dark & {
+          border-right-color: black
+        }
+      }
+
+    }
+  }
+
+  .post_replies #submit_reply, #new_thread {
+    .text_b {
+      display: none;
+    }
+    label {
+      display: block;
+      left: 63px;
+      position: relative;
+      border: none;
+      width: inherit;
+      min-height: inherit;
+      padding: 0px;
+      &::after {
+        left: -8px;
+      }
+      &::before {
+        left: -9px;
+      }
+    }
+    #save_warning { left: 63px; }
+    textarea, #submit_reply_preview, #new_thread_preview {
+      width: 71%;
+      min-height: 80px;
+      border: 1px solid grey;
+      border-radius: 4px;
+      padding: 5px;
+      &:focus {
+        outline-color: $highlight;
+      }
+      body.dark & {
+        background-color: transparent;
+        color: $highlight;
+      }
+    }
+    #submit_reply_preview {
+      border: none;
+      position: relative;
+      left: 63px;
+    }
+
+    form {
+      padding-bottom: 100px;
+    }
+    .submit {
+      position: relative;
+      left: 220px;
+      text-align: center;
+      background-color: black;
+      border: none;
+      color: white;
+      box-shadow: 0px 1px 4px black;
+      height: 16pt;
+      width: 70px;
+
+    }
+  }
+
+  #new_thread {
+    #new_thread_title, #new_category_description {
+      font-size: 20pt;
+      height: 24pt;
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 2px;
+      body.dark & {
+        background-color: transparent;
+        color: $highlight;
+      }
+    }
+    form {
+      padding: 0px;
+    }
+    label, textarea {
+      width: 100%;
+      position: static;
+
+    }
+    #new_thread_preview {
+      border: none;
+    }
+    .submit {
+      left: 280px;
+    }
+  }
+
+  .errors {
+    background-color: lighten(red, 50);
+  }
+
+  #save_warning {
+    position: relative;
+    color: grey;
+    font-style: italic;
+  }
+
+  /* Messages */
+  #messages .message {
+    margin-top: 10px;
+    .topic_title {
+      font-style: italic;
+    }
+  }
+}
+
+
+#save_hover, #save_hover_clear {
+  position: fixed;
+  bottom: 0px;
+  right: 80px;
+  color: black;
+  padding-bottom: 20px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 5px;
+  border-radius: 4px 4px 0px 0px ;
+  background-color: lighten($highlight, 10);
+  @include mix-transition(padding-bottom, 0.5s);
+  border: 1px solid grey;
+  border-bottom: none;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
+
+  &:hover {
+    padding-bottom: 30px;
+    @include mix-transition(padding-bottom, 0.5s);
+  }
+}
+
+#save_hover_clear {
+  right: 10px;
+}
