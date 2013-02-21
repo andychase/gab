@@ -1,4 +1,5 @@
 <?php
+use \Doctrine\DBAL\Query\QueryBuilder;
 
 class forum {
 
@@ -212,28 +213,31 @@ class forum {
     }
 
     static function get_categories() {
-        global $pdo;
-
-        $q = "
-            SELECT category.id, category.title, category.message, posts.number_of_posts
-            FROM forum category
-            LEFT JOIN (
+        global $dbal;
+        $q = new QueryBuilder($dbal);
+        $categories = $q
+          ->select("category.id", "category.title", "category.message", "posts.number_of_posts")
+          ->from("forum", "category")
+          ->leftJoin("category", "(
               SELECT posts.reply_to, count(*) as number_of_posts
               FROM forum posts
               WHERE posts.type = 'post'
               GROUP BY reply_to
-            ) posts on posts.reply_to = category.id
-            WHERE category.`type` = 'category'
-            ORDER BY posts.number_of_posts DESC
-        ";
+            )", "posts", "posts.reply_to = category.id")
+          ->where("category.type = 'category'")
+          ->orderBy("posts.number_of_posts", "DESC")
+          ->execute()
+          ->fetchAll();
 
-        $statement = $pdo->prepare($q);
-        $statement->execute();
-        $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
         $categories[''] = array("id" => "", "title" => "", "message" => "");
         foreach ($categories as $id => $category) {
             $categories[$id]['posts'] = self::get_post_category($category['id']);
         }
         return $categories;
+    }
+
+    static function get_category_list() {
+        global $dbal;
+        return $dbal->fetchArray("SELECT title FROM forum WHERE type = 'category'");
     }
 }

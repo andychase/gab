@@ -48,3 +48,4 @@ function smarty_modifier_timeAgo( $date)
 }
 
 $this->smarty->registerPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
+$this->templates['single_post'] .= '|file:'.dirname(__DIR__).'/timeago/timeago.tpl';

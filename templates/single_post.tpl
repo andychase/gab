@@ -5,24 +5,14 @@
             <a href='{$base_url}/category/{$topic.category}' class="category {$topic.category}">{$topic.category}</a>
         {/if}
     </h2>
-    <div class='post_container'>
-        <div class='post_user'>
-            {block 'post_user'}
-            <img src='http://www.gravatar.com/avatar/{$topic.author_email_hash}?s=40&d=retro' class='author_image' alt='{$topic.author_name|escape}' />
-            <span class='author_name'>{$topic.author_name|escape}</span><br />
-            <span class='post_time'>{$topic.timestamp|timeAgo}</span>
-            {/block}
-        </div>
-        <div class='post_body'>{block 'topic_body'}{$topic.message|escape}{/block}</div>
-    </div>
 
     {foreach $replies as $key=>$post}
         <div class='post_container'>
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
                 <img src='http://www.gravatar.com/avatar/{$post.author_email_hash}?s=40&d=retro' class='author_image' alt='{$post.author_name|escape}' />
-                <span class='author_name'>{$post.author_name|escape}</span><br />
-                <span class='post_time'>{$post.timestamp|timeAgo}</span>
+                <span class='author_name'>{$post.author_name|escape}</span>
+                <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>
             </div>
             <div class='post_body'>{block 'post_body'}{$post.message|escape}{/block}</div>
         </div>

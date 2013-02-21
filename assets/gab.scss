@@ -203,7 +203,12 @@ html, body {
 
       .author_name, .post_time {
         position: relative;
-        bottom: 8px;
+        bottom: 7px;
+        height: 17pt;
+        display: block;
+        width: 136px;
+        text-align: right;
+        right: 95px;
         body.dark & {
           color: $highlight;
         }

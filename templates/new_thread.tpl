@@ -13,6 +13,16 @@
             {if $new_name == "Message"}To:{/if}
             {if $new_name == "Category"}Name:{/if}
             <input type="text" name="title" id="new_thread_title" />
+            {if $new_name == "Thread" && count($categories) > 0}
+            {foreach $categories as $category}
+                <label for="category_picker {$category}" style="display:inline;">
+                    <a class="category {$category|replace:" ":"_"|lower}">
+                        {$category}
+                    </a>
+                </label>
+                <input type="radio" name="category" id="category_picker {$category}" value="{$category}" />
+            {/foreach}
+            {/if}
         </label>
         <label>
             {if $new_name == "Category"}Description:

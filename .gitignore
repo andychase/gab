@@ -1,5 +1,6 @@
 .hg/*
 .idea/*
 .hgignore
-templates/compile/*
+smarty/compile/*
+smarty/cache/*
 assets/.sass-cache/*

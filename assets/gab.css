@@ -156,7 +156,12 @@ body.dark #forum #posts_table thead tr th, body.dark #forum .category_table thea
 }
 #forum .post_replies .post_container .author_name, #forum .post_replies .post_container .post_time {
   position: relative;
-  bottom: 8px;
+  bottom: 7px;
+  height: 17pt;
+  display: block;
+  width: 136px;
+  text-align: right;
+  right: 95px;
 }
 body.dark #forum .post_replies .post_container .author_name, body.dark #forum .post_replies .post_container .post_time {
   color: #3aa6ff;

@@ -33,6 +33,7 @@ $pdo = new PDO("mysql:host=localhost;dbname=gab", /*Username:*/"gab", /*Password
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 $pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $GLOBALS['pdo'] = $pdo;
+require_once("dbal/dbal.php");
 
 
 $SMARTY_DIR = "smarty";

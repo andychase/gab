@@ -1,0 +1,1 @@
+{block 'post_time'}{$post.timestamp|timeAgo}{/block}

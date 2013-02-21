@@ -21,24 +21,24 @@
             margin-right: auto;
             margin-top: 125px;
         }
-        h1 {
+        #gatname {
             font-family: "Knewave", sans-serif;
             font-size: 72pt;
             color: black;
             text-shadow: 0px 2px 5px black;
 
         }
-        h1 a {
+        #gatname a {
             color: black; text-decoration: none;
             text-shadow: none;
         }
-        h1 a:visited { color: black;}
+        #gatname a:visited { color: black;}
     </style>
 {block name='head'}{/block}
 </head>
 <body>
 
-<h1><a href="">Gab</a></h1>
+<h1 id="gatname"><a href="">Gab</a></h1>
 
 {block 'body'}{/block}
 
