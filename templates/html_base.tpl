@@ -14,31 +14,10 @@
 
     <link href='http://fonts.googleapis.com/css?family=Knewave' rel='stylesheet' type='text/css'>
 
-    <style type="text/css">
-        body {
-            width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 125px;
-        }
-        #gatname {
-            font-family: "Knewave", sans-serif;
-            font-size: 72pt;
-            color: black;
-            text-shadow: 0px 2px 5px black;
 
-        }
-        #gatname a {
-            color: black; text-decoration: none;
-            text-shadow: none;
-        }
-        #gatname a:visited { color: black;}
-    </style>
 {block name='head'}{/block}
 </head>
 <body>
-
-<h1 id="gatname"><a href="">Gab</a></h1>
 
 {block 'body'}{/block}
 

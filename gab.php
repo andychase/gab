@@ -11,7 +11,7 @@ class gab
     /// // ////// /////// ////////////////////
     //     GAB - Tiny Forums by Andy Chase.
 
-    // Setup /////////////////////////////
+    // Setup /////////////////////////////////
 
     // Paths
     // Do not include the trailing slash on path names
@@ -47,9 +47,44 @@ class gab
     public $pdo;
     public $caching;
 
-    //
+    public $extension_pages = array();
+    private $current_extension;
 
-    // Switch these out for different template layers
+    // Extension API /////////////////////////
+
+    function addController($controller_name, $page, $order="") {
+
+    }
+
+    function addSmartyPlugin($plugin_type, $plugin_name, $function_name) {
+        $this->smarty->registerPlugin($plugin_type, $plugin_name, $function_name);
+    }
+
+    function addTemplate($page, $template_name, $order="") {
+        $folder = $this->extensions_folder;
+        $ext = $this->current_extension;
+
+        if ($page=='*') {
+            foreach(array_keys($this->templates) as $tpl)
+                $this->addTemplate($tpl, $template_name, $order);
+            return;
+        }
+        if (!array_key_exists($page, $this->templates))
+            throw new Exception("Extension $ext error adding controller: Not a page with that name.");
+        $tpl = $this->templates[$page];
+        if (!$order)
+            $this->templates[$page] .= "|file:$folder/$ext/$template_name";
+        else if ($order == "pre" && strpos($tpl, "|") !== False)
+            $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, "|"), 0);
+
+    }
+
+    function addField($field_name, $field_type, $model_actions) {
+
+    }
+
+
+    // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);
     }
@@ -62,30 +97,46 @@ class gab
         return $this->smarty->clearCache($template, $cache_id);
     }
 
+
     function gab(Smarty $smarty, $pdo)
     {
         $smarty->setTemplateDir($this->templates_folder);
         $this->smarty = $smarty;
         $this->pdo = $pdo;
 
-    // Extensions ////////////////////////
+    // Extensions ////////////////////////////
+
         if (is_dir($this->extensions_folder))
             foreach (new DirectoryIterator($this->extensions_folder) as $item) {
                 $name = $this->extensions_folder."/".$item->getFilename()."/".$item->getFilename().'.php';
-                if (!$item->isDot() && $item->isDir() && is_file($name))
-                    require_once($name);
-            }
+                if (!$item->isDot() && $item->isDir() && is_file($name)) {
+                    $this->current_extension = $item->getFilename();
+                    require($name);
+                }
+        }
 
     }
 
     function run($page, $matches, $user_id, $user_email_hash, $user_name) {
         $this->assign('base_url', $this->base_url);
+        $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->assign('assets_url', $this->assets_url);
 
-        require_once($this->model_location);
-        foreach($this->controllers[$page] as $controller)
-            require($this->controller_folder.DIRECTORY_SEPARATOR.$controller.'.php');
-        $this->smarty->display($this->templates[$page]);
+        if ($user_id) {
+            $this->assign('logged_in', true);
+            $this->assign('user_logged_in', $user_id);
+        }
+
+        if ($page == "ext") {
+            if (array_key_exists($matches[1], $this->extension_pages))
+                call_user_func_array($this->extension_pages[$matches[1]], array($this));
+        } else {
+            require_once($this->model_location);
+            foreach($this->controllers[$page] as $controller)
+                require($this->controller_folder.DIRECTORY_SEPARATOR.$controller.'.php');
+            $this->smarty->display($this->templates[$page]);
+        }
     }
-    // ////// /////// ////////////////////
+
+    // ////// /////// ////////////////////////
 }

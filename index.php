@@ -45,6 +45,8 @@ $smarty = new Smarty;
 $smarty->setCompileDir('smarty/compile');
 $smarty->setCacheDir('smarty/cache');
 
+
+
 // Gab
 $gab = new gab($smarty, $pdo);
 
@@ -57,6 +59,7 @@ $urls = array(
     '/new_thread' => 'new_thread',
     '/categories' => 'categories',
     '/messages' => 'messages',
+    '/ext/([a-zA-Z0-9]+)' => 'ext',
 );
 
 // Run! (Inspired by GLUEPHP.com)

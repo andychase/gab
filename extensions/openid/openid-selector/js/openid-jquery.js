@@ -16,7 +16,7 @@ openid = {
 	cookie_name : 'openid_provider',
 	cookie_path : '/',
 
-	img_path : 'images/',
+	img_path : '/extensions/openid/openid-selector/images/',
 	locale : null, // is set in openid-<locale>.js
 	sprite : null, // usually equals to locale, is set in
 	// openid-<locale>.js
@@ -85,7 +85,7 @@ openid = {
 	signin : function(box_id, onload) {
 		var provider = providers[box_id];
 		if (!provider) {
-			return;
+			return null;
 		}
 		this.highlight(box_id);
 		this.setCookie(box_id);

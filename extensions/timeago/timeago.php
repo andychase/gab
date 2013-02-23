@@ -47,5 +47,5 @@ function smarty_modifier_timeAgo( $date)
     return floor($years+0.5)." ".$timeStrings[14];
 }
 
-$this->smarty->registerPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
-$this->templates['single_post'] .= '|file:'.dirname(__DIR__).'/timeago/timeago.tpl';
+$this->addSmartyPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
+$this->addTemplate('single_post', 'timeago.tpl');

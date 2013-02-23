@@ -5,5 +5,5 @@ function smarty_modifier_markdown($text) {
     return Markdown($text);
 }
 
-$this->smarty->registerPlugin("modifier", "markdown", "smarty_modifier_markdown");
-$this->templates['single_post'] .= '|file:'.dirname(__DIR__).'/markdown/markdown.tpl';
+$this->addSmartyPlugin("modifier", "markdown", "smarty_modifier_markdown");
+$this->addTemplate('single_post', 'markdown.tpl');
