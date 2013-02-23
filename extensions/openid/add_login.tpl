@@ -1,15 +1,3 @@
-{block 'head' append}
-<script type="text/javascript" src="{$ext_url}/openid/openid-selector/js/openid-jquery.js"></script>
-<script type="text/javascript" src="{$ext_url}/openid/openid-selector/js/openid-en.js"></script>
-<link type="text/css" rel="stylesheet" href="{$ext_url}/openid/openid-selector/css/openid.css" />
-<script type="text/javascript">
-    $(document).ready(function() {
-        openid.init('openid_identifier');
-        //openid.setDemoMode(true); //Stops form submission for client javascript-only test purposes
-    });
-</script>
-{/block}
-
 {block 'new_links' append}
     {if !$logged_in}
     <a href="{$base_url}/login" id="new_link" class="nav_section new_link ss-plus"><span>Login</span></a>

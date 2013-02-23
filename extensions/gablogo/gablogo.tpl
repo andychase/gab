@@ -1,5 +1,5 @@
 {block 'head' append}
-    <link type="text/css" rel="stylesheet" href="{$ext_url}/gablogo/gablogo.css" />
+    <link href='http://fonts.googleapis.com/css?family=Knewave' rel='stylesheet' type='text/css'>
 {/block}
 
 {block 'body' prepend}

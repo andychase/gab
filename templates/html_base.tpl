@@ -5,17 +5,10 @@
     <meta name="description" content="Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy." />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <link rel="stylesheet" type="text/css" href="{$assets_url}/gab.css" />
-    <script type="text/javascript" src="{$assets_url}/jquery.js"></script>
-    <script type="text/javascript" src="{$assets_url}/jquery.cookie.js"></script>
-    <script type="text/javascript" src="{$assets_url}/markdown.js"></script>
-    <script type="text/javascript" src="{$assets_url}/hash.js"></script>
-    <script type="text/javascript" src="{$assets_url}/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="{$css_url}" />
+    <script type="text/javascript" src="{$js_url}"></script>
 
-    <link href='http://fonts.googleapis.com/css?family=Knewave' rel='stylesheet' type='text/css'>
-
-
-{block name='head'}{/block}
+    {block name='head'}{/block}
 </head>
 <body>
 

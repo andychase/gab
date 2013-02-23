@@ -23,7 +23,7 @@ class gab
 
     // Urls
     public $base_url = "";
-    public $assets_url = "/assets";
+    public $assets_url = "assets";
 
     // Page Controllers
     // Controllers are loaded left to right
@@ -49,6 +49,8 @@ class gab
 
     public $extension_pages = array();
     private $current_extension;
+    private $javascript = array();
+    private $css = array();
 
     // Extension API /////////////////////////
 
@@ -79,6 +81,22 @@ class gab
 
     }
 
+    function addJavascript($name) {
+        $this->javascript[] =
+            $this->extensions_folder .
+            DIRECTORY_SEPARATOR .
+            $this->current_extension .
+            DIRECTORY_SEPARATOR . $name;
+    }
+
+    function addCss($name) {
+        $this->css[] =
+            $this->extensions_folder .
+                DIRECTORY_SEPARATOR .
+                $this->current_extension .
+                DIRECTORY_SEPARATOR . $name;
+    }
+
     function addField($field_name, $field_type, $model_actions) {
 
     }
@@ -104,6 +122,11 @@ class gab
         $this->smarty = $smarty;
         $this->pdo = $pdo;
 
+        $assets_url = $this->assets_url;
+        $this->css = array("{$assets_url}/gab.css");
+        $this->javascript = array("{$assets_url}/jquery.js", "{$assets_url}/jquery.cookie.js",
+            "{$assets_url}/markdown.js", "{$assets_url}/hash.js", "{$assets_url}/script.js");
+
     // Extensions ////////////////////////////
 
         if (is_dir($this->extensions_folder))
@@ -120,6 +143,10 @@ class gab
     function run($page, $matches, $user_id, $user_email_hash, $user_name) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
+
+        require_once("min/utils.php");
+        $this->assign('js_url', Minify_getUri($this->javascript));
+        $this->assign('css_url', Minify_getUri($this->css));
         $this->assign('assets_url', $this->assets_url);
 
         if ($user_id) {

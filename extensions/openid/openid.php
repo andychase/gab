@@ -32,5 +32,9 @@ if ($_SESSION['user_logged_in']) {
 }
 
 $this->assign("openid-selector", dirname(__FIlE__)."/openid-selector/demo.html");
+$this->addJavascript("openid-selector/js/openid-jquery.js");
+$this->addJavascript("openid-selector/js/openid-en.js");
+$this->addJavascript("openid-activate.js");
+$this->addCss("openid-selector/css/openid.css");
 $this->addTemplate("all_posts", "add_login.tpl");
 $this->extension_pages['openid'] = 'gab_openid_callback';

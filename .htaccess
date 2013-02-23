@@ -1,6 +1,7 @@
 RewriteEngine On
-RewriteRule ^extensions/(.*[\.js|\.css|\.png|\.jpg]) extensions/$1 [last]
+RewriteRule ^extensions/(.*[\.png|\.jpg|\.gif]) extensions/$1 [last]
 RewriteRule ^assets/(.*) assets/$1 [last]
+RewriteRule ^min/(.*) min/$1 [last]
 RewriteRule ^favicon.ico assets/favicon.ico [last]
 RewriteRule !(index.php) /index.php
 
