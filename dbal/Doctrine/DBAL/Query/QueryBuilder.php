@@ -179,8 +179,9 @@ class QueryBuilder
      *
      * @return mixed
      */
-    public function execute()
+    public function execute($ohuh="")
     {
+        if($ohuh) echo "dbal's execute does not take parameters";
         if ($this->type == self::SELECT) {
             return $this->connection->executeQuery($this->getSQL(), $this->params, $this->paramTypes);
         } else {

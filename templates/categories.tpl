@@ -8,8 +8,8 @@
                 <tr>
                     <th colspan="3">
                         {if $category.title}
-                        <a href='{$base_url}/category/{$category.title|replace:" ":"_"|lower}'
-                           class="category {$category.title|replace:" ":"_"|lower}">
+                        <a href='{$base_url}/category/{$category.title|replace:" ":"_"}'
+                           class="category {$category.title|replace:" ":"_"}">
                             {$category.title}
                         </a>
                         {/if}

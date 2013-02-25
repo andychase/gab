@@ -1,5 +1,3 @@
-{extends 'base/forumbase.tpl'}
-
 {block "forum"}
 <div id='messages'>
         {foreach from=$messages item=message}
@@ -10,7 +8,7 @@
                 <span class="time">{$message.timestamp|timeAgo} ago</span>
                 <span class="topic_title">{$message.title}</span>
             </a>
-            <blockquote>{$message.message|substr:{$user_logged_in_name|count_characters:true+1}|truncate:100}</blockquote>
+            <blockquote>{$message.message|truncate:100}</blockquote>
         </div>
         {/foreach}
 </div>

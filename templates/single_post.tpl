@@ -6,23 +6,39 @@
         {/if}
     </h2>
 
-    {foreach $replies as $key=>$post}
+    {foreach $replies as $key => $post}
         <div class='post_container'>
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
-                <img src='http://www.gravatar.com/avatar/{$post.author_email_hash}?s=40&d=retro' class='author_image' alt='{$post.author_name|escape}' />
+                <a href="{$baseurl}/user/{$post.author_name}">
+                    <img src='http://www.gravatar.com/avatar/{$post.author_email_hash}?s=40&d=retro' class='author_image' alt='{$post.author_name|escape}' />
+                </a>
                 <span class='author_name'>{$post.author_name|escape}</span>
                 <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>
             </div>
-            <div class='post_body'>{block 'post_body'}{$post.message|escape}{/block}</div>
+            <div class='post_body'>{block 'post_body'}{$post.message|escape}{/block}
+                <div class='post_actions'>
+                    <a href='{$baseurl}/{$topic.id}#post{$post.id}' class="permalink" title="permalink">
+                        <span class="txt">Permalink</span>
+                    </a>
+                    {if $logged_in}
+                    <a href='{$baseurl}/{$topic.id}#reply' class="reply" title="reply">
+                        <span class="txt">Reply</span>
+                    </a>
+                    {/if}
+                </div>
+            </div>
         </div>
     {/foreach}
     {if $topic.replies > 60}
+        <div id="pages">
         {for $i=0 to $topic.replies step 60}
             <a href="{$base_url}/{$topic.id}?skip={$i}">{$i}</a>
         {/for}
+        </div>
     {/if}
 
+    {if $logged_in}
     <div id='submit_reply'>
         <a id="reply"></a>
         <h3>Reply</h3>
@@ -45,5 +61,6 @@
             <input type="submit" class="submit" value="Submit">
         </form>
     </div>
+    {/if}
 </div>
 {/block}

@@ -24,7 +24,7 @@
             {elseif $key == 'category'}
             <td>
                 {if $value}
-                    <a href='{$base_url}/category/{$value|replace:" ":"_"|lower}' class="category {$value|replace:" ":"_"|lower}">
+                    <a href='{$base_url}/category/{$value|replace:" ":"_"}' class="category {$value|replace:" ":"_"|lower}">
                         {$value}
                     </a>
                 {/if}

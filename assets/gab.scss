@@ -1,3 +1,27 @@
+$fontAwesomePath:   "font" !default;
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('#{$fontAwesomePath}/fontawesome-webfont.eot?v=3.0.1');
+  src: url('#{$fontAwesomePath}/fontawesome-webfont.eot?#iefix&v=3.0.1') format("embedded-opentype"),
+  url('#{$fontAwesomePath}/fontawesome-webfont.woff?v=3.0.1') format("woff"),
+  url('#{$fontAwesomePath}/fontawesome-webfont.ttf?v=3.0.1') format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.icon-link:before                 { content: "\f0c1"; }
+.icon-share-alt:before            { content: "\f064"; }
+
+/*  Font Awesome styles
+    ------------------------------------------------------- */
+.font-awesome  {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+
 $highlight: #3aa6ff;
 
 @mixin shadow {
@@ -19,12 +43,6 @@ $highlight: #3aa6ff;
   transition-property: $property;
   transition-duration: $duration;
 }
-
-@mixin light_dark_color {
-  body.light & {color: black;}
-  body.dark & {color: $highlight;}
-}
-
 
 html, body {
   font: normal 10pt/16pt Georgia, "DejaVu Serif", "Trebuchet MS", Times, serif;
@@ -49,9 +67,6 @@ html, body {
     font-size: 12px;
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    body.dark & {
-      color: white;
-    }
   }
 
   .nav_section.new_link {
@@ -87,6 +102,10 @@ html, body {
     }
   }
 
+  &.cat .nav_section.category.single {
+    border-color: transparent;
+  }
+
   .category a, a.category {
     padding: 3px 8px;
     color: #fff;
@@ -108,12 +127,6 @@ html, body {
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
 
-    body.dark & {
-      border: none;
-      -webkit-box-shadow: 0 0px 9px #3aa6ff;
-      box-shadow: 0 0px 9px #3aa6ff;;
-    }
-
     thead tr th {
       border-bottom: 1px solid #b5b5b5;
       color: #534d4b;
@@ -130,27 +143,19 @@ html, body {
       &.Title {
         text-align: left;
       }
-      body.dark & {
-        color: $highlight;
-        text-shadow: none;
-        background-color: transparent;
-        border-bottom: 1px solid #5f5f5f;
-        box-shadow: none;
-        -webkit-box-shadow: none;
-      }
     }
     td {
       text-align: center;
     }
 
-    .id /* Topic name */
+    .id
     {
       text-align: left;
       padding-left: 5px;
       width: 270px;
     }
 
-    .author_name a img /* Author name */
+    .author_name a img
      {
       margin-top: 5px;
       border-radius: 2px;
@@ -209,9 +214,6 @@ html, body {
         width: 136px;
         text-align: right;
         right: 95px;
-        body.dark & {
-          color: $highlight;
-        }
       }
       .post_time {
         font-size: 8pt;
@@ -238,6 +240,10 @@ html, body {
       min-height: 48px;
       padding: 10px;
       border-radius: 4px;
+
+      p {
+        margin-top: 0px;
+      }
 
       &:before, &:after {
         position: absolute;
@@ -267,11 +273,36 @@ html, body {
         left: -9px;
         border-width: 9px 9px 9px 0;
         border-right-color: #fff;
-        body.dark & {
-          border-right-color: black
-        }
       }
 
+    }
+
+  }
+
+  .post_actions {
+    float: right;
+    position: absolute;
+    bottom: 0px;
+    right: 3px;
+
+    a {
+      display: inline-block;
+      font-size: 12pt;
+      height: 24px;
+      width: 24px;
+      color: grey;
+    }
+
+    .permalink {
+      @extend .font-awesome;
+      @extend .icon-link;
+    }
+    .reply {
+      @extend .font-awesome;
+      @extend .icon-share-alt;
+    }
+    .txt {
+      display: none;
     }
   }
 
@@ -295,7 +326,7 @@ html, body {
       }
     }
     #save_warning { left: 63px; }
-    textarea, #submit_reply_preview, #new_thread_preview {
+    textarea, #submit_reply #preview, #new_thread_preview {
       width: 71%;
       min-height: 80px;
       border: 1px solid grey;
@@ -304,15 +335,6 @@ html, body {
       &:focus {
         outline-color: $highlight;
       }
-      body.dark & {
-        background-color: transparent;
-        color: $highlight;
-      }
-    }
-    #submit_reply_preview {
-      border: none;
-      position: relative;
-      left: 63px;
     }
 
     form {
@@ -332,6 +354,12 @@ html, body {
     }
   }
 
+  .post_replies #submit_reply #preview {
+    border: none;
+    position: relative;
+    left: 63px;
+  }
+
   #new_thread {
     #new_thread_title, #new_category_description {
       font-size: 20pt;
@@ -339,24 +367,39 @@ html, body {
       width: 100%;
       border-radius: 4px;
       margin-bottom: 2px;
-      body.dark & {
-        background-color: transparent;
-        color: $highlight;
-      }
     }
+
     form {
       padding: 0px;
     }
+
     label, textarea {
       width: 100%;
       position: static;
 
     }
+
     #new_thread_preview {
       border: none;
     }
+
     .submit {
       left: 280px;
+    }
+
+    label {
+      display: inline;
+    }
+
+    input[type="radio"] {
+    }
+
+    input[type="radio"] + label {
+    }
+
+    input[type="radio"]:checked + label a {
+      border: 3px solid black;
+      border-radius: 4px;
     }
   }
 
@@ -370,7 +413,6 @@ html, body {
     font-style: italic;
   }
 
-  /* Messages */
   #messages .message {
     margin-top: 10px;
     .topic_title {
@@ -378,7 +420,6 @@ html, body {
     }
   }
 }
-
 
 #save_hover, #save_hover_clear {
   position: fixed;

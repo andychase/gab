@@ -1,6 +1,5 @@
 <?php
-/* Copyright (c) 2013 Andy Chase & Others.
-MIT License
+/*
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
@@ -29,6 +28,7 @@ class gab
     // Controllers are loaded left to right
     public $controllers = array(
         "all_posts" => array('new_thread', 'posts'),
+        "single_category" => array('single_category'),
         "single_post" => array('new_reply', 'post'),
         "new_thread" => array('new_thread', 'post'),
         "categories" => array('new_category', "categories"),
@@ -37,6 +37,7 @@ class gab
 
     public $templates = array(
         "all_posts" => "extends:base.tpl|all_posts.tpl",
+        "single_category" => "extends:base.tpl|all_posts.tpl",
         "single_post" => "extends:base.tpl|single_post.tpl",
         "new_thread" => "extends:base.tpl|new_thread_page.tpl",
         "categories" => "extends:base.tpl|categories.tpl",
@@ -47,15 +48,25 @@ class gab
     public $pdo;
     public $caching;
 
-    public $extension_pages = array();
+    private $extension_pages = array();
+    private $extension_pages_ext = array();
     private $current_extension;
     private $javascript = array();
     private $css = array();
+
+    public $user_id;
+    public $user_email_hash;
+    public $user_name;
 
     // Extension API /////////////////////////
 
     function addController($controller_name, $page, $order="") {
 
+    }
+
+    function addPage($page, $callback_function) {
+        $this->extension_pages[$page] = $callback_function;
+        $this->extension_pages_ext[$page] = $this->current_extension;
     }
 
     function addSmartyPlugin($plugin_type, $plugin_name, $function_name) {
@@ -115,6 +126,11 @@ class gab
         return $this->smarty->clearCache($template, $cache_id);
     }
 
+    function displayGeneric($template) {
+        $this->addTemplate("all_posts", $template);
+        $this->smarty->display($this->templates['all_posts']);
+    }
+
 
     function gab(Smarty $smarty, $pdo)
     {
@@ -154,11 +170,15 @@ class gab
             $this->assign('user_logged_in', $user_id);
         }
 
+        require_once($this->model_location);
         if ($page == "ext") {
-            if (array_key_exists($matches[1], $this->extension_pages))
+            if (array_key_exists($matches[1], $this->extension_pages)) {
+                $this->current_extension = $this->extension_pages_ext[$matches[1]];
                 call_user_func_array($this->extension_pages[$matches[1]], array($this));
+            }
+            else
+                echo "Not found";
         } else {
-            require_once($this->model_location);
             foreach($this->controllers[$page] as $controller)
                 require($this->controller_folder.DIRECTORY_SEPARATOR.$controller.'.php');
             $this->smarty->display($this->templates[$page]);

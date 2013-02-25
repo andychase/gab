@@ -3,14 +3,10 @@
     <a href="{$base_url}/login" id="new_link" class="nav_section new_link ss-plus"><span>Login</span></a>
     {$new_name = 'Login'}
     <div id="new_thread">
-        <h2>JQuery Simple OpenID Selector Demo</h2>
-        <p>This is a simple example to show how you can include the Javascript into your page.</p>
-        <br/>
+        <h2>Login</h2>
         <!-- Simple OpenID Selector -->
         <form action="/ext/openid" method="get" id="openid_form">
             <input type="hidden" name="action" value="verify" />
-            <fieldset>
-                <legend>Sign-in or Create New Account</legend>
                 <div id="openid_choice">
                     <p>Please click your account provider:</p>
                     <div id="openid_btns"></div>
@@ -23,8 +19,13 @@
                     <p>OpenID is service that allows you to log-on to many different websites using a single indentity.
                         Find out <a href="http://openid.net/what/">more about OpenID</a> and <a href="http://openid.net/get/">how to get an OpenID enabled account</a>.</p>
                 </noscript>
-            </fieldset>
         </form>
     </div>
     {/if}
+{/block}
+
+{block 'extra_links' append}
+{if $logged_in}
+    <a href="{$base_url}/ext/openid_logout" class="nav_section new_link"><span>Logout</span></a>
+{/if}
 {/block}

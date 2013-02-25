@@ -2,7 +2,7 @@
 /*
 CREATE TABLE IF NOT EXISTS `forum` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` enum('post','reply','message','category','vote') NOT NULL,
+  `type` enum('post','reply','message','category','vote','user') NOT NULL,
   `reply_to` int(11) DEFAULT NULL,
   `author` int(11) NOT NULL,
   `author_email_hash` varchar(32) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
   PRIMARY KEY (`id`),
   KEY `reply_to` (`reply_to`),
   KEY `message` (`message`(767))
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `forum`
   ADD CONSTRAINT `forum_ibfk_1` FOREIGN KEY (`reply_to`) REFERENCES `forum` (`id`)
@@ -27,6 +27,9 @@ $live = false; // SET TO TRUE WHEN LIVE
 
 if($live) ini_set('display_errors','off');
 else ini_set('display_errors','on');
+
+if($live) $GLOBALS['baseurlhost'] = "gab.asperous.us";
+else $GLOBALS['baseurlhost'] = "test.co";
 
 // PDO
 $pdo = new PDO("mysql:host=localhost;dbname=gab", /*Username:*/"gab", /*Password:*/"");
@@ -58,8 +61,9 @@ $urls = array(
     '/([0-9]+)' => 'single_post',
     '/new_thread' => 'new_thread',
     '/categories' => 'categories',
+    '/category/([a-zA-Z0-9_]+)' => 'single_category',
     '/messages' => 'messages',
-    '/ext/([a-zA-Z0-9]+)' => 'ext',
+    '/ext/([a-zA-Z0-9_]+)' => 'ext',
 );
 
 // Run! (Inspired by GLUEPHP.com)

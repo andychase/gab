@@ -3,32 +3,36 @@ use \Doctrine\DBAL\Query\QueryBuilder;
 
 class forum {
 
-    static function get_posts() {
+    static function get_posts($category=null) {
         global $pdo;
-
-        $q = "
-            SELECT  forum.`id`,
-                    forum.`title`,
-                    category.`title` as category,
-                    forum.`author_name`,
-                    forum.`author_email_hash`,
-                    replies.reply_num as replies,
-                    forum.`views`,
-                    replies.last_reply as last_reply
-            FROM forum forum
-            LEFT JOIN (
+        global $dbal;
+        $q = new \Doctrine\DBAL\Query\QueryBuilder($dbal);
+        $q->select(
+            "forum.id",
+            "forum.title",
+            "category.title as category",
+            "forum.author_name",
+            "forum.author_email_hash",
+            "replies.reply_num as replies",
+            "forum.views",
+            "COALESCE(replies.last_reply, forum.timestamp) as last_reply")
+           ->from("forum", "forum")
+           ->leftJoin("forum", "(
                    SELECT count(*) as reply_num, MAX(replies.`timestamp`) as last_reply, replies.reply_to
                    FROM forum as replies
                    WHERE replies.`type` = 'reply'
                    GROUP BY replies.reply_to
-                   ) replies ON id = replies.reply_to
-            LEFT JOIN forum category on forum.`reply_to` = category.`id`
-            WHERE forum.`type` = 'post'
-        ";
-
-        $statement = $pdo->prepare($q);
-        $statement->execute();
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+                   )
+            ", "replies", "id = replies.reply_to")
+            ->leftJoin("forum", "forum", "category", "forum.reply_to = category.id")
+            ->Where("forum.type = 'post'")
+            ->orderBy("last_reply", "DESC")
+            ->getSql();
+        if ($category) {
+            $q->andWhere("category.title = ?")
+              ->setParameters(array($category));
+        }
+        return $q->execute()->fetchAll();
     }
 
     static function get_post($post_id) {
@@ -41,11 +45,11 @@ class forum {
               forum.`timestamp`,
               forum.`author_name`,
               forum.`author_email_hash`,
-              replies.number_of_replies as replies,
+              replies.reply_num,
               category.title as 'category'
             FROM forum forum
             LEFT JOIN (
-                   SELECT count(*) as number_of_replies, replies.reply_to
+                   SELECT count(*) as reply_num, reply_to
                    FROM forum as replies
                    WHERE replies.`type` = 'reply'
                    GROUP BY replies.reply_to
@@ -141,8 +145,13 @@ class forum {
     public static function new_thread($user_id, $user_name, $user_email_hash, $title, $text, $cat=null)
     {
         global $pdo;
+        global $dbal;
 
-        if (empty($cat)) $cat = null;
+        if ($cat)
+            $cat = $dbal->fetchColumn("SELECT id FROM forum WHERE type = 'category' AND title = ?", array($cat));
+        else
+            $cat = null;
+
 
         $q = "
             INSERT INTO  `forum` (
@@ -193,18 +202,26 @@ class forum {
             SELECT  forum.`id`,
                     forum.`title`,
                     replies.reply_num as replies,
-                    replies.last_reply as last_reply
+                    COALESCE(replies.last_reply, forum.timestamp) as last_reply
             FROM forum forum
-            LEFT JOIN (
-                   SELECT count(*) as reply_num, MAX(replies.`timestamp`) as last_reply, replies.reply_to
+            LEFT JOIN
+                (
+                   SELECT count(*) as reply_num,
+                          MAX(replies.`timestamp`) as last_reply,
+                          replies.reply_to
                    FROM forum as replies
                    WHERE replies.`type` = 'reply'
                    GROUP BY replies.reply_to
-                   ) replies ON id = replies.reply_to
+               )  replies ON id = replies.reply_to
             WHERE forum.`type` = 'post'
-            AND forum.reply_to ";
+            AND forum.reply_to
+
+            ";
+
         if ($category_id == "") $q .= "is null";
         else $q .= "= ?";
+
+        $q .= " ORDER BY last_reply DESC";
 
         $statement = $pdo->prepare($q);
         if ($category_id == null) $statement->execute();
@@ -238,6 +255,36 @@ class forum {
 
     static function get_category_list() {
         global $dbal;
-        return $dbal->fetchArray("SELECT title FROM forum WHERE type = 'category'");
+        return $dbal->fetchAll("SELECT title FROM forum WHERE type = 'category'");
+    }
+
+    static function get_category($id) {
+        global $dbal;
+        return $dbal->fetchColumn("SELECT title FROM forum WHERE type = 'category' and id = ?", array($id));
+    }
+
+    static function get_user($user_title) {
+        global $dbal;
+        $q = new QueryBuilder($dbal);
+        return $q
+             ->select("id", "title", "author", "author_name", "author_email_hash")
+             ->from("forum", "user")
+             ->Where("title = ?")
+             ->andWhere("type = 'user'")
+             ->setMaxResults(1)
+             ->setParameters(array($user_title))
+             ->execute()
+             ->fetch();
+    }
+
+    static function new_user($user_title, $user_name, $user_email_hash) {
+        global $dbal;
+        $dbal->insert("forum", array(
+            "title" => $user_title,
+            "author_name" => $user_name,
+            "author_email_hash" => $user_email_hash,
+            "type" => 'user',
+        ));
+        return $dbal->lastInsertId();
     }
 }
