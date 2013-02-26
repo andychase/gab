@@ -92,12 +92,16 @@ class gab
 
     }
 
-    function addJavascript($name) {
-        $this->javascript[] =
+    function addJavascript($name, $order="") {
+        $path =
             $this->extensions_folder .
             DIRECTORY_SEPARATOR .
             $this->current_extension .
             DIRECTORY_SEPARATOR . $name;
+        if ($order == "pre")
+            $this->javascript = array_merge(array($path), $this->javascript);
+        else
+            $this->javascript[] = $path;
     }
 
     function addCss($name) {
@@ -107,11 +111,6 @@ class gab
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $name;
     }
-
-    function addField($field_name, $field_type, $model_actions) {
-
-    }
-
 
     // Template //////////////////////////////
     function assign($var_name, $var) {
@@ -139,9 +138,6 @@ class gab
         $this->pdo = $pdo;
 
         $assets_url = $this->assets_url;
-        $this->css = array("{$assets_url}/gab.css");
-        $this->javascript = array("{$assets_url}/jquery.js", "{$assets_url}/jquery.cookie.js",
-            "{$assets_url}/markdown.js", "{$assets_url}/hash.js", "{$assets_url}/script.js");
 
     // Extensions ////////////////////////////
 

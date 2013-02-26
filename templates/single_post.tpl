@@ -18,11 +18,14 @@
             </div>
             <div class='post_body'>{block 'post_body'}{$post.message|escape}{/block}
                 <div class='post_actions'>
-                    <a href='{$baseurl}/{$topic.id}#post{$post.id}' class="permalink" title="permalink">
+                    <a href='{$baseurl}/ext/flag/{$post.id}' class="flag" title="Flag as spam">
+                        <span class="txt">Flag</span>
+                    </a>
+                    <a href='{$baseurl}/{$topic.id}#post{$post.id}' class="permalink" title="Permanent link for sharing">
                         <span class="txt">Permalink</span>
                     </a>
                     {if $logged_in}
-                    <a href='{$baseurl}/{$topic.id}#reply' class="reply" title="reply">
+                    <a href='{$baseurl}/{$topic.id}#reply' class="reply" title="Reply to this">
                         <span class="txt">Reply</span>
                     </a>
                     {/if}

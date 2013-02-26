@@ -1,0 +1,52 @@
+body {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 125px;
+}
+#gabname {
+    font-family: "Knewave", sans-serif;
+    font-size: 72pt;
+    color: black;
+    text-shadow: 0px 2px 5px black;
+}
+#gabname a {
+    color: black; text-decoration: none;
+    text-shadow: none;
+}
+#gatname a:visited { color: black;}
+
+
+#gabsite_navlinks {
+    position: absolute;
+    bottom: -6px;
+    left: 185px;
+}
+
+#gabsite_navlinks a {
+    display: inline;
+    text-decoration: none;
+    border-bottom: 2px solid black;
+    padding-right: 30px;
+    font-size: 12pt;
+    color: black;
+}
+
+#gabsite_navlinks a.last {
+    margin-right: 0px;
+}
+
+#gabsite_navlinks a:hover {
+    border-bottom: 2px solid #3aa6ff;
+    padding-bottom: 0px;
+    color: #3aa6ff;
+
+}
+
+#gabsite_navsection {
+    position: relative;
+    height: 50px;
+    padding-bottom: 0px;
+    width: 100%;
+}
+

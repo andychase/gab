@@ -14,9 +14,13 @@
   content: "\f064";
 }
 
+.icon-flag:before, #forum .post_actions .flag:before {
+  content: "\f024";
+}
+
 /*  Font Awesome styles
     ------------------------------------------------------- */
-.font-awesome, #forum .post_actions .permalink, #forum .post_actions .reply {
+.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;

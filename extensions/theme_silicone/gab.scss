@@ -10,6 +10,7 @@ $fontAwesomePath:   "font" !default;
 }
 .icon-link:before                 { content: "\f0c1"; }
 .icon-share-alt:before            { content: "\f064"; }
+.icon-flag:before                 { content: "\f024"; }
 
 /*  Font Awesome styles
     ------------------------------------------------------- */
@@ -291,6 +292,11 @@ html, body {
       height: 24px;
       width: 24px;
       color: grey;
+    }
+
+    .flag {
+      @extend .font-awesome;
+      @extend .icon-flag;
     }
 
     .permalink {

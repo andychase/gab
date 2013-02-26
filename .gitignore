@@ -3,4 +3,6 @@
 .hgignore
 smarty/compile/*
 smarty/cache/*
-assets/.sass-cache/*
+extensions/.sass-cache/*
+
+

@@ -1,3 +1,6 @@
-GAB
+# GAB
 
-Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy.
+Embeddable, <br />
+Extendable, <br />
+Minimal. <br />
+Next generation forum software in PHP5.
