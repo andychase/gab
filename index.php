@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS `forum` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(80) DEFAULT NULL,
   `message` varchar(5000) NOT NULL,
-  `latest` enum('Y','N') NOT NULL DEFAULT 'N',
   `views` int(11) NOT NULL,
   `last_activity` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -36,7 +35,6 @@ $pdo = new PDO("mysql:host=localhost;dbname=gab", /*Username:*/"gab", /*Password
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 $pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $GLOBALS['pdo'] = $pdo;
-require_once("dbal/dbal.php");
 
 
 $SMARTY_DIR = "smarty";

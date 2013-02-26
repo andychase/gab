@@ -1,38 +1,41 @@
 <?php
-use \Doctrine\DBAL\Query\QueryBuilder;
 
 class forum {
 
     static function get_posts($category=null) {
         global $pdo;
-        global $dbal;
-        $q = new \Doctrine\DBAL\Query\QueryBuilder($dbal);
-        $q->select(
-            "forum.id",
-            "forum.title",
-            "category.title as category",
-            "forum.author_name",
-            "forum.author_email_hash",
-            "replies.reply_num as replies",
-            "forum.views",
-            "COALESCE(replies.last_reply, forum.timestamp) as last_reply")
-           ->from("forum", "forum")
-           ->leftJoin("forum", "(
-                   SELECT count(*) as reply_num, MAX(replies.`timestamp`) as last_reply, replies.reply_to
-                   FROM forum as replies
-                   WHERE replies.`type` = 'reply'
-                   GROUP BY replies.reply_to
-                   )
-            ", "replies", "id = replies.reply_to")
-            ->leftJoin("forum", "forum", "category", "forum.reply_to = category.id")
-            ->Where("forum.type = 'post'")
-            ->orderBy("last_reply", "DESC")
-            ->getSql();
+        $q = "
+            SELECT
+              forum.id,
+              forum.title,
+              category.title AS category,
+              forum.author_name,
+              forum.author_email_hash,
+              replies.reply_num  AS replies,
+              forum.views,
+              Coalesce(replies.last_reply, forum.timestamp) AS last_reply
+            FROM forum forum
+            LEFT JOIN (
+                 SELECT Count(*) AS reply_num, Max(replies.`timestamp`) AS last_reply, replies.reply_to
+                 FROM   forum AS replies
+                 WHERE  replies.`type` = 'reply'
+                 GROUP  BY replies.reply_to
+            ) replies ON id = replies.reply_to
+            LEFT JOIN forum category ON forum.reply_to = category.id
+            WHERE  forum.type = 'post'
+        ";
         if ($category) {
-            $q->andWhere("category.title = ?")
-              ->setParameters(array($category));
+            $q .= " AND category.title = ?";
+            $q .= " ORDER BY last_reply DESC";
+            $statement = $pdo->prepare($q);
+            $statement->execute(array($category));
+        } else {
+            $q .= " ORDER BY last_reply DESC";
+            $statement = $pdo->prepare($q);
+            $statement->execute();
         }
-        return $q->execute()->fetchAll();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     static function get_post($post_id) {
@@ -111,10 +114,9 @@ class forum {
                 `author_email_hash` ,
                 `title`,
                 `message`,
-                `reply_to`,
-                `latest`
+                `reply_to`
                 )
-            VALUES ('category', ?, ?, ?, ?, ?, NULL, 'Y');
+            VALUES ('category', ?, ?, ?, ?, ?, NULL);
         ";
         $statement = $pdo->prepare($q);
         $statement->execute(array($author, $author_name, $author_email_hash, $title, $description));
@@ -131,10 +133,9 @@ class forum {
                 `author` ,
                 `author_name` ,
                 `author_email_hash` ,
-                `message` ,
-                `latest`
+                `message`
                 )
-            VALUES ('reply', ?, ?, ?, ?, ?, 'Y');
+            VALUES ('reply', ?, ?, ?, ?, ?);
         ";
 
         $statement = $pdo->prepare($q);
@@ -145,13 +146,16 @@ class forum {
     public static function new_thread($user_id, $user_name, $user_email_hash, $title, $text, $cat=null)
     {
         global $pdo;
-        global $dbal;
 
-        if ($cat)
-            $cat = $dbal->fetchColumn("SELECT id FROM forum WHERE type = 'category' AND title = ?", array($cat));
-        else
+        if ($cat) {
+            $statement = $pdo->prepare("
+                SELECT id FROM forum WHERE type = 'category' AND title = ?
+            ");
+            $statement->execute(array($cat));
+            $cat = $statement->fetchColumn();
+        } else {
             $cat = null;
-
+        }
 
         $q = "
             INSERT INTO  `forum` (
@@ -161,10 +165,9 @@ class forum {
                 `author_email_hash` ,
                 `title`,
                 `message`,
-                `reply_to`,
-                `latest`
+                `reply_to`
                 )
-            VALUES ('post', ?, ?, ?, ?, ?, ?, 'Y');
+            VALUES ('post', ?, ?, ?, ?, ?, ?);
         ";
 
         $statement = $pdo->prepare($q);
@@ -215,7 +218,6 @@ class forum {
                )  replies ON id = replies.reply_to
             WHERE forum.`type` = 'post'
             AND forum.reply_to
-
             ";
 
         if ($category_id == "") $q .= "is null";
@@ -230,21 +232,22 @@ class forum {
     }
 
     static function get_categories() {
-        global $dbal;
-        $q = new QueryBuilder($dbal);
-        $categories = $q
-          ->select("category.id", "category.title", "category.message", "posts.number_of_posts")
-          ->from("forum", "category")
-          ->leftJoin("category", "(
+        global $pdo;
+        $q = "
+          SELECT category.id, category.title, category.message, posts.number_of_posts
+          FROM forum category
+          LEFT JOIN (
               SELECT posts.reply_to, count(*) as number_of_posts
               FROM forum posts
               WHERE posts.type = 'post'
               GROUP BY reply_to
-            )", "posts", "posts.reply_to = category.id")
-          ->where("category.type = 'category'")
-          ->orderBy("posts.number_of_posts", "DESC")
-          ->execute()
-          ->fetchAll();
+            ) posts on posts.reply_to = category.id
+          WHERE category.type = 'category'
+          ORDER BY posts.number_of_posts DESC
+        ";
+        $statement = $pdo->prepare($q);
+        $statement->execute();
+        $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $categories[''] = array("id" => "", "title" => "", "message" => "");
         foreach ($categories as $id => $category) {
@@ -254,37 +257,47 @@ class forum {
     }
 
     static function get_category_list() {
-        global $dbal;
-        return $dbal->fetchAll("SELECT title FROM forum WHERE type = 'category'");
+        global $pdo;
+        $statement = $pdo->prepare("SELECT title FROM forum WHERE type = 'category'");
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     static function get_category($id) {
-        global $dbal;
-        return $dbal->fetchColumn("SELECT title FROM forum WHERE type = 'category' and id = ?", array($id));
+        global $pdo;
+        $statement = $pdo->prepare("SELECT title FROM forum WHERE type = 'category' and id = ?");
+        $statement->execute(array($id));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     static function get_user($user_title) {
-        global $dbal;
-        $q = new QueryBuilder($dbal);
-        return $q
-             ->select("id", "title", "author", "author_name", "author_email_hash")
-             ->from("forum", "user")
-             ->Where("title = ?")
-             ->andWhere("type = 'user'")
-             ->setMaxResults(1)
-             ->setParameters(array($user_title))
-             ->execute()
-             ->fetch();
+        global $pdo;
+        $q = "
+             SELECT id, title, author, author_name, author_email_hash
+             FROM forum user
+             WHERE title = ?
+             AND type = 'user'
+             LIMIT 1
+         ";
+        $statement = $pdo->prepare($q);
+        $statement->execute(array($user_title));
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     static function new_user($user_title, $user_name, $user_email_hash) {
-        global $dbal;
-        $dbal->insert("forum", array(
-            "title" => $user_title,
-            "author_name" => $user_name,
-            "author_email_hash" => $user_email_hash,
-            "type" => 'user',
-        ));
-        return $dbal->lastInsertId();
+        global $pdo;
+        $q = "
+            INSERT INTO  `forum` (
+                `title` ,
+                `author_name` ,
+                `author_email_hash` ,
+                `type`
+                )
+            VALUES ('post', ?, ?, ?, ?, ?, 'user');
+        ";
+
+        $statement = $pdo->prepare($q);
+        $statement->execute(array($user_title, $user_name, $user_email_hash));
+        return $pdo->lastInsertId();
     }
 }
