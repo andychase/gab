@@ -1,5 +1,6 @@
 <?php
 /*
+
 CREATE TABLE IF NOT EXISTS `forum` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` enum('post','reply','message','category','vote','user') NOT NULL,
@@ -45,8 +46,9 @@ require_once("gab.php");
 $smarty = new Smarty;
 $smarty->setCompileDir('smarty/compile');
 $smarty->setCacheDir('smarty/cache');
-
-
+$smarty->caching = 1;
+$smarty->cache_lifetime = 86400;
+$compile_check = !$live;
 
 // Gab
 $gab = new gab($smarty, $pdo);
@@ -64,7 +66,7 @@ $urls = array(
     '/ext/([a-zA-Z0-9_]+)' => 'ext',
 );
 
-// Run! (Inspired by GLUEPHP.com)
+// Run! (Inspired by gluephp.com)
 $page_found = false;
 foreach ($urls as $regex => $page) {
     $regex = '^' . str_replace('/', '\/', $regex) . '(\/)?(\?[a-zA-Z0-9]+=.*)?$';

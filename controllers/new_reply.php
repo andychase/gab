@@ -23,7 +23,7 @@ if (!$data['text_b'] && $data['text'] && $data['topic_id'] && $data['user']) {
             $data['user_email_hash'],
             $data['text']);
 
-        $this->clearCache('forum/post.tpl', $data['topic_id']);
+        $this->clearCache('single_post', $data['topic_id']);
         setcookie ("reply_url", "", time() - 3600, "/");
         setcookie ("reply_text", "", time() - 3600, "/");
         $baseurl = $this->baseurl;
@@ -31,7 +31,7 @@ if (!$data['text_b'] && $data['text'] && $data['topic_id'] && $data['user']) {
 
         if (!$GLOBALS['testing']) exit;
     } else {
-        $GLOBALS['cache_id'] = hash("md4", implode("_", $errors)) . "|" . $GLOBALS['cache_id'];
+        $this->addCacheId(hash("md4", implode("_", $errors)));
         $this->assign("posterror", true);
         $this->assign("posterrors", $errors);
     }

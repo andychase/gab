@@ -61,6 +61,7 @@ session_start();
 if ($_SESSION['user_logged_in']) {
     $this->assign('logged_in', true);
     $this->assign('user_logged_in', $_SESSION['user_logged_in']);
+    $this->addCacheId($_SESSION['user_logged_in']);
 }
 
 $this->assign("openid-selector", dirname(__FIlE__)."/openid-selector/demo.html");

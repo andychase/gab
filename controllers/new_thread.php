@@ -13,7 +13,7 @@ if ($_POST['do'] == 'forum_new_thread') {
     );
 
     if (!$data['text_b'] && strlen($data['text']) > 1) {
-        $this->caching = 0;
+
 
         if (empty($errors)) {
             $post_id = forum::new_thread(
@@ -24,12 +24,14 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['text'],
                 $data['cat']);
 
+            $this->clearCache("all_posts");
+            $this->clearCache("categories");
             setcookie ("reply_url", "", time() - 3600, "/");
             setcookie ("reply_text", "", time() - 3600, "/");
             header("Location: {$baseurl}/{$post_id}#post${post_id}");
             if (!$GLOBALS['testing']) exit;
         } else {
-            $GLOBALS['cache_id'] = hash("md4", implode("_", $errors)) . "|" . $GLOBALS['cache_id'];
+            $this->addCacheId(hash("md4", implode("_", $errors)));
             $this->assign("posterror", true);
             $this->assign("posterrors", $errors);
         }

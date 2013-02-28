@@ -16,7 +16,7 @@ openid = {
 	cookie_name : 'openid_provider',
 	cookie_path : '/',
 
-	img_path : '/extensions/openid/openid-selector/images/',
+	img_path : '/extensions/feat_openid/openid-selector/images/',
 	locale : null, // is set in openid-<locale>.js
 	sprite : null, // usually equals to locale, is set in
 	// openid-<locale>.js

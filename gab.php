@@ -27,12 +27,13 @@ class gab
     // Page Controllers
     // Controllers are loaded left to right
     public $controllers = array(
-        "all_posts" => array('new_thread', 'posts'),
-        "single_category" => array('single_category'),
-        "single_post" => array('new_reply', 'post'),
-        "new_thread" => array('new_thread', 'post'),
-        "categories" => array('new_category', "categories"),
-        "messages" => array('new_message', "messages"),
+        // ~ Represents the path of the $controller_folder
+        "all_posts" => array('~new_thread.php', '~posts.php'),
+        "single_category" => array('~single_category.php'),
+        "single_post" => array('~new_reply.php', '~post.php'),
+        "new_thread" => array('~new_thread.php', '~post.php'),
+        "categories" => array('~new_category.php', "~categories.php"),
+        "messages" => array('~new_message.php', "~messages.php"),
     );
 
     public $templates = array(
@@ -51,6 +52,8 @@ class gab
     private $extension_pages = array();
     private $extension_pages_ext = array();
     private $current_extension;
+    private $current_page;
+    private $cache_id = '';
     private $javascript = array();
     private $css = array();
 
@@ -61,7 +64,15 @@ class gab
     // Extension API /////////////////////////
 
     function addController($controller_name, $page, $order="") {
-
+        $path =
+            $this->extensions_folder .
+                DIRECTORY_SEPARATOR .
+                $this->current_extension .
+                DIRECTORY_SEPARATOR . $controller_name;
+        if ($order == "pre")
+            $this->controllers = array_merge(array($path), $this->controllers[$page]);
+        else
+            $this->controllers[$page][] = $path;
     }
 
     function addPage($page, $callback_function) {
@@ -117,17 +128,21 @@ class gab
         $this->smarty->assign($var_name, $var);
     }
 
-    function clearCache($template, $cache_id) {
-        $this->smarty->clearCache($template, $cache_id);
+    function clearCache($page, $cache_id=null) {
+        $this->smarty->clearCache($this->templates[$page], $cache_id);
     }
 
-    function isCached($template, $cache_id) {
-        return $this->smarty->clearCache($template, $cache_id);
+    function isCached() {
+        return $this->smarty->isCached($this->templates[$this->current_page], $this->cache_id);
     }
 
     function displayGeneric($template) {
         $this->addTemplate("all_posts", $template);
         $this->smarty->display($this->templates['all_posts']);
+    }
+
+    function addCacheId($id) {
+        $this->cache_id = "$id|".$this->cache_id;
     }
 
 
@@ -149,12 +164,12 @@ class gab
                     require($name);
                 }
         }
-
     }
 
     function run($page, $matches, $user_id, $user_email_hash, $user_name) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
+        $this->current_page = $page;
 
         require_once("min/utils.php");
         $this->assign('js_url', Minify_getUri($this->javascript));
@@ -164,6 +179,7 @@ class gab
         if ($user_id) {
             $this->assign('logged_in', true);
             $this->assign('user_logged_in', $user_id);
+            $this->addCacheId($user_id);
         }
 
         require_once($this->model_location);
@@ -175,9 +191,13 @@ class gab
             else
                 echo "Not found";
         } else {
-            foreach($this->controllers[$page] as $controller)
-                require($this->controller_folder.DIRECTORY_SEPARATOR.$controller.'.php');
-            $this->smarty->display($this->templates[$page]);
+            foreach($this->controllers[$page] as $controller) {
+                if ($controller[0] == "~")
+                    require($this->controller_folder.DIRECTORY_SEPARATOR.substr($controller, 1));
+                else
+                    require($controller);
+            }
+            $this->smarty->display($this->templates[$page], $this->cache_id);
         }
     }
 
