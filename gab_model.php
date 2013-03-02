@@ -2,7 +2,7 @@
 
 class forum {
 
-    static function get_posts($category=null, $sort=null, $sort_down=true) {
+    static function get_posts($category=null, $sort=null, $sort_down=true, $show_hidden=false) {
         global $pdo;
         $q = "
             SELECT
@@ -19,6 +19,7 @@ class forum {
                  SELECT Count(*) AS reply_num, Max(replies.`timestamp`) AS last_reply, replies.reply_to
                  FROM   forum AS replies
                  WHERE  replies.`type` = 'reply'
+                 AND replies.`hidden` = 'N'
                  GROUP  BY replies.reply_to
             ) replies ON id = replies.reply_to
             LEFT JOIN forum category ON forum.reply_to = category.id
@@ -36,6 +37,7 @@ class forum {
         $q .= " WHERE  forum.type = 'post' ";
         if ($category)
             $q .= " AND category.title = ? ";
+        $q .= " AND forum.hidden = 'N' ";
 
         if ($sort == "category")
             $q .= " ORDER BY - RAND() * LOG((NOW() - forum.timestamp))";
@@ -61,8 +63,10 @@ class forum {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    static function get_post($post_id) {
+    static function get_post($post_id, $show_hidden=false) {
         global $pdo;
+        $hideq = " AND forum.`hidden` = 'N' ";
+        if ($show_hidden) $hideq = "";
         $q = "
             SELECT
               forum.`id`,
@@ -72,7 +76,8 @@ class forum {
               forum.`author_name`,
               forum.`author_email_hash`,
               replies.reply_num,
-              category.title as 'category'
+              category.title as 'category',
+              forum.`hidden`
             FROM forum forum
             LEFT JOIN (
                    SELECT count(*) as reply_num, reply_to
@@ -83,6 +88,7 @@ class forum {
             LEFT JOIN forum category on forum.`reply_to` = category.`id`
             WHERE forum.`type` = 'post'
             AND forum.`id` = ?
+            $hideq
             LIMIT 1
         ";
 
@@ -91,8 +97,10 @@ class forum {
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    static function get_replies($post_id, $skip=0) {
+    static function get_replies($post_id, $skip=0, $show_hidden=false) {
         global $pdo;
+        $hideq = " AND forum.`hidden` = 'N' ";
+        if ($show_hidden) $hideq = "";
         $q = "
             SELECT
               forum.`id`,
@@ -100,10 +108,12 @@ class forum {
               forum.`message`,
               forum.`timestamp`,
               forum.`author_name`,
-              forum.`author_email_hash`
+              forum.`author_email_hash`,
+              forum.`hidden`
             FROM forum forum
             WHERE forum.`type` = 'reply'
             AND forum.`reply_to` = ?
+            $hideq
             ORDER BY forum.`id` ASC
             LIMIT ?, 60
         ";
@@ -235,11 +245,13 @@ class forum {
                    SELECT count(*) as reply_num,
                           MAX(replies.`timestamp`) as last_reply,
                           replies.reply_to
-                   FROM forum as replies
+                   FROM forum replies
                    WHERE replies.`type` = 'reply'
+                   AND replies.`hidden` = 'N'
                    GROUP BY replies.reply_to
                )  replies ON id = replies.reply_to
             WHERE forum.`type` = 'post'
+            AND forum.hidden = 'N'
             AND forum.reply_to
             ";
 
@@ -263,7 +275,9 @@ class forum {
               SELECT posts.reply_to, count(*) as number_of_posts
               FROM forum posts
               WHERE posts.type = 'post'
+              AND hidden = 'N'
               GROUP BY reply_to
+
             ) posts on posts.reply_to = category.id
           WHERE category.type = 'category'
           ORDER BY posts.number_of_posts DESC
@@ -354,5 +368,19 @@ class forum {
         $statement = $pdo->prepare($q);
         $statement->execute(array($user_title, $user_name, $user_email_hash));
         return $pdo->lastInsertId();
+    }
+
+    public static function hide_post($post_id, $recover=false)
+    {
+        global $pdo;
+        if ($recover) $hide = 'N';
+        else $hide = 'Y';
+        $q = "
+            UPDATE forum
+            SET hidden = ?
+            WHERE id = ?;
+            ";
+        $statement = $pdo->prepare($q);
+        return $statement->execute(array($hide, $post_id));
     }
 }

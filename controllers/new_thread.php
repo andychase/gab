@@ -14,7 +14,6 @@ if ($_POST['do'] == 'forum_new_thread') {
 
     if (!$data['text_b'] && strlen($data['text']) > 1) {
 
-
         if (empty($errors)) {
             $post_id = forum::new_thread(
                 $data['user'],

@@ -7,7 +7,7 @@
     </h2>
 
     {foreach $replies as $key => $post}
-        <div class='post_container'>
+        <div class='post_container {if $post.hidden == 'Y'}hidden{/if}'>
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
                 <a href="{$baseurl}/user/{$post.author_name}">
@@ -16,8 +16,25 @@
                 <span class='author_name'>{$post.author_name|escape}</span>
                 <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>
             </div>
-            <div class='post_body'>{block 'post_body'}{$post.message|escape}{/block}
+            <div class='post_body'>
+                {if $post.hidden == 'Y'}<del>{/if}
+                {block 'post_body'}{$post.message|escape}{/block}
+                {if $post.hidden == 'Y'}</del>{/if}
                 <div class='post_actions'>
+                {block 'mod_actions'}
+                    {if $user_trust >= $trust_levels.delete}
+                        {if $post.hidden == 'N'}
+                            <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">
+                                <span class="txt">Delete</span>
+                            </a>
+                        {else}
+                            <a href='{$baseurl}/{$topic.id}/?recover={$post.id}#post{$post.id}' class="delete" title="Recover">
+                                <span class="txt">Recover</span>
+                            </a>
+                        {/if}
+                    {/if}
+                {/block}
+                {block 'post_actions'}
                     <a href='{$baseurl}/ext/flag/{$post.id}' class="flag" title="Flag as spam">
                         <span class="txt">Flag</span>
                     </a>
@@ -29,6 +46,7 @@
                         <span class="txt">Reply</span>
                     </a>
                     {/if}
+                {/block}
                 </div>
             </div>
         </div>

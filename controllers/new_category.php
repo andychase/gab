@@ -23,6 +23,7 @@ if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->tr
                 $data['text']
                 );
 
+            $this->clearCache("categories");
             setcookie ("reply_url", "", time() - 3600, "/");
             setcookie ("reply_text", "", time() - 3600, "/");
             //header("Location: http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");

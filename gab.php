@@ -22,7 +22,6 @@ class gab
 
     // Urls
     public $base_url = "";
-    public $assets_url = "assets";
 
     // Page Controllers
     // Controllers are loaded left to right
@@ -30,7 +29,7 @@ class gab
         // ~ Represents the path of the $controller_folder
         "all_posts" => array('~new_thread.php', '~posts.php'),
         "single_category" => array('~single_category.php', '~posts.php'),
-        "single_post" => array('~new_reply.php', '~post.php'),
+        "single_post" => array('~moderate.php', '~new_reply.php', '~post.php'),
         "new_thread" => array('~new_thread.php', '~post.php'),
         "categories" => array('~new_category.php', "~categories.php"),
         "messages" => array('~new_message.php', "~messages.php"),
@@ -48,7 +47,9 @@ class gab
     // Defines the trust levels for users.
     //   Number on left is action, right is minimum trust integer.
     public $trust_levels = array (
-        "new_category" => 1
+        "new_category" => 1,
+        "delete" => 1,
+        "see_deleted" => 1
     );
 
     public $smarty;
@@ -129,6 +130,14 @@ class gab
                 DIRECTORY_SEPARATOR . $name;
     }
 
+    function hasPermission($permission) {
+        // Returns true if current user has permissions greater than or higher than $permission
+        if(array_key_exists($permission, $this->trust_levels))
+            return $_SESSION['user_trust'] >= $this->trust_levels[$permission];
+        else
+            return false;
+    }
+
     // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);
@@ -148,9 +157,9 @@ class gab
     }
 
     function addCacheId($id) {
+        // The most important Cache Id should be added last.
         $this->cache_id = "$id|".$this->cache_id;
     }
-
 
     function gab(Smarty $smarty, $pdo)
     {
