@@ -13,10 +13,11 @@ CREATE TABLE IF NOT EXISTS `forum` (
   `message` varchar(5000) NOT NULL,
   `views` int(11) NOT NULL,
   `last_activity` timestamp NULL DEFAULT NULL,
+  `ext` varchar(8000) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `reply_to` (`reply_to`),
   KEY `message` (`message`(767))
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `forum`
   ADD CONSTRAINT `forum_ibfk_1` FOREIGN KEY (`reply_to`) REFERENCES `forum` (`id`)
@@ -72,7 +73,7 @@ foreach ($urls as $regex => $page) {
     $regex = '^' . str_replace('/', '\/', $regex) . '(\/)?(\?[a-zA-Z0-9]+=.*)?$';
     if (preg_match("/$regex/i", $_SERVER['REQUEST_URI'], $matches)) {
         $page_found = true;
-        $gab->run($page, $matches, $user_id, $user_email_hash, $user_name);
+        $gab->run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust);
         break;
     }
 }

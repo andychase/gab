@@ -11,6 +11,8 @@ $fontAwesomePath:   "font" !default;
 .icon-link:before                 { content: "\f0c1"; }
 .icon-share-alt:before            { content: "\f064"; }
 .icon-flag:before                 { content: "\f024"; }
+.icon-caret-down:before           { content: "\f0d7"; }
+.icon-caret-up:before             { content: "\f0d8"; }
 
 /*  Font Awesome styles
     ------------------------------------------------------- */
@@ -161,6 +163,27 @@ html, body {
       margin-top: 5px;
       border-radius: 2px;
     }
+
+
+    thead tr.headers a {
+        color: #534d4b;
+        text-decoration: none;
+        &.down {
+          @extend .icon-caret-down;
+          &::before {
+            @extend .font-awesome;
+          }
+        }
+        &.up {
+          @extend .icon-caret-up;
+          &::before {
+            @extend .font-awesome;
+          }
+        }
+        &:hover {
+          border-bottom: 1px grey dotted;
+        }
+      }
   }
 
   #categories_page {

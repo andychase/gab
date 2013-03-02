@@ -2,8 +2,33 @@
  <table id='posts_table'>
     <thead>
     <tr class='headers'>
-        {foreach from=array("Title", "Category", "Author", "Posts", "Views", "Last") item=header}
-            <th class='{$header}'>{$header}</th>
+        {block 'sort'}
+            {$sort_desc = array("Sort by title",
+            "Sort by random",
+            "Sort by contribution",
+            "Sort by posts",
+            "Sort by views",
+            "Sort by last activity")}
+        {/block}
+        {block 'table_headers'}
+            {$table_headers = array("Title", "Category", "Author", "Posts", "Views", "Last")}
+        {/block}
+        {foreach $table_headers as $header}
+            <th class='{$header}'>
+            {if $sort_by == {$header|lower} && $sort_down}
+                <a href="?sort={$header|lower}&dir=up" title="{$sort_desc[$header@index]}" class="down">
+                    {$header}
+                </a>
+            {elseif $sort_by == {$header|lower}}
+                <a href="?sort={$header|lower}" title="{$sort_desc[$header@index]}" class="up">
+                    {$header}
+                </a>
+            {else}
+                <a href="?sort={$header|lower}" title="{$sort_desc[$header@index]}">
+                    {$header}
+                </a>
+            {/if}
+            </th>
         {/foreach}
         </tr>
     </thead>

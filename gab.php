@@ -29,7 +29,7 @@ class gab
     public $controllers = array(
         // ~ Represents the path of the $controller_folder
         "all_posts" => array('~new_thread.php', '~posts.php'),
-        "single_category" => array('~single_category.php'),
+        "single_category" => array('~single_category.php', '~posts.php'),
         "single_post" => array('~new_reply.php', '~post.php'),
         "new_thread" => array('~new_thread.php', '~post.php'),
         "categories" => array('~new_category.php', "~categories.php"),
@@ -43,6 +43,12 @@ class gab
         "new_thread" => "extends:base.tpl|new_thread_page.tpl",
         "categories" => "extends:base.tpl|categories.tpl",
         "messages" => "extends:base.tpl|messages.tpl",
+    );
+
+    // Defines the trust levels for users.
+    //   Number on left is action, right is minimum trust integer.
+    public $trust_levels = array (
+        "new_category" => 1
     );
 
     public $smarty;
@@ -166,7 +172,7 @@ class gab
         }
     }
 
-    function run($page, $matches, $user_id, $user_email_hash, $user_name) {
+    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->current_page = $page;
@@ -176,9 +182,11 @@ class gab
         $this->assign('css_url', Minify_getUri($this->css));
         $this->assign('assets_url', $this->assets_url);
 
+        $this->assign("trust_levels", $this->trust_levels);
         if ($user_id) {
             $this->assign('logged_in', true);
             $this->assign('user_logged_in', $user_id);
+            $this->assign('user_trust', $user_trust);
             $this->addCacheId($user_id);
         }
 

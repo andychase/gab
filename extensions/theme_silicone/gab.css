@@ -18,9 +18,17 @@
   content: "\f024";
 }
 
+.icon-caret-down:before, #forum #posts_table thead tr.headers a.down:before, #forum .category_table thead tr.headers a.down:before {
+  content: "\f0d7";
+}
+
+.icon-caret-up:before, #forum #posts_table thead tr.headers a.up:before, #forum .category_table thead tr.headers a.up:before {
+  content: "\f0d8";
+}
+
 /*  Font Awesome styles
     ------------------------------------------------------- */
-.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply {
+.font-awesome, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -132,6 +140,13 @@ html, body {
 #forum #posts_table .author_name a img, #forum .category_table .author_name a img {
   margin-top: 5px;
   border-radius: 2px;
+}
+#forum #posts_table thead tr.headers a, #forum .category_table thead tr.headers a {
+  color: #534d4b;
+  text-decoration: none;
+}
+#forum #posts_table thead tr.headers a:hover, #forum .category_table thead tr.headers a:hover {
+  border-bottom: 1px grey dotted;
 }
 #forum #categories_page {
   margin-top: 10px;

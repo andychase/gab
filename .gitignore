@@ -3,6 +3,6 @@
 .hgignore
 smarty/compile/*
 smarty/cache/*
-extensions/.sass-cache/*
+extensions/theme-silicone/.sass-cache/*
 
 

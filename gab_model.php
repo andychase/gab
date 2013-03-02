@@ -2,7 +2,7 @@
 
 class forum {
 
-    static function get_posts($category=null) {
+    static function get_posts($category=null, $sort=null, $sort_down=true) {
         global $pdo;
         $q = "
             SELECT
@@ -22,18 +22,41 @@ class forum {
                  GROUP  BY replies.reply_to
             ) replies ON id = replies.reply_to
             LEFT JOIN forum category ON forum.reply_to = category.id
-            WHERE  forum.type = 'post'
+
         ";
-        if ($category) {
-            $q .= " AND category.title = ?";
-            $q .= " ORDER BY last_reply DESC";
-            $statement = $pdo->prepare($q);
-            $statement->execute(array($category));
-        } else {
-            $q .= " ORDER BY last_reply DESC";
-            $statement = $pdo->prepare($q);
-            $statement->execute();
-        }
+        if ($sort == "author")
+            $q .= "
+                LEFT JOIN (
+                SELECT id, count(*) as contributions
+                FROM forum
+                GROUP BY author
+                ) author ON author.id = forum.author";
+
+
+        $q .= " WHERE  forum.type = 'post' ";
+        if ($category)
+            $q .= " AND category.title = ? ";
+
+        if ($sort == "category")
+            $q .= " ORDER BY - RAND() * LOG((NOW() - forum.timestamp))";
+        else if ($sort == "title")
+            $q .= " ORDER BY title";
+        else if ($sort == "views")
+            $q .= " ORDER BY forum.views";
+        else if ($sort == "posts")
+            $q .= " ORDER BY replies.reply_num";
+        else if ($sort == "author")
+            $q .= " ORDER BY author.contributions";
+        else
+            $q .= " ORDER BY last_reply";
+
+        if($sort_down) $q .= " DESC";
+        else $q .= " ASC";
+
+        $statement = $pdo->prepare($q);
+
+        if ($category == null) $statement->execute();
+        else $statement->execute(array($category));
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -282,6 +305,38 @@ class forum {
         $statement = $pdo->prepare($q);
         $statement->execute(array($user_title));
         return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    static function get_user_ext($user_id) {
+        global $pdo;
+        $statement = $pdo->prepare("SELECT ext from forum where id = ?");
+        $statement->execute(array($user_id));
+        return unserialize($statement->fetchColumn());
+    }
+
+    static function get_user_ext_lock($user_id) {
+        /* The locking mechanism is in place to prevent a race condition data loss
+            1. Thread 1 reads 'a'
+            2. Thread 2 reads 'a'
+            3. Thread 1 sets 'a:1'
+            4. Thread 2 sets 'a,b:3'
+            5. Thread 1's data was lost.
+        If you are saving any ext data, you must call this method to get the current state first.
+        If are only reading, you can use the other method..
+        */
+        global $pdo;
+        if (!$GLOBALS['testing']) $pdo->beginTransaction();
+        $statement = $pdo->prepare("SELECT ext from forum where id = ? FOR UPDATE");
+        $statement->execute(array($user_id));
+        return unserialize($statement->fetchColumn());
+    }
+
+    static function set_user_ext($user_id, $ext) {
+        global $pdo;
+        $statement = $pdo->prepare("UPDATE forum SET ext = ? where id = ?");
+        $result = $statement->execute(array(serialize($ext), $user_id));
+        if (!$GLOBALS['testing']) $pdo->commit();
+        return $result;
     }
 
     static function new_user($user_title, $user_name, $user_email_hash) {
