@@ -5,23 +5,12 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
-class gab
+require_once("gab_config.php");
+
+class gab extends gab_settings
 {
     /// // ////// /////// ////////////////////
     //     GAB - Tiny Forums by Andy Chase.
-
-    // Setup /////////////////////////////////
-
-    // Paths
-    // Do not include the trailing slash on path names
-    public $model_location = "gab_model.php";
-    public $templates_folder = "templates";
-    public $templates_folder_section = "templates/sections";
-    public $controller_folder = "controllers";
-    public $extensions_folder = "extensions";
-
-    // Urls
-    public $base_url = "";
 
     // Page Controllers
     // Controllers are loaded left to right
@@ -44,17 +33,9 @@ class gab
         "messages" => "extends:base.tpl|messages.tpl",
     );
 
-    // Defines the trust levels for users.
-    //   Number on left is action, right is minimum trust integer.
-    public $trust_levels = array (
-        "new_category" => 1,
-        "delete" => 1,
-        "see_deleted" => 1
-    );
-
     public $smarty;
     public $pdo;
-    public $caching;
+    public $caching = 1;
 
     private $extension_pages = array();
     private $extension_pages_ext = array();
@@ -159,6 +140,7 @@ class gab
 
     function displayGeneric($template) {
         $this->addTemplate("all_posts", $template);
+        $this->smarty->caching = $this->caching;
         $this->smarty->display($this->templates['all_posts']);
     }
 
@@ -227,6 +209,7 @@ class gab
                 else
                     require($controller);
             }
+            $this->smarty->caching = $this->caching;
             $this->smarty->display($this->templates[$page], $this->cache_id);
         }
     }

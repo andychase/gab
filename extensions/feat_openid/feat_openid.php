@@ -51,13 +51,22 @@ function gab_openid_logout($gab) {
 }
 
 function gab_setup_account($gab) {
+    $gab->caching = 0;
     if (!trim($_POST['name'])) {
         $gab->displayGeneric('signup.tpl');
+    } else if (forum::exists_user_name(trim($_POST['name']))) {
+        $gab->assign("errors", array("That name is already taken"));
+        $gab->displayGeneric('signup.tpl');
     } else {
-        forum::new_user($_SESSION['user_title'], trim($_POST['name']), md5(strtolower(trim($_POST['email']))));
+        $user_id = forum::new_user($_SESSION['user_title'], trim($_POST['name']), md5(strtolower(trim($_POST['email']))));
+        if (forum::just_inserted_first_user()) {
+            // First user on forum is lvl 99 moderator.
+            $ext = forum::get_user_ext_lock($user_id);
+            $ext['trust'] = 99;
+            forum::set_user_ext($user_id, $ext);
+        }
         gab_successful_login($_SESSION['user_title'], $gab);
     }
-
 }
 
 

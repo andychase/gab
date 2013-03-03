@@ -24,9 +24,10 @@ if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->tr
                 );
 
             $this->clearCache("categories");
+            $this->clearCache("all_posts");
             setcookie ("reply_url", "", time() - 3600, "/");
             setcookie ("reply_text", "", time() - 3600, "/");
-            //header("Location: http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+            header("Location: {$baseurl}/categories");
         } else {
             $GLOBALS['cache_id'] = hash("md4", implode("_", $errors)) . "|" . $GLOBALS['cache_id'];
             $this->assign("posterror", true);

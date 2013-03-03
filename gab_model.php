@@ -383,4 +383,23 @@ class forum {
         $statement = $pdo->prepare($q);
         return $statement->execute(array($hide, $post_id));
     }
+
+    public static function exists_user_name($name) {
+        global $pdo;
+        $statement = $pdo->prepare("SELECT id FROM forum WHERE author_name = ? LIMIT 1");
+        $statement->execute(array($name));
+        return $statement->fetchAll();
+    }
+
+    public static function just_inserted_first_user() {
+        global $pdo;
+        $statement = $pdo->prepare("
+            SELECT id
+            FROM forum
+            WHERE type = 'user'
+            AND id != ?
+        ");
+        $statement->execute(array($pdo->lastInsertId()));
+        return !$statement->fetchAll();
+    }
 }
