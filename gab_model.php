@@ -362,7 +362,7 @@ class forum {
                 `author_email_hash` ,
                 `type`
                 )
-            VALUES ('post', ?, ?, ?, ?, ?, 'user');
+            VALUES (?, ?, ?, 'user');
         ";
 
         $statement = $pdo->prepare($q);

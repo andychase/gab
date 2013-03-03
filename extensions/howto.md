@@ -11,6 +11,7 @@
 - ux_   -- Small user experience nicety
 - misc_ -- Cosmetic details unrelated to a specific theme
 - hook_ -- Integration with other services
+- parser_ -- Anything that transform post input when displaying
 - search_ -- Anything that requires the search service extension
 
 ## Api

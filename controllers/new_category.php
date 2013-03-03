@@ -3,9 +3,9 @@
 if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->trust_levels['new_category']) {
 
     $data = array(
-        "title" => htmlentities($_POST['title']),
-        "text" => htmlentities($_POST['description']),
-        "text_b" => htmlentities($_POST['text_b']),
+        "title" => $_POST['title'],
+        "text" => $_POST['description'],
+        "text_b" => $_POST['text_b'],
         "user" => $_SESSION['user_logged_in'],
         "user_name" => $_SESSION['user_name'],
         "user_email_hash" => $_SESSION['user_email_hash'],

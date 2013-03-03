@@ -63,6 +63,7 @@ class gab
     private $cache_id = '';
     private $javascript = array();
     private $css = array();
+    private $parsers = array();
 
     public $user_id;
     public $user_email_hash;
@@ -77,7 +78,7 @@ class gab
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $controller_name;
         if ($order == "pre")
-            $this->controllers = array_merge(array($path), $this->controllers[$page]);
+            array_unshift($this->controllers[$page], $path);
         else
             $this->controllers[$page][] = $path;
     }
@@ -117,7 +118,7 @@ class gab
             $this->current_extension .
             DIRECTORY_SEPARATOR . $name;
         if ($order == "pre")
-            $this->javascript = array_merge(array($path), $this->javascript);
+             array_unshift($this->javascript, $path);
         else
             $this->javascript[] = $path;
     }
@@ -128,6 +129,11 @@ class gab
                 DIRECTORY_SEPARATOR .
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $name;
+    }
+
+    function addParser($function_name, $order="") {
+        if ($order == "pre") array_unshift($this->parsers, $function_name);
+        else $this->parsers[] = $function_name;
     }
 
     function hasPermission($permission) {
@@ -161,15 +167,21 @@ class gab
         $this->cache_id = "$id|".$this->cache_id;
     }
 
+    public function parse($text) {
+        foreach($this->parsers as $parser)
+            $text = $parser($text);
+        return $text;
+    }
+
     function gab(Smarty $smarty, $pdo)
     {
         $smarty->setTemplateDir($this->templates_folder);
         $this->smarty = $smarty;
         $this->pdo = $pdo;
 
-        $assets_url = $this->assets_url;
+        $this->addSmartyPlugin("modifier", "parse", array($this, 'parse'));
 
-    // Extensions ////////////////////////////
+        // Prepare Extensions ////////////////////////////
 
         if (is_dir($this->extensions_folder))
             foreach (new DirectoryIterator($this->extensions_folder) as $item) {
@@ -179,6 +191,7 @@ class gab
                     require($name);
                 }
         }
+
     }
 
     function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {
@@ -189,8 +202,8 @@ class gab
         require_once("min/utils.php");
         $this->assign('js_url', Minify_getUri($this->javascript));
         $this->assign('css_url', Minify_getUri($this->css));
-        $this->assign('assets_url', $this->assets_url);
 
+        // User
         $this->assign("trust_levels", $this->trust_levels);
         if ($user_id) {
             $this->assign('logged_in', true);

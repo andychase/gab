@@ -2,8 +2,8 @@
 
 
 $data = array(
-    "text" => htmlentities($_POST['text']),
-    "topic_id" => htmlentities($_POST['topic_id']),
+    "text" => $_POST['text'],
+    "topic_id" => $_POST['topic_id'],
     "text_b" => $_POST['text_b'],
     "user" => $_SESSION['user_logged_in'],
     "user_name" => $_SESSION['user_name'],

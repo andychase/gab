@@ -8,14 +8,14 @@
         <a href="{$base_url}/" class="nav_section posts">Posts</a>
         {* Post -> Topic *}
         {if $topic}
-            <a href="{$base_url}/{$topic.id}" class="nav_section posts single">{$topic.title|truncate:30}</a>
+            <a href="{$base_url}/{$topic.id}" class="nav_section posts single">{$topic.title|escape|truncate:30}</a>
         {/if}
 
         {* Categories *}
         <a href="{$base_url}/categories" class="nav_section cat">Categories</a>
         {*  Categories -> Category *}
         {if $category}
-            <a href="{$base_url}/category/{$category}" class="nav_section category cat single">{$category|truncate:30}</a>
+            <a href="{$base_url}/category/{$category}" class="nav_section category cat single">{$category|escape|truncate:30}</a>
         {/if}
 
         {* Messages *}

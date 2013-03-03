@@ -18,7 +18,7 @@
             </div>
             <div class='post_body'>
                 {if $post.hidden == 'Y'}<del>{/if}
-                {block 'post_body'}{$post.message|escape}{/block}
+                {block 'post_body'}{$post.message|parse}{/block}
                 {if $post.hidden == 'Y'}</del>{/if}
                 <div class='post_actions'>
                 {block 'mod_actions'}
