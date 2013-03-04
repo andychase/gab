@@ -58,7 +58,7 @@ $gab = new gab($smarty, $pdo);
 // Url Regex (Left Side) is routed to a file in controller_folder (Right side)
 // Array variable $matches contains url patterns. $matches[1] contains first () group.
 $urls = array(
-    '/' => 'all_posts',
+    '/' => 'posts',
     '/([0-9]+)' => 'single_post',
     '/new_thread' => 'new_thread',
     '/categories' => 'categories',

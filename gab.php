@@ -16,7 +16,7 @@ class gab extends gab_settings
     // Controllers are loaded left to right
     public $controllers = array(
         // ~ Represents the path of the $controller_folder
-        "all_posts" => array('~new_thread.php', '~posts.php'),
+        "posts" => array('~new_thread.php', '~posts.php'),
         "single_category" => array('~single_category.php', '~posts.php'),
         "single_post" => array('~moderate.php', '~new_reply.php', '~post.php'),
         "new_thread" => array('~new_thread.php', '~post.php'),
@@ -27,8 +27,8 @@ class gab extends gab_settings
     );
 
     public $templates = array(
-        "all_posts" => "extends:base.tpl|all_posts.tpl",
-        "single_category" => "extends:base.tpl|all_posts.tpl",
+        "posts" => "extends:base.tpl|posts.tpl",
+        "single_category" => "extends:base.tpl|posts.tpl",
         "single_post" => "extends:base.tpl|single_post.tpl",
         "new_thread" => "extends:base.tpl|new_thread_page.tpl",
         "categories" => "extends:base.tpl|categories.tpl",
@@ -143,9 +143,9 @@ class gab extends gab_settings
     }
 
     function displayGeneric($template) {
-        $this->addTemplate("all_posts", $template);
+        $this->addTemplate("posts", $template);
         $this->smarty->caching = $this->caching;
-        $this->smarty->display($this->templates['all_posts']);
+        $this->smarty->display($this->templates['posts']);
     }
 
     function addCacheId($id) {

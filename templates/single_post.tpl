@@ -22,7 +22,7 @@
                 {if $post.hidden == 'Y'}</del>{/if}
                 <div class='post_actions'>
                 {block 'mod_actions'}
-                    {if $user_trust >= $trust_levels.delete}
+                    {if $user_trust >= $trust_levels.delete || $post.author == $user_logged_in}
                         {if $post.hidden == 'N'}
                             <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">
                                 <span class="txt">Delete</span>

@@ -5,7 +5,8 @@ $this->smarty->cache_lifetime = 360;
 
 $post_id = $matches[1];
 $skip = intval($_GET['skip']);
-$this->addCacheId("trust:".$_SESSION['user_trust']);
+$this->addCacheId("t:".$_SESSION['user_trust']);
+$this->addCacheId('u:'.$_SESSION['user_logged_in']);
 $this->addCacheId("$post_id|$skip");
 
 if (!$this->isCached()) {

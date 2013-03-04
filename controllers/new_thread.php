@@ -23,7 +23,7 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['text'],
                 $data['cat']);
 
-            $this->clearCache("all_posts");
+            $this->clearCache("posts");
             $this->clearCache("categories");
             $this->clearCache('single_user', $data['user_name']);
             setcookie ("reply_url", "", time() - 3600, "/");

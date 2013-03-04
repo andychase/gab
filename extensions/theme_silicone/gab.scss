@@ -442,9 +442,12 @@ html, body {
       width: 40px;
       a {
         display: block;
-        height: 40px;
+        height: 54px;
         text-decoration: none;
         margin: 0px;
+        font-size: 7pt;
+        text-align: center;
+        overflow: hidden;
       }
     }
   }

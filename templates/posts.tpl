@@ -11,7 +11,7 @@
             "Sort by last activity")}
         {/block}
         {block 'table_headers'}
-            {$table_headers = array("Title", "Category", "Author", "Posts", "Views", "Last")}
+            {$table_headers = array("Title", " ", "Author", "Posts", "Views", "Last")}
         {/block}
         {foreach $table_headers as $header}
             <th class='{$header}'>

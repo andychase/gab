@@ -400,9 +400,12 @@ html, body {
 }
 #forum #users_page ul li a {
   display: block;
-  height: 40px;
+  height: 54px;
   text-decoration: none;
   margin: 0px;
+  font-size: 7pt;
+  text-align: center;
+  overflow: hidden;
 }
 #forum #new_thread #new_thread_title, #forum #new_thread #new_category_description {
   font-size: 20pt;

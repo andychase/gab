@@ -24,7 +24,7 @@ if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->tr
                 );
 
             $this->clearCache("categories");
-            $this->clearCache("all_posts");
+            $this->clearCache("posts");
             setcookie ("reply_url", "", time() - 3600, "/");
             setcookie ("reply_text", "", time() - 3600, "/");
             header("Location: {$baseurl}/categories");

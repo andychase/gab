@@ -22,12 +22,12 @@
 - ``$this->addTemplate($page, $template_name, [$order=""])``
 - ``$this->addJavascript($name, [$order=""])``
 - ``$this->addCss($name)``
-- ``$gab->displayGeneric($template_name)`` - Push ``$template_name`` to the stack for "all_posts" and display it.
+- ``$gab->displayGeneric($template_name)`` - Push ``$template_name`` to the stack for "posts" and display it.
 
 ``$page``
 
 - "*" -- Shortcut for adding something to all pages
-- "all_posts" -- All the threads or posts in all categories (the homepage)
+- "posts" -- All the threads or posts in all categories (the homepage)
 - "single_post" -- All the replies to one post (or thread)
 - "categories" -- A list of all the categories
 - "single_category" -- One category: its description and posts (or threads)

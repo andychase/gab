@@ -73,6 +73,7 @@ class forum {
               forum.`title`,
               forum.`message`,
               forum.`timestamp`,
+              forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
               replies.reply_num,
@@ -107,6 +108,7 @@ class forum {
               forum.`title`,
               forum.`message`,
               forum.`timestamp`,
+              forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
               forum.`hidden`
@@ -448,5 +450,15 @@ class forum {
         $statement = $pdo->prepare($q);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function get_author($id) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            SELECT author
+            FROM forum
+            WHERE id = ?");
+        $statement->execute(array($id));
+        return $statement->fetchColumn();
     }
 }
