@@ -25,6 +25,7 @@ if ($_POST['do'] == 'forum_new_thread') {
 
             $this->clearCache("all_posts");
             $this->clearCache("categories");
+            $this->clearCache('single_user', $data['user_name']);
             setcookie ("reply_url", "", time() - 3600, "/");
             setcookie ("reply_text", "", time() - 3600, "/");
             header("Location: {$baseurl}/{$post_id}#post${post_id}");

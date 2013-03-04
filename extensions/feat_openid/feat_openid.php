@@ -69,7 +69,6 @@ function gab_setup_account($gab) {
     }
 }
 
-
 session_set_cookie_params(0);
 session_start();
 if ($_SESSION['user_logged_in']) {

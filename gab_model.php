@@ -321,6 +321,41 @@ class forum {
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function get_user_info($user_name) {
+        global $pdo;
+        $q = "
+            SELECT id, `timestamp`, author_name, author_email_hash, ext
+            FROM forum user
+            WHERE type = 'user'
+            AND author_name = ?
+            LIMIT 1
+        ";
+        $statement = $pdo->prepare($q);
+        $statement->execute(array($user_name));
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function get_user_posts($user_id) {
+        global $pdo;
+        $q = "
+            SELECT post.`id`, post.`title`, post.`timestamp`, 'post' as type, -1 as reply_id
+            FROM forum post
+            WHERE post.`type` = 'post'
+            AND post.`hidden` = 'N'
+            AND post.`author` = ?
+            UNION
+            SELECT post.`id`, post.`title`, post.`timestamp`, 'reply' as type, reply.id as reply_id
+            FROM forum reply
+            LEFT JOIN forum post on reply.`reply_to` = post.`id`
+            WHERE reply.author = ?
+            AND reply.type = 'reply'
+            AND reply.hidden = 'N'
+        ";
+        $statement = $pdo->prepare($q);
+        $statement->execute(array($user_id, $user_id));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     static function get_user_ext($user_id) {
         global $pdo;
         $statement = $pdo->prepare("SELECT ext from forum where id = ?");
@@ -401,5 +436,17 @@ class forum {
         ");
         $statement->execute(array($pdo->lastInsertId()));
         return !$statement->fetchAll();
+    }
+
+    public static function get_users() {
+        global $pdo;
+        $q = "
+            SELECT author, author_name, author_email_hash, ext
+            FROM forum
+            WHERE type = 'user'
+        ";
+        $statement = $pdo->prepare($q);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

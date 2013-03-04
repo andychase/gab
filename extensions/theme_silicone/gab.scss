@@ -89,7 +89,7 @@ html, body {
     display: none;
   }
 
-  &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat {
+  &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat, &.users .nav_section.users {
     @extend .badge-category;
     position: relative;
     color: white;
@@ -424,14 +424,29 @@ html, body {
       box-shadow: 0px 1px 4px black;
       height: 16pt;
       width: 70px;
-
     }
   }
 
   .post_replies #submit_reply #preview {
     border: none;
     position: relative;
-    left: 63px;
+    left: 40px;
+  }
+
+  #users_page ul {
+    list-style: none;
+    line-height: 10px;
+    li {
+      display: inline-block;
+      height: 40px;
+      width: 40px;
+      a {
+        display: block;
+        height: 40px;
+        text-decoration: none;
+        margin: 0px;
+      }
+    }
   }
 
   #new_thread {

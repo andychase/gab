@@ -24,6 +24,7 @@ if (!$data['text_b'] && $data['text'] && $data['topic_id'] && $data['user']) {
             $data['text']);
 
         $this->clearCache('single_post', $data['topic_id']);
+        $this->clearCache('single_user', $data['user_name']);
         setcookie ("reply_url", "", time() - 3600, "/");
         setcookie ("reply_text", "", time() - 3600, "/");
         $baseurl = $this->baseurl;

@@ -21,6 +21,8 @@ class gab extends gab_settings
         "single_post" => array('~moderate.php', '~new_reply.php', '~post.php'),
         "new_thread" => array('~new_thread.php', '~post.php'),
         "categories" => array('~new_category.php', "~categories.php"),
+        "users" => array("~users.php"),
+        "single_user" => array("~single_user.php"),
         "messages" => array('~new_message.php', "~messages.php"),
     );
 
@@ -30,6 +32,8 @@ class gab extends gab_settings
         "single_post" => "extends:base.tpl|single_post.tpl",
         "new_thread" => "extends:base.tpl|new_thread_page.tpl",
         "categories" => "extends:base.tpl|categories.tpl",
+        "users" => "extends:base.tpl|users.tpl",
+        "single_user" => "extends:base.tpl|single_user.tpl",
         "messages" => "extends:base.tpl|messages.tpl",
     );
 

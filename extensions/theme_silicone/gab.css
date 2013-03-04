@@ -48,7 +48,7 @@ html, body {
   margin-top: 50px;
   /* Thread Styles */
 }
-#forum .badge-category, #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum a.category {
+#forum .badge-category, #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users, #forum a.category {
   display: inline-block;
   border: 1px solid rgba(0, 0, 0, 0.4);
   font-weight: bold;
@@ -78,14 +78,14 @@ html, body {
 #forum #new_thread {
   display: none;
 }
-#forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat {
+#forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users {
   position: relative;
   color: white;
   background-color: #3aa6ff;
   border-color: #0074d3;
   z-index: 1;
 }
-#forum.posts .nav_section.posts.single, #forum.msg .nav_section.msg.single, #forum.cat .nav_section.cat.single {
+#forum.posts .nav_section.posts.single, #forum.msg .nav_section.msg.single, #forum.cat .nav_section.cat.single, #forum.users .nav_section.users.single {
   position: relative;
   right: 8px;
   background-color: #ff933a;
@@ -387,7 +387,22 @@ html, body {
 #forum .post_replies #submit_reply #preview {
   border: none;
   position: relative;
-  left: 63px;
+  left: 40px;
+}
+#forum #users_page ul {
+  list-style: none;
+  line-height: 10px;
+}
+#forum #users_page ul li {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+}
+#forum #users_page ul li a {
+  display: block;
+  height: 40px;
+  text-decoration: none;
+  margin: 0px;
 }
 #forum #new_thread #new_thread_title, #forum #new_thread #new_category_description {
   font-size: 20pt;

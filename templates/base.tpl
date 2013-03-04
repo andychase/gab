@@ -18,11 +18,19 @@
             <a href="{$base_url}/category/{$category}" class="nav_section category cat single">{$category|escape|truncate:30}</a>
         {/if}
 
+        {* Users *}
+        <a href="{$base_url}/users" class="nav_section users">Users</a>
+        {*  Users -> User *}
+        {if $user_name}
+            <a href="{$base_url}/users/{$user_name}" class="nav_section users single">{$user_name|escape|truncate:30}</a>
+        {/if}
+
         {* Messages *}
         {block 'show_messages'}{$show_messages=$logged_in}{/block}
         {if $show_messages}
             <a href="{$base_url}/messages" class="nav_section msg">Messages</a>
         {/if}
+
     {/block}
 
 

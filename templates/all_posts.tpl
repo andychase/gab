@@ -41,7 +41,7 @@
             {elseif $key == 'title'}
                 {$value|escape} </a></td>
             {elseif $key == 'author_name'}
-                <td class='{$key}'><a href=""><img title="{$value}"
+                <td class='{$key}'><a href="{$baseurl}/user/{$value}"><img title="{$value}"
             {elseif $key == 'author_email_hash'}
                             src="http://www.gravatar.com/avatar/{$value}?s=24&d=retro"/></a></td>
             {elseif $key == 'last_reply'}

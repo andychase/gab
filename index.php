@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
   `author_name` varchar(45) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `title` varchar(80) DEFAULT NULL,
-  `message` varchar(5000) NOT NULL,
+  `message` varchar(5000) DEFAULT NULL,
   `views` int(11) NOT NULL,
   `last_activity` timestamp NULL DEFAULT NULL,
   `ext` varchar(8000) NOT NULL,
@@ -64,6 +64,8 @@ $urls = array(
     '/categories' => 'categories',
     '/category/([a-zA-Z0-9_]+)' => 'single_category',
     '/messages' => 'messages',
+    '/users' => 'users',
+    '/user/([a-zA-Z0-9_]+)' => 'single_user',
     '/ext/([a-zA-Z0-9_]+)' => 'ext',
 );
 
