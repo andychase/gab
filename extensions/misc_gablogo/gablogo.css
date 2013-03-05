@@ -20,7 +20,7 @@ body {
 #gabsite_navlinks {
     position: absolute;
     bottom: -6px;
-    left: 185px;
+    left: 195px;
 }
 
 #gabsite_navlinks a {
@@ -36,7 +36,6 @@ body {
 }
 
 #gabsite_navlinks a:hover {
-    padding-bottom: 0px;
     color: #3aa6ff;
 
 }
