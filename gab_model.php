@@ -43,6 +43,7 @@ class forum {
                     FROM forum
                     WHERE status >= 'normal'
                     GROUP BY author, reply_to
+                    ORDER BY replies DESC
                     ) replies_per_author
                 GROUP BY replies_per_author.reply_to
             ) most_replies on forum.id = most_replies.reply_to

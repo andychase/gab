@@ -65,6 +65,7 @@ function gab_setup_account($gab) {
             $ext['trust'] = 99;
             forum::set_user_ext($user_id, $ext);
         }
+        $gab->clearCache('users');
         gab_successful_login($_SESSION['user_title'], $gab);
     }
 }
