@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
   `message` varchar(5000) DEFAULT NULL,
   `views` int(11) NOT NULL,
   `last_activity` timestamp NULL DEFAULT NULL,
+  `status` enum('sticky','important','answered','normal','closed','hidden','mod_hidden') NOT NULL DEFAULT 'normal',
   `ext` varchar(8000) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `reply_to` (`reply_to`),

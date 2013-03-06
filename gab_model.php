@@ -19,7 +19,7 @@ class forum {
                  SELECT Count(*) AS reply_num, Max(replies.`timestamp`) AS last_reply, replies.reply_to
                  FROM   forum AS replies
                  WHERE  replies.`type` = 'reply'
-                 AND replies.`hidden` = 'N'
+                 AND replies.`status` >= 'normal'
                  GROUP  BY replies.reply_to
             ) replies ON id = replies.reply_to
             LEFT JOIN forum category ON forum.reply_to = category.id
@@ -37,7 +37,7 @@ class forum {
         $q .= " WHERE  forum.type = 'post' ";
         if ($category)
             $q .= " AND category.title = ? ";
-        $q .= " AND forum.hidden = 'N' ";
+        $q .= " AND forum.`status` >= 'normal' ";
 
         if ($sort == "category")
             $q .= " ORDER BY - RAND() * LOG((NOW() - forum.timestamp))";
@@ -65,7 +65,7 @@ class forum {
 
     static function get_post($post_id, $show_hidden=false) {
         global $pdo;
-        $hideq = " AND forum.`hidden` = 'N' ";
+        $hideq = " AND forum.`status` >= 'normal' ";
         if ($show_hidden) $hideq = "";
         $q = "
             SELECT
@@ -78,7 +78,7 @@ class forum {
               forum.`author_email_hash`,
               replies.reply_num,
               category.title as 'category',
-              forum.`hidden`
+              forum.`status`
             FROM forum forum
             LEFT JOIN (
                    SELECT count(*) as reply_num, reply_to
@@ -100,7 +100,7 @@ class forum {
 
     static function get_replies($post_id, $skip=0, $show_hidden=false) {
         global $pdo;
-        $hideq = " AND forum.`hidden` = 'N' ";
+        $hideq = " AND forum.`status` >= 'normal' ";
         if ($show_hidden) $hideq = "";
         $q = "
             SELECT
@@ -111,7 +111,7 @@ class forum {
               forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
-              forum.`hidden`
+              forum.`status`
             FROM forum forum
             WHERE forum.`type` = 'reply'
             AND forum.`reply_to` = ?
@@ -249,11 +249,11 @@ class forum {
                           replies.reply_to
                    FROM forum replies
                    WHERE replies.`type` = 'reply'
-                   AND replies.`hidden` = 'N'
+                   AND replies.`status` >= 'normal'
                    GROUP BY replies.reply_to
                )  replies ON id = replies.reply_to
             WHERE forum.`type` = 'post'
-            AND forum.hidden = 'N'
+            AND forum.`status` >= 'normal'
             AND forum.reply_to
             ";
 
@@ -277,7 +277,7 @@ class forum {
               SELECT posts.reply_to, count(*) as number_of_posts
               FROM forum posts
               WHERE posts.type = 'post'
-              AND hidden = 'N'
+              AND status >= 'normal'
               GROUP BY reply_to
 
             ) posts on posts.reply_to = category.id
@@ -343,7 +343,7 @@ class forum {
             SELECT post.`id`, post.`title`, post.`timestamp`, 'post' as type, -1 as reply_id
             FROM forum post
             WHERE post.`type` = 'post'
-            AND post.`hidden` = 'N'
+            AND post.`status` >= 'normal'
             AND post.`author` = ?
             UNION
             SELECT post.`id`, post.`title`, post.`timestamp`, 'reply' as type, reply.id as reply_id
@@ -351,7 +351,7 @@ class forum {
             LEFT JOIN forum post on reply.`reply_to` = post.`id`
             WHERE reply.author = ?
             AND reply.type = 'reply'
-            AND reply.hidden = 'N'
+            AND reply.`status` >= 'normal'
         ";
         $statement = $pdo->prepare($q);
         $statement->execute(array($user_id, $user_id));
@@ -409,11 +409,11 @@ class forum {
 
     public static function hide_post($post_id, $recover=false) {
         global $pdo;
-        if ($recover) $hide = 'N';
-        else $hide = 'Y';
+        if ($recover) $hide = 'normal';
+        else $hide = 'hidden';
         $q = "
             UPDATE forum
-            SET hidden = ?
+            SET status = ?
             WHERE id = ?;
         ";
         $statement = $pdo->prepare($q);

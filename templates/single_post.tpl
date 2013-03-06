@@ -7,7 +7,7 @@
     </h2>
 
     {foreach $replies as $key => $post}
-        <div class='post_container {if $post.hidden == 'Y'}hidden{/if}'>
+        <div class='post_container {if $post.status == 'hidden' || $post.status == 'mod_hidden'}hidden{/if}'>
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
                 <a href="{$baseurl}/user/{$post.author_name}">
@@ -24,9 +24,9 @@
                         <input type="submit" value="submit" />
                     </form>
                 {else}
-                    {if $post.hidden == 'Y'}<del>{/if}
+                    {if $post.status == 'hidden' || $post.status == 'mod_hidden'}<del>{/if}
                     {block 'post_body'}{$post.message|parse}{/block}
-                    {if $post.hidden == 'Y'}</del>{/if}
+                    {if $post.status == 'hidden' || $post.status == 'mod_hidden'}</del>{/if}
                 {/if}
                 <div class='post_actions'>
                 {block 'mod_actions'}
@@ -40,13 +40,13 @@
                         </a>
                     {/if}
                     {if $user_trust >= $trust_levels.delete || $post.author == $user_logged_in}
-                        {if $post.hidden == 'N'}
-                            <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">
-                                <span class="txt">Delete</span>
-                            </a>
-                        {else}
+                        {if $post.status == 'hidden' || $post.status == 'mod_hidden'}
                             <a href='{$baseurl}/{$topic.id}/?recover={$post.id}#post{$post.id}' class="delete" title="Recover">
                                 <span class="txt">Recover</span>
+                            </a>
+                        {else}
+                            <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">
+                                <span class="txt">Delete</span>
                             </a>
                         {/if}
                     {/if}
