@@ -11,21 +11,43 @@ class forum {
               category.title AS category,
               forum.author_name,
               forum.author_email_hash,
-              replies.reply_num  AS replies,
               forum.views,
-              Coalesce(replies.last_reply, forum.timestamp) AS last_reply
+              Coalesce(replies.last_reply, forum.timestamp) AS last_reply,
+              last_reply.author_name as last_replier_name,
+              last_reply.author_email_hash as last_replier_email_hash,
+              most_replies.author_name as most_replies_name,
+              most_replies.author_email_hash as most_replies_email_hash,
+              replies.reply_num as replies
             FROM forum forum
             LEFT JOIN (
-                 SELECT Count(*) AS reply_num, Max(replies.`timestamp`) AS last_reply, replies.reply_to
-                 FROM   forum AS replies
-                 WHERE  replies.`type` = 'reply'
-                 AND replies.`status` >= 'normal'
-                 GROUP  BY replies.reply_to
-            ) replies ON id = replies.reply_to
+                 SELECT
+                    count(*) as reply_num,
+                    max(`timestamp`) AS last_reply,
+                    max(`id`) AS last_reply_id,
+                    reply_to
+                FROM forum
+                WHERE  `type` =  'reply'
+                AND  `status` >=  'normal'
+                GROUP BY reply_to
+            ) replies ON forum.id = replies.reply_to
             LEFT JOIN forum category ON forum.reply_to = category.id
-
+            LEFT JOIN forum last_reply ON replies.last_reply_id = last_reply.id
+            LEFT JOIN (
+                SELECT
+                  replies_per_author.author_name,
+                  replies_per_author.author_email_hash,
+                  max(replies_per_author.replies),
+                  replies_per_author.reply_to
+                FROM (
+                    SELECT author_name, author_email_hash, count(*) as replies, reply_to
+                    FROM forum
+                    WHERE status >= 'normal'
+                    GROUP BY author, reply_to
+                    ) replies_per_author
+                GROUP BY replies_per_author.reply_to
+            ) most_replies on forum.id = most_replies.reply_to
         ";
-        if ($sort == "author")
+        if ($sort == "people")
             $q .= "
                 LEFT JOIN (
                 SELECT id, count(*) as contributions
@@ -45,9 +67,9 @@ class forum {
             $q .= " ORDER BY title";
         else if ($sort == "views")
             $q .= " ORDER BY forum.views";
-        else if ($sort == "posts")
+        else if ($sort == "replies")
             $q .= " ORDER BY replies.reply_num";
-        else if ($sort == "author")
+        else if ($sort == "people")
             $q .= " ORDER BY author.contributions";
         else
             $q .= " ORDER BY last_reply";

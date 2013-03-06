@@ -2,16 +2,14 @@
  <table id='posts_table'>
     <thead>
     <tr class='headers'>
-        {block 'sort'}
+        {block 'table_headers'}
             {$sort_desc = array("Sort by title",
             "Sort by random",
             "Sort by contribution",
             "Sort by posts",
             "Sort by views",
             "Sort by last activity")}
-        {/block}
-        {block 'table_headers'}
-            {$table_headers = array("Title", " ", "Author", "Posts", "Views", "Last")}
+            {$table_headers = array("Title", " ", "People", "Replies", "Views", "Last")}
         {/block}
         {foreach $table_headers as $header}
             <th class='{$header}'>
@@ -35,29 +33,31 @@
     <tbody>
     {foreach from=$posts item=post}
         <tr>
-        {foreach $post as $key=>$value}
-            {if $key == 'id'}
-                <td class='{$key}'><a href='{$base_url}/{$value}'>
-            {elseif $key == 'title'}
-                {$value|escape} </a></td>
-            {elseif $key == 'author_name'}
-                <td class='{$key}'><a href="{$baseurl}/user/{$value}"><img title="{$value}"
-            {elseif $key == 'author_email_hash'}
-                            src="http://www.gravatar.com/avatar/{$value}?s=24&d=retro"/></a></td>
-            {elseif $key == 'last_reply'}
-                <td class='{$key}'>{if $value}{$value|timeAgo}{/if}</td>
-            {elseif $key == 'category'}
+                <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape}</a></td>
+                <td>
+                    {if $post.category}
+                        <a href='{$base_url}/category/{$post.category|replace:" ":"_"}' class="category {$post.category|replace:" ":"_"|lower}">
+                            {$post.category}
+                        </a>
+                    {/if}
+                </td>
+                <td class='author_name'>
+                    <a href="{$baseurl}/user/{$post.author_name}"><img title="Author: {$post.author_name}"
+                            src="http://www.gravatar.com/avatar/{$post.author_email_hash}?s=24&d=retro"/></a>
+                    {if $post.most_replies_name}
+                    <a href="{$baseurl}/user/{$post.most_replies_name}"><img title="Most Replies: {$post.most_replies_name}"
+                            src="http://www.gravatar.com/avatar/{$post.most_replies_email_hash}?s=24&d=retro"/></a>
+                    {/if}
+                    {if $post.last_replier_name}
+                    <a href="{$baseurl}/user/{$post.last_replier_name}"><img title="Last Reply: {$post.last_replier_name}"
+                            src="http://www.gravatar.com/avatar/{$post.last_replier_email_hash}?s=24&d=retro"/></a>
+                    {/if}
+                </td>
+                <td class='replies'>{if $post.replies}{$post.replies}{/if}</td>
+                <td class='views'>{if $post.views}{$post.views}{/if}</td>
+                <td class='last_reply'>{if $post.last_reply}{$post.last_reply|timeAgo}{/if}</td>
             <td>
-                {if $value}
-                    <a href='{$base_url}/category/{$value|replace:" ":"_"}' class="category {$value|replace:" ":"_"|lower}">
-                        {$value}
-                    </a>
-                {/if}
             </td>
-            {else}
-                <td class='{$key}'>{$value|escape}</td>
-            {/if}
-        {/foreach}
         </tr>
     {/foreach}
     </tbody>

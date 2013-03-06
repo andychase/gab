@@ -23,6 +23,7 @@ if (!$data['text_b'] && $data['text'] && $data['topic_id'] && $data['user']) {
             $data['user_email_hash'],
             $data['text']);
 
+        $this->clearCache('posts');
         $this->clearCache('single_post', $data['topic_id']);
         $this->clearCache('single_user', $data['user_name']);
         setcookie ("reply_url", "", time() - 3600, "/");
