@@ -15,6 +15,7 @@ class forum {
               Coalesce(replies.last_reply, forum.timestamp) AS last_reply,
               last_reply.author_name as last_replier_name,
               last_reply.author_email_hash as last_replier_email_hash,
+              most_replies.replies_total as most_replies_total,
               most_replies.author_name as most_replies_name,
               most_replies.author_email_hash as most_replies_email_hash,
               replies.reply_num as replies
@@ -36,7 +37,7 @@ class forum {
                 SELECT
                   replies_per_author.author_name,
                   replies_per_author.author_email_hash,
-                  max(replies_per_author.replies),
+                  max(replies_per_author.replies) as replies_total,
                   replies_per_author.reply_to
                 FROM (
                     SELECT author_name, author_email_hash, count(*) as replies, reply_to
