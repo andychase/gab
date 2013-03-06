@@ -26,7 +26,7 @@ body {
 #gabsite_navlinks a {
     display: inline;
     text-decoration: none;
-    padding-right: 30px;
+    padding-right: 25px;
     font-size: 12pt;
     color: black;
 }
@@ -37,7 +37,6 @@ body {
 
 #gabsite_navlinks a:hover {
     color: #3aa6ff;
-
 }
 
 #gabsite_navsection {

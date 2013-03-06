@@ -30,9 +30,13 @@
   content: "\f05e";
 }
 
+.icon-pencil:before, #forum .post_actions .edit:before {
+  content: "\f040";
+}
+
 /*  Font Awesome styles
     ------------------------------------------------------- */
-.font-awesome, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete {
+.font-awesome, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;

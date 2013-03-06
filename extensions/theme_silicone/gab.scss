@@ -14,6 +14,7 @@ $fontAwesomePath:   "font" !default;
 .icon-caret-down:before           { content: "\f0d7"; }
 .icon-caret-up:before             { content: "\f0d8"; }
 .icon-ban-circle:before           { content: "\f05e"; }
+.icon-pencil:before               { content: "\f040"; }
 
 /*  Font Awesome styles
     ------------------------------------------------------- */
@@ -24,7 +25,6 @@ $fontAwesomePath:   "font" !default;
   text-decoration: inherit;
   -webkit-font-smoothing: antialiased;
 }
-
 
 $highlight: #3aa6ff;
 
@@ -374,6 +374,10 @@ html, body {
     .delete {
       @extend .font-awesome;
       @extend .icon-ban-circle;
+    }
+    .edit {
+      @extend .font-awesome;
+      @extend .icon-pencil;
     }
     .txt {
       display: none;

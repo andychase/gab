@@ -17,11 +17,28 @@
                 <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>
             </div>
             <div class='post_body'>
-                {if $post.hidden == 'Y'}<del>{/if}
-                {block 'post_body'}{$post.message|parse}{/block}
-                {if $post.hidden == 'Y'}</del>{/if}
+                {if $edit && $edit == $post.id}
+                    <form action action="{$baseurl}/{$topic.id}/#post{$post.id}" method="post">
+                        <input type="hidden" name="edit" value="{$post.id}" />
+                        <textarea rows="3" cols="50" name="text">{$post.message}</textarea>
+                        <input type="submit" value="submit" />
+                    </form>
+                {else}
+                    {if $post.hidden == 'Y'}<del>{/if}
+                    {block 'post_body'}{$post.message|parse}{/block}
+                    {if $post.hidden == 'Y'}</del>{/if}
+                {/if}
                 <div class='post_actions'>
                 {block 'mod_actions'}
+                    {if $post.author == $user_logged_in && !$edit}
+                        <a href="{$baseurl}/{$topic.id}/?edit={$post.id}#post{$post.id}" class="edit" title="Edit">
+                            <span class="txt">Edit</span>
+                        </a>
+                    {elseif $post.author == $user_logged_in}
+                        <a href="{$baseurl}/{$topic.id}#post{$post.id}" class="edit" title="Cancel Edit">
+                            <span class="txt">Cancel</span>
+                        </a>
+                    {/if}
                     {if $user_trust >= $trust_levels.delete || $post.author == $user_logged_in}
                         {if $post.hidden == 'N'}
                             <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">

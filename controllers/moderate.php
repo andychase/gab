@@ -1,14 +1,19 @@
 <?php
 
-if (($_GET['delete'] || $_GET['recover']) && count($matches) > 0) {
-    $post_id = $matches[1];
-    $user_deletion = forum::get_author($post_id) == $_SESSION['user_logged_in'];
-    if ($user_deletion || $this->hasPermission('delete')) {
-        if (!empty($_GET['recover']))
+if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) > 0) {
+    $post_id = intval($_GET['delete'] . $_GET['recover'] . $_POST['edit']);
+    // Todo: Check if post status is higher than hidden before allowing a recover/edit
+    $user_is_author = (forum::get_author($post_id) == $_SESSION['user_logged_in']);
+    if ($user_is_author || $this->hasPermission('delete')) {
+        if ($_GET['recover'])
             forum::hide_post($_GET['recover'], true);
-        else
+        else if ($_GET['delete'])
             forum::hide_post($_GET['delete']);
-        $this->clearCache('single_post', $post_id);
+        else if ($_POST['edit']) {
+            forum::modify_post($post_id, $_POST['text']);
+            header("location: ./");
+        }
+        $this->clearCache('single_post', $matches[1]);
         $this->clearCache('posts');
         $this->clearCache('categories');
     }

@@ -5,9 +5,18 @@ $this->smarty->cache_lifetime = 360;
 
 $post_id = $matches[1];
 $skip = intval($_GET['skip']);
-$this->addCacheId("t:".$_SESSION['user_trust']);
+$edit = intval($_GET['edit']);
+$this->addCacheId('e:'.$edit);
 $this->addCacheId('u:'.$_SESSION['user_logged_in']);
+$this->addCacheId("t:".$_SESSION['user_trust']);
 $this->addCacheId("$post_id|$skip");
+
+if($edit) {
+    $this->caching = 0;
+    $this->assign('edit', $edit);
+} else {
+    $this->assign('edit', false);
+}
 
 if (!$this->isCached()) {
     forum::add_view($post_id);

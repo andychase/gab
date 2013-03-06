@@ -407,8 +407,7 @@ class forum {
         return $pdo->lastInsertId();
     }
 
-    public static function hide_post($post_id, $recover=false)
-    {
+    public static function hide_post($post_id, $recover=false) {
         global $pdo;
         if ($recover) $hide = 'N';
         else $hide = 'Y';
@@ -416,9 +415,20 @@ class forum {
             UPDATE forum
             SET hidden = ?
             WHERE id = ?;
-            ";
+        ";
         $statement = $pdo->prepare($q);
         return $statement->execute(array($hide, $post_id));
+    }
+
+    public static function modify_post($post_id, $text) {
+        global $pdo;
+        $q = "
+            UPDATE forum
+            SET message = ?
+            WHERE id = ?
+        ";
+        $statement = $pdo->prepare($q);
+        return $statement->execute(array($text, $post_id));
     }
 
     public static function exists_user_name($name) {

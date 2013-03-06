@@ -18,7 +18,7 @@ class gab extends gab_settings
         // ~ Represents the path of the $controller_folder
         "posts" => array('~new_thread.php', '~posts.php'),
         "single_category" => array('~single_category.php', '~posts.php'),
-        "single_post" => array('~moderate.php', '~new_reply.php', '~post.php'),
+        "single_post" => array('~moderate.php', '~new_reply.php', '~single_post.php'),
         "new_thread" => array('~new_thread.php', '~post.php'),
         "categories" => array('~new_category.php', "~categories.php"),
         "users" => array("~users.php"),
