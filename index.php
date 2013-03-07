@@ -28,7 +28,8 @@ ALTER TABLE `forum`
 // Speed up page loads by zlibing them
 ini_set('zlib.output_compression', 4096);
 
-if ($_SERVER['REQUEST_URI'] == '/' && apc_fetch('precache_valid') && function_exists('apc_cache_info')) {
+if ($_SERVER['REQUEST_URI'] == '/' && apc_fetch('precache') && function_exists('apc_fetch') &&
+    !$_COOKIE['PHPSESSID']) {
     echo apc_fetch('precache');
     exit;
 }
@@ -44,12 +45,9 @@ else $GLOBALS['baseurlhost'] = 'test.co';
 
 
 // PDO
-$pdo = new PDO('mysql:host=localhost;dbname=gab', /*Username:*/'gab', /*Password:*/'');
-$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
-$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+require("models/PDOLazyConnector.php");
+$pdo = new PDOLazyConnector('mysql:host=localhost;dbname=gab', /*Username:*/'gab', /*Password:*/'');
 $GLOBALS['pdo'] = $pdo;
-
-
 
 // Smarty
 require_once('smarty/Smarty.class.php');

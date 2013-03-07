@@ -49,6 +49,7 @@ function gab_openid_logout($gab) {
     $gab->assign('logged_in', false);
     $gab->assign('user_logged_in', "");
     $gab->assign('user_trust', "");
+    setcookie("PHPSESSID", '', time() - 3600, '/');
     header('Location: /');
 }
 

@@ -134,7 +134,7 @@ class gab extends gab_settings
 
     function clearCache($page, $cache_id=null) {
         if ($page == "posts" && function_exists('apc_cache_info'))
-            apc_store('precache_valid', false);
+            apc_store('precache', false);
         $this->smarty->clearCache($this->templates[$page], $cache_id);
     }
 
@@ -220,10 +220,8 @@ class gab extends gab_settings
             $this->smarty->caching = $this->caching;
             if($page == "posts" &&
                 $this->cache_id == "category:|sort_down|sort:|" &&
-                !$this->isCached() && function_exists('apc_cache_info')) {
-                apc_store("precache_valid", true);
+                !$this->isCached() && function_exists('apc_cache_info'))
                 apc_store("precache", $this->smarty->fetch($this->templates[$page], $this->cache_id));
-            }
             $this->smarty->display($this->templates[$page], $this->cache_id);
         }
     }
