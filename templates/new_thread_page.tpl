@@ -8,6 +8,6 @@
 
 {block name="content"}
     <div id="forum">
-        {include 'new_thread.tpl'}
+        {include 'sections/new_thread_cat_msg.tpl'}
     </div>
 {/block}

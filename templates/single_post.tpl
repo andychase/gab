@@ -28,77 +28,16 @@
                     {block 'post_body'}{$post.message|parse}{/block}
                     {if $post.status == 'hidden' || $post.status == 'mod_hidden'}</del>{/if}
                 {/if}
-                <div class='post_actions'>
-                {block 'mod_actions'}
-                    {if $post.author == $user_logged_in && !$edit}
-                        <a href="{$baseurl}/{$topic.id}/?edit={$post.id}#post{$post.id}" class="edit" title="Edit">
-                            <span class="txt">Edit</span>
-                        </a>
-                    {elseif $post.author == $user_logged_in}
-                        <a href="{$baseurl}/{$topic.id}#post{$post.id}" class="edit" title="Cancel Edit">
-                            <span class="txt">Cancel</span>
-                        </a>
-                    {/if}
-                    {if $user_trust >= $trust_levels.delete || $post.author == $user_logged_in}
-                        {if $post.status == 'hidden' || $post.status == 'mod_hidden'}
-                            <a href='{$baseurl}/{$topic.id}/?recover={$post.id}#post{$post.id}' class="delete" title="Recover">
-                                <span class="txt">Recover</span>
-                            </a>
-                        {else}
-                            <a href='{$baseurl}/{$topic.id}/?delete={$post.id}#post{$post.id}' class="delete" title="Delete">
-                                <span class="txt">Delete</span>
-                            </a>
-                        {/if}
-                    {/if}
-                {/block}
-                {block 'post_actions'}
-                    <a href='{$baseurl}/ext/flag/{$post.id}' class="flag" title="Flag as spam">
-                        <span class="txt">Flag</span>
-                    </a>
-                    <a href='{$baseurl}/{$topic.id}#post{$post.id}' class="permalink" title="Permanent link for sharing">
-                        <span class="txt">Permalink</span>
-                    </a>
-                    {if $logged_in}
-                    <a href='{$baseurl}/{$topic.id}#reply' class="reply" title="Reply to this">
-                        <span class="txt">Reply</span>
-                    </a>
-                    {/if}
-                {/block}
-                </div>
+                {include 'sections/post_actions.tpl'}
             </div>
         </div>
     {/foreach}
-    {if $topic.replies > 60}
-        <div id="pages">
-        {for $i=0 to $topic.replies step 60}
-            <a href="{$base_url}/{$topic.id}?skip={$i}">{$i}</a>
-        {/for}
-        </div>
-    {/if}
+    {include 'sections/paging.tpl'}
 
-    {if $logged_in}
-    <div id='submit_reply'>
-        <a id="reply"></a>
-        <h3>Reply</h3>
-        {if $posterror}
-            <ul class="errors">
-                {foreach $posterrors as $errors}
-                    <li>{$errors}</li>
-                {/foreach}
-            </ul>
+    {block 'thread_reply'}
+        {if $logged_in}
+            {include 'sections/thread_reply.tpl'}
         {/if}
-        <form action="{$base_url}/{$topic.id}#reply" method="post" class="savable">
-            <label>
-                <textarea name="text"></textarea>
-            </label>
-            <div id="save_warning"></div>
-            <input name="text_b" class="text_b" />
-            <div id='preview'></div>
-            <input type="hidden" name="do" value="forum_reply" />
-            <input type="hidden" name="topic_id" value="{$topic.id}" />
-            <input type="submit" class="submit" value="Submit">
-        </form>
-    </div>
-    {/if}
+    {/block}
 </div>
 {/block}
