@@ -15,7 +15,7 @@ if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->tr
         $this->caching = 0;
 
         if (empty($errors)) {
-            $post_id = forum::new_category(
+            $post_id = category::new_category(
                 $data['user'],
                 $data['user_name'],
                 $data['user_email_hash'],

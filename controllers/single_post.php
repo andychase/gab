@@ -19,14 +19,14 @@ if($edit) {
 }
 
 if (!$this->isCached()) {
-    forum::add_view($post_id);
+    post::add_view($post_id);
     if($this->hasPermission('see_deleted')) {
-        $topic = forum::get_post($post_id, true);
-        $replies = array_merge(array($topic), forum::get_replies($post_id, $skip, true));
+        $topic = post::get_post($post_id, true);
+        $replies = array_merge(array($topic), post::get_replies($post_id, $skip, true));
     }
     else {
-        $topic = forum::get_post($post_id);
-        $replies = array_merge(array($topic), forum::get_replies($post_id, $skip));
+        $topic = post::get_post($post_id);
+        $replies = array_merge(array($topic), post::get_replies($post_id, $skip));
     }
 
     $this->assign("forum_section", "posts");

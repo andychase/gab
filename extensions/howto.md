@@ -1,4 +1,4 @@
-# How to make an extension #
+# How to make an extension
 
 1. Make directory titled with a category & name. Example: theme_silicone
 2. Make php file inside directory with the same name as that directory. Example: theme_silicone.php
@@ -6,13 +6,15 @@
 
 ## Categories
 
-- theme_ -- Look & Feel (Anything w/ mostly css)
+- theme_ -- Look & Feel (Anything w/ mostly css & images)
 - feat_ -- Major feature (Anything that adds pages)
 - ux_   -- Small user experience nicety
 - misc_ -- Cosmetic details unrelated to a specific theme
 - hook_ -- Integration with other services
-- parser_ -- Anything that transform post input when displaying
+- parser_ -- Anything that transform posts output when they are displayed
 - search_ -- Anything that requires the search service extension
+- lang_ -- Language packs (should mostly extend templates, possibly css & js)
+- pack_ -- A bundle of other extensions above
 
 ## Api
 
@@ -22,7 +24,7 @@
 - ``$this->addTemplate($page, $template_name, [$order=""])``
 - ``$this->addJavascript($name, [$order=""])``
 - ``$this->addCss($name)``
-- ``$gab->displayGeneric($template_name)`` - Push ``$template_name`` to the stack for "posts" and display it.
+- ``$gab->displayGeneric($template_name)`` - Push ``$template_name`` to the stack for "posts" and display it. ($template_name is relative to your extension path)
 
 ``$page``
 
@@ -33,7 +35,7 @@
 - "single_category" -- One category: its description and posts (or threads)
 - "messages" -- Your mentions and watched posts/thread updates
 - "single_user" -- The profile of one user
-- "all_users" -- A directory of all the users
+- "users" -- A directory of all the users
 
 ``$order``
 

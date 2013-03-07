@@ -11,12 +11,12 @@ if (!$this->isCached()) {
     $sort_by = $_GET['sort'];
     $this->assign("sort_by", $sort_by);
     $this->assign("sort_down", $sort_down);
-    $this->assign("categories", forum::get_category_list());
+    $this->assign("categories", category::get_category_list());
     if($category == null)  {
         $this->assign("forum_section", "posts");
     } else {
         $this->assign("forum_section", "cat");
         $this->assign("category", $category);
     }
-    $this->assign("posts", forum::get_posts($category, $sort_by, $sort_down));
+    $this->assign("posts", post::get_posts($category, $sort_by, $sort_down));
 }

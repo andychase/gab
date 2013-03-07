@@ -202,7 +202,7 @@ class gab extends gab_settings
             $this->addCacheId($user_id);
         }
 
-        require_once($this->model_location);
+        require_once($this->model_folder.DIRECTORY_SEPARATOR."model.php");
         if ($page == "ext") {
             if (array_key_exists($matches[1], $this->extension_pages)) {
                 $this->current_extension = $this->extension_pages_ext[$matches[1]];

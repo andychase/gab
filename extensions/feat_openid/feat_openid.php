@@ -2,8 +2,8 @@
 
 function gab_successful_login($user_title, $gab) {
     $baseurl = $gab->base_url;
-    $user = forum::get_user($user_title);
-    $user_ext = forum::get_user_ext($user['id']);
+    $user = user::get_user($user_title);
+    $user_ext = user::get_user_ext($user['id']);
     $_SESSION['user_trust'] = $user_ext['trust'];
     $_SESSION['user_title'] = $user_title;
     if (empty($user)) {
@@ -54,16 +54,16 @@ function gab_setup_account($gab) {
     $gab->caching = 0;
     if (!trim($_POST['name'])) {
         $gab->displayGeneric('signup.tpl');
-    } else if (forum::exists_user_name(trim($_POST['name']))) {
+    } else if (user::exists_user_name(trim($_POST['name']))) {
         $gab->assign("errors", array("That name is already taken"));
         $gab->displayGeneric('signup.tpl');
     } else {
-        $user_id = forum::new_user($_SESSION['user_title'], trim($_POST['name']), md5(strtolower(trim($_POST['email']))));
-        if (forum::just_inserted_first_user()) {
+        $user_id = user::new_user($_SESSION['user_title'], trim($_POST['name']), md5(strtolower(trim($_POST['email']))));
+        if (user::just_inserted_first_user()) {
             // First user on forum is lvl 99 moderator.
-            $ext = forum::get_user_ext_lock($user_id);
+            $ext = user::get_user_ext_lock($user_id);
             $ext['trust'] = 99;
-            forum::set_user_ext($user_id, $ext);
+            user::set_user_ext($user_id, $ext);
         }
         $gab->clearCache('users');
         gab_successful_login($_SESSION['user_title'], $gab);

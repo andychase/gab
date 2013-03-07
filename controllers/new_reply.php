@@ -16,7 +16,7 @@ if (!$data['text_b'] && $data['text'] && $data['topic_id'] && $data['user']) {
 
     //$errors = validateFields($data, $validators);
     if (empty($errors)) {
-        $post_id = forum::post_reply(
+        $post_id = post::post_reply(
             $data['topic_id'],
             $data['user'],
             $data['user_name'],

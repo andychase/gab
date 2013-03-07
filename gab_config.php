@@ -2,7 +2,7 @@
 
 class gab_settings {
     // Do not include the trailing slash on path names
-    public $model_location = "gab_model.php";
+    public $model_folder = "models";
     public $templates_folder = "templates";
     public $controller_folder = "controllers";
     public $extensions_folder = "extensions";
