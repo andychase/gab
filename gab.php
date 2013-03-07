@@ -159,12 +159,17 @@ class gab extends gab_settings
         return $text;
     }
 
+    public function avatar($email_hash, $size=40, $default_style='retro') {
+        return "http://www.gravatar.com/avatar/{$email_hash}?s={$size}&d={$default_style}";
+    }
+
     function gab(Smarty $smarty, $pdo)
     {
         $smarty->setTemplateDir($this->templates_folder);
         $this->smarty = $smarty;
         $this->pdo = $pdo;
 
+        $this->addSmartyPlugin("modifier", "avatar", array($this, 'avatar'));
         $this->addSmartyPlugin("modifier", "parse", array($this, 'parse'));
 
         // Prepare Extensions ////////////////////////////
@@ -177,7 +182,6 @@ class gab extends gab_settings
                     require($name);
                 }
         }
-
     }
 
     function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {

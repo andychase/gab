@@ -11,7 +11,7 @@
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
                 <a href="{$baseurl}/user/{$post.author_name}">
-                    <img src='http://www.gravatar.com/avatar/{$post.author_email_hash}?s=40&d=retro' class='author_image' alt='{$post.author_name|escape}' />
+                    <img src='{$post.author_email_hash|avatar}' class='author_image' alt='{$post.author_name|escape}' />
                 </a>
                 <span class='author_name'>{$post.author_name|escape}</span>
                 <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>

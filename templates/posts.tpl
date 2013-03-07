@@ -43,14 +43,14 @@
                 </td>
                 <td class='author_name'>
                     <a href="{$baseurl}/user/{$post.author_name}"><img title="Author: {$post.author_name}"
-                            src="http://www.gravatar.com/avatar/{$post.author_email_hash}?s=24&d=retro"/></a>
+                            src="{$post.author_email_hash|avatar:24}"/></a>
                     {if $post.most_replies_name && $post.most_replies_total > 1}
                     <a href="{$baseurl}/user/{$post.most_replies_name}"><img title="Most Replies: {$post.most_replies_name}"
-                            src="http://www.gravatar.com/avatar/{$post.most_replies_email_hash}?s=24&d=retro"/></a>
+                            src="{$post.most_replies_email_hash|avatar:24}"/></a>
                     {/if}
                     {if $post.last_replier_name}
                     <a href="{$baseurl}/user/{$post.last_replier_name}"><img title="Last Reply: {$post.last_replier_name}"
-                            src="http://www.gravatar.com/avatar/{$post.last_replier_email_hash}?s=24&d=retro"/></a>
+                            src="{$post.last_replier_email_hash|avatar:24}" /></a>
                     {/if}
                 </td>
                 <td class='replies'>{if $post.replies}{$post.replies}{/if}</td>

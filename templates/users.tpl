@@ -7,7 +7,7 @@
     {foreach from=$users item=user}
                 <li>
                     <a href="{$baseurl}/user/{$user.author_name}" title='{$user.author_name|escape}'>
-                        <img src='http://www.gravatar.com/avatar/{$user.author_email_hash}?s=40&d=retro' class='author_image' alt='{$user.author_name|escape}' />
+                        <img src='{$user.author_email_hash|avatar}' class='author_image' alt='{$user.author_name|escape}' />
                         {$user.author_name}
                     </a>
                 </li>

@@ -1,7 +1,7 @@
 {block "forum"}
 <div id='user_info'>
         <h3>{$user.author_name}</h3>
-    <img src='http://www.gravatar.com/avatar/{$user.author_email_hash}?s=64&d=retro' alt='{$user.author_name|escape}' />
+    <img src='{$user.author_email_hash|avatar:64}' alt='{$user.author_name|escape}' />
     <ul id="user_stats">
         <li>Joined: {$user.timestamp|date_format:"%D"}</li>
     </ul>
