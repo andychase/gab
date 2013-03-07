@@ -38,6 +38,8 @@ $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 $pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $GLOBALS['pdo'] = $pdo;
 
+// Speed up page loads by zlibing them
+ini_set("zlib.output_compression", 4096);
 
 $SMARTY_DIR = "smarty";
 require_once('smarty/Smarty.class.php');
