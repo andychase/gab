@@ -1,6 +1,8 @@
 <?php
 
 function gab_successful_login($user_title, $gab) {
+    session_set_cookie_params(0);
+    session_start();
     $baseurl = $gab->base_url;
     $user = user::get_user($user_title);
     $user_ext = user::get_user_ext($user['id']);
@@ -22,7 +24,7 @@ function gab_successful_login($user_title, $gab) {
 function gab_openid_callback($gab) {
     require_once(dirname(__FIlE__).'/openid_lib.php');
     # Change 'localhost' to your domain name.
-    $openid = new LightOpenID($GLOBALS['baseurlhost']);
+    $openid = new LightOpenID($_SERVER['SERVER_NAME']);
     if(!$openid->mode) {
         if(isset($_REQUEST['openid_identifier'])) {
             $openid->identity = $_REQUEST['openid_identifier'];
@@ -70,13 +72,15 @@ function gab_setup_account($gab) {
     }
 }
 
-session_set_cookie_params(0);
-session_start();
-if ($_SESSION['user_logged_in']) {
-    $this->assign('logged_in', true);
-    $this->assign('user_logged_in', $_SESSION['user_logged_in']);
-    $this->assign('user_trust', $_SESSION['user_trust']);
-    $this->addCacheId($_SESSION['user_logged_in']);
+if ($_COOKIE['PHPSESSID']) {
+    session_set_cookie_params(0);
+    session_start();
+    if ($_SESSION['user_logged_in']) {
+        $this->assign('logged_in', true);
+        $this->assign('user_logged_in', $_SESSION['user_logged_in']);
+        $this->assign('user_trust', $_SESSION['user_trust']);
+        $this->addCacheId($_SESSION['user_logged_in']);
+    }
 }
 
 $this->assign("openid-selector", dirname(__FIlE__)."/openid-selector/demo.html");

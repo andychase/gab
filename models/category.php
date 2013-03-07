@@ -3,7 +3,7 @@
 class category {
     static function get_post_category($category_id) {
         global $pdo;
-        $q = "
+        $q = '
             SELECT  forum.`id`,
                     forum.`title`,
                     replies.reply_num as replies,
@@ -15,14 +15,14 @@ class category {
                           MAX(replies.`timestamp`) as last_reply,
                           replies.reply_to
                    FROM forum replies
-                   WHERE replies.`type` = 'reply'
-                   AND replies.`status` >= 'normal'
+                   WHERE replies.`type` = "reply"
+                   AND replies.`status` >= "normal"
                    GROUP BY replies.reply_to
                )  replies ON id = replies.reply_to
-            WHERE forum.`type` = 'post'
-            AND forum.`status` >= 'normal'
+            WHERE forum.`type` = "post"
+            AND forum.`status` >= "normal"
             AND forum.reply_to
-            ";
+            ';
 
         if ($category_id == "") $q .= "is null";
         else $q .= "= ?";

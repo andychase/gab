@@ -5,7 +5,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
-require_once("gab_config.php");
+require_once('gab_config.php');
 
 class gab extends gab_settings
 {
@@ -16,25 +16,25 @@ class gab extends gab_settings
     // Controllers are loaded left to right
     public $controllers = array(
         // ~ Represents the path of the $controller_folder
-        "posts" => array('~new_thread.php', '~posts.php'),
-        "single_category" => array('~single_category.php', '~posts.php'),
-        "single_post" => array('~moderate.php', '~new_reply.php', '~single_post.php'),
-        "new_thread" => array('~new_thread.php', '~post.php'),
-        "categories" => array('~new_category.php', "~categories.php"),
-        "users" => array("~users.php"),
-        "single_user" => array("~single_user.php"),
-        "messages" => array('~new_message.php', "~messages.php"),
+        'posts' => array('~new_thread.php', '~posts.php'),
+        'single_category' => array('~single_category.php', '~posts.php'),
+        'single_post' => array('~moderate.php', '~new_reply.php', '~single_post.php'),
+        'new_thread' => array('~new_thread.php', '~post.php'),
+        'categories' => array('~new_category.php', '~categories.php'),
+        'users' => array('~users.php'),
+        'single_user' => array('~single_user.php'),
+        'messages' => array('~new_message.php', '~messages.php'),
     );
 
     public $templates = array(
-        "posts" => "extends:base.tpl|posts.tpl",
-        "single_category" => "extends:base.tpl|posts.tpl",
-        "single_post" => "extends:base.tpl|single_post.tpl",
-        "new_thread" => "extends:base.tpl|new_thread_page.tpl",
-        "categories" => "extends:base.tpl|categories.tpl",
-        "users" => "extends:base.tpl|users.tpl",
-        "single_user" => "extends:base.tpl|single_user.tpl",
-        "messages" => "extends:base.tpl|messages.tpl",
+        'posts' => 'extends:base.tpl|posts.tpl',
+        'single_category' => 'extends:base.tpl|posts.tpl',
+        'single_post' => 'extends:base.tpl|single_post.tpl',
+        'new_thread' => 'extends:base.tpl|new_thread_page.tpl',
+        'categories' => 'extends:base.tpl|categories.tpl',
+        'users' => 'extends:base.tpl|users.tpl',
+        'single_user' => 'extends:base.tpl|single_user.tpl',
+        'messages' => 'extends:base.tpl|messages.tpl',
     );
 
     public $smarty;
@@ -86,23 +86,21 @@ class gab extends gab_settings
                 $this->addTemplate($tpl, $template_name, $order);
             return;
         }
-        if (!array_key_exists($page, $this->templates))
-            throw new Exception("Extension $ext error adding controller: Not a page with that name.");
         $tpl = $this->templates[$page];
         if (!$order)
             $this->templates[$page] .= "|file:$folder/$ext/$template_name";
-        else if ($order == "pre" && strpos($tpl, "|") !== False)
-            $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, "|"), 0);
+        else if ($order == 'pre' && strpos($tpl, '|') !== False)
+            $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
 
     }
 
-    function addJavascript($name, $order="") {
+    function addJavascript($name, $order='') {
         $path =
             $this->extensions_folder .
             DIRECTORY_SEPARATOR .
             $this->current_extension .
             DIRECTORY_SEPARATOR . $name;
-        if ($order == "pre")
+        if ($order == 'pre')
              array_unshift($this->javascript, $path);
         else
             $this->javascript[] = $path;
@@ -117,7 +115,7 @@ class gab extends gab_settings
     }
 
     function addParser($function_name, $order="") {
-        if ($order == "pre") array_unshift($this->parsers, $function_name);
+        if ($order == 'pre') array_unshift($this->parsers, $function_name);
         else $this->parsers[] = $function_name;
     }
 
@@ -135,6 +133,8 @@ class gab extends gab_settings
     }
 
     function clearCache($page, $cache_id=null) {
+        if ($page == "posts" && function_exists('apc_cache_info'))
+            apc_store('precache_valid', false);
         $this->smarty->clearCache($this->templates[$page], $cache_id);
     }
 
@@ -143,7 +143,7 @@ class gab extends gab_settings
     }
 
     function displayGeneric($template) {
-        $this->addTemplate("posts", $template);
+        $this->addTemplate('posts', $template);
         $this->smarty->caching = $this->caching;
         $this->smarty->display($this->templates['posts']);
     }
@@ -169,18 +169,18 @@ class gab extends gab_settings
         $this->smarty = $smarty;
         $this->pdo = $pdo;
 
-        $this->addSmartyPlugin("modifier", "avatar", array($this, 'avatar'));
-        $this->addSmartyPlugin("modifier", "parse", array($this, 'parse'));
+        $this->addSmartyPlugin('modifier', 'avatar', array($this, 'avatar'));
+        $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
 
         // Prepare Extensions ////////////////////////////
-
-        if (is_dir($this->extensions_folder))
-            foreach (new DirectoryIterator($this->extensions_folder) as $item) {
-                $name = $this->extensions_folder."/".$item->getFilename()."/".$item->getFilename().'.php';
-                if (!$item->isDot() && $item->isDir() && is_file($name)) {
-                    $this->current_extension = $item->getFilename();
-                    require($name);
-                }
+        $ext = include($this->extensions_folder.DIRECTORY_SEPARATOR.'ext.php');
+        foreach($ext as $name) {
+            $this->current_extension = $name;
+            require($this->extensions_folder.
+                    DIRECTORY_SEPARATOR.
+                    $name.
+                    DIRECTORY_SEPARATOR.
+                    "$name.php");
         }
     }
 
@@ -218,6 +218,12 @@ class gab extends gab_settings
                     require($controller);
             }
             $this->smarty->caching = $this->caching;
+            if($page == "posts" &&
+                $this->cache_id == "category:|sort_down|sort:|" &&
+                !$this->isCached() && function_exists('apc_cache_info')) {
+                apc_store("precache_valid", true);
+                apc_store("precache", $this->smarty->fetch($this->templates[$page], $this->cache_id));
+            }
             $this->smarty->display($this->templates[$page], $this->cache_id);
         }
     }

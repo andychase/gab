@@ -24,28 +24,35 @@ ALTER TABLE `forum`
   ON DELETE SET NULL ON UPDATE CASCADE;
 
 */
+
+// Speed up page loads by zlibing them
+ini_set('zlib.output_compression', 4096);
+
+if ($_SERVER['REQUEST_URI'] == '/' && apc_fetch('precache_valid') && function_exists('apc_cache_info')) {
+    echo apc_fetch('precache');
+    exit;
+}
+
+
 $live = false; // SET TO TRUE WHEN LIVE
 
 if($live) ini_set('display_errors','off');
 else ini_set('display_errors','on');
 
-if($live) $GLOBALS['baseurlhost'] = "gab.asperous.us";
-else $GLOBALS['baseurlhost'] = "test.co";
+if($live) $GLOBALS['baseurlhost'] = 'gab.asperous.us';
+else $GLOBALS['baseurlhost'] = 'test.co';
+
 
 // PDO
-$pdo = new PDO("mysql:host=localhost;dbname=gab", /*Username:*/"gab", /*Password:*/"");
+$pdo = new PDO('mysql:host=localhost;dbname=gab', /*Username:*/'gab', /*Password:*/'');
 $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
 $pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $GLOBALS['pdo'] = $pdo;
 
-// Speed up page loads by zlibing them
-ini_set("zlib.output_compression", 4096);
 
-$SMARTY_DIR = "smarty";
-require_once('smarty/Smarty.class.php');
-require_once("gab.php");
 
 // Smarty
+require_once('smarty/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->setCompileDir('smarty/compile');
 $smarty->setCacheDir('smarty/cache');
@@ -54,6 +61,7 @@ $smarty->cache_lifetime = 86400;
 $compile_check = !$live;
 
 // Gab
+require_once('gab.php');
 $gab = new gab($smarty, $pdo);
 
 // Url Definitions
