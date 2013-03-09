@@ -71,6 +71,7 @@ html, body {
   font-size: 12px;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  line-height: 13px;
 }
 #forum .nav_section.new_link {
   float: right;
@@ -91,6 +92,7 @@ html, body {
   color: white;
   background-color: #3aa6ff;
   border-color: #0074d3;
+  line-height: 13px;
   z-index: 1;
 }
 #forum.posts .nav_section.posts.single, #forum.msg .nav_section.msg.single, #forum.cat .nav_section.cat.single, #forum.users .nav_section.users.single {
@@ -222,29 +224,73 @@ html, body {
   box-shadow: 0px 0px 20px 4px rgba(58, 166, 255, 0.5);
   -moz-transition-property: box-shadow;
   -moz-transition-duration: 2s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: box-shadow;
   -webkit-transition-duration: 2s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: box-shadow;
   -o-transition-duration: 2s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: box-shadow;
   transition-duration: 2s;
+  transition-timing-function: linear;
 }
 #forum .post_replies .post_container .post_body.highlight:hover {
   box-shadow: 0px 0px 50px 4px rgba(58, 166, 255, 0.5);
   -moz-transition-property: box-shadow;
   -moz-transition-duration: 2s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: box-shadow;
   -webkit-transition-duration: 2s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: box-shadow;
   -o-transition-duration: 2s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: box-shadow;
   transition-duration: 2s;
+  transition-timing-function: linear;
+}
+#forum .post_replies .post_container .post_body .post_actions {
+  opacity: 0;
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.1s;
+  -moz-transition-timing-function: ease-in;
+  /* WebKit */
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.1s;
+  -webkit-transition-timing-function: ease-in;
+  /* Opera */
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.1s;
+  -o-transition-timing-function: ease-in;
+  /* Standard */
+  transition-property: opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-in;
+}
+#forum .post_replies .post_container .post_body:hover .post_actions {
+  -moz-transition-property: opacity;
+  -moz-transition-duration: 0.1s;
+  -moz-transition-timing-function: ease-out;
+  /* WebKit */
+  -webkit-transition-property: opacity;
+  -webkit-transition-duration: 0.1s;
+  -webkit-transition-timing-function: ease-out;
+  /* Opera */
+  -o-transition-property: opacity;
+  -o-transition-duration: 0.1s;
+  -o-transition-timing-function: ease-out;
+  /* Standard */
+  transition-property: opacity;
+  transition-duration: 0.1s;
+  transition-timing-function: ease-out;
+  opacity: 1;
 }
 #forum .post_replies .post_container.hidden {
   box-shadow: inset -7px -13px 14px 8px white;
@@ -274,29 +320,37 @@ html, body {
   box-shadow: 0px 0px 20px 4px rgba(128, 128, 128, 0.5);
   -moz-transition-property: box-shadow;
   -moz-transition-duration: 2s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: box-shadow;
   -webkit-transition-duration: 2s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: box-shadow;
   -o-transition-duration: 2s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: box-shadow;
   transition-duration: 2s;
+  transition-timing-function: linear;
 }
 #forum .post_replies .post_container.hidden .post_body.highlight:hover {
   box-shadow: 0px 0px 50px 4px rgba(128, 128, 128, 0.5);
   -moz-transition-property: box-shadow;
   -moz-transition-duration: 2s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: box-shadow;
   -webkit-transition-duration: 2s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: box-shadow;
   -o-transition-duration: 2s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: box-shadow;
   transition-duration: 2s;
+  transition-timing-function: linear;
 }
 #forum .post_replies .post_container .post_body, #forum .post_replies #submit_reply label {
   position: relative;
@@ -480,15 +534,19 @@ html, body {
   background-color: #6dbdff;
   -moz-transition-property: padding-bottom;
   -moz-transition-duration: 0.5s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: padding-bottom;
   -webkit-transition-duration: 0.5s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: padding-bottom;
   -o-transition-duration: 0.5s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: padding-bottom;
   transition-duration: 0.5s;
+  transition-timing-function: linear;
   border: 1px solid grey;
   border-bottom: none;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -498,15 +556,19 @@ html, body {
   padding-bottom: 30px;
   -moz-transition-property: padding-bottom;
   -moz-transition-duration: 0.5s;
+  -moz-transition-timing-function: linear;
   /* WebKit */
   -webkit-transition-property: padding-bottom;
   -webkit-transition-duration: 0.5s;
+  -webkit-transition-timing-function: linear;
   /* Opera */
   -o-transition-property: padding-bottom;
   -o-transition-duration: 0.5s;
+  -o-transition-timing-function: linear;
   /* Standard */
   transition-property: padding-bottom;
   transition-duration: 0.5s;
+  transition-timing-function: linear;
 }
 
 #save_hover_clear {

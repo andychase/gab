@@ -100,12 +100,5 @@ $(document).ready(function () {
         });
     }
 
-    /* Actions Mouseover */
-    $(".post_actions").hide();
-    $(".post_body").mouseenter(function () {
-        $(this).children(".post_actions").fadeIn(100);
-    });
-    $(".post_body").mouseleave(function () {
-        $(this).children(".post_actions").fadeOut(100);
-    });
+
 });
