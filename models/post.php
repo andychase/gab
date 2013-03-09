@@ -1,6 +1,6 @@
 <?php
 class post {
-    static function get_posts($category=null, $sort=null, $sort_down=true, $show_hidden=false) {
+    static function get_posts($category=null, $sort=null, $sort_down=true, $show_hidden=false, $skip=0) {
         global $pdo;
         $q = "
             SELECT
@@ -10,79 +10,50 @@ class post {
               forum.author_name,
               forum.author_email_hash,
               forum.views,
-              Coalesce(replies.last_reply, forum.timestamp) AS last_reply,
-              last_reply.author_name as last_replier_name,
-              last_reply.author_email_hash as last_replier_email_hash,
-              most_replies.replies_total as most_replies_total,
-              most_replies.author_name as most_replies_name,
-              most_replies.author_email_hash as most_replies_email_hash,
-              replies.reply_num as replies
+              forum.stats,
+              forum.time_last_activity as last_reply
             FROM forum forum
-            LEFT JOIN (
-                 SELECT
-                    count(*) as reply_num,
-                    max(`timestamp`) AS last_reply,
-                    max(`id`) AS last_reply_id,
-                    reply_to
-                FROM forum
-                WHERE  `type` =  'reply'
-                AND  `status` >=  'normal'
-                GROUP BY reply_to
-            ) replies ON forum.id = replies.reply_to
-            LEFT JOIN forum category ON forum.reply_to = category.id
-            LEFT JOIN forum last_reply ON replies.last_reply_id = last_reply.id
-            LEFT JOIN (
-                SELECT
-                  replies_per_author.author_name,
-                  replies_per_author.author_email_hash,
-                  max(replies_per_author.replies) as replies_total,
-                  replies_per_author.reply_to
-                FROM (
-                    SELECT author_name, author_email_hash, count(*) as replies, reply_to
-                    FROM forum
-                    WHERE status >= 'normal'
-                    GROUP BY author, reply_to
-                    ORDER BY replies DESC
-                    ) replies_per_author
-                GROUP BY replies_per_author.reply_to
-            ) most_replies on forum.id = most_replies.reply_to
+            LEFT JOIN forum category on category.id = forum.reply_to
         ";
         if ($sort == "people")
             $q .= "
                 LEFT JOIN (
-                SELECT id, count(*) as contributions
+                SELECT id, count(id) as contributions
                 FROM forum
                 GROUP BY author
                 ) author ON author.id = forum.author";
-
-
         $q .= " WHERE  forum.type = 'post' ";
         if ($category)
             $q .= " AND category.title = ? ";
         $q .= " AND forum.`status` >= 'normal' ";
 
-        if ($sort == "category")
-            $q .= " ORDER BY - RAND() * LOG((NOW() - forum.timestamp))";
-        else if ($sort == "title")
+        if ($sort == "title")
             $q .= " ORDER BY title";
         else if ($sort == "views")
             $q .= " ORDER BY forum.views";
         else if ($sort == "replies")
-            $q .= " ORDER BY replies.reply_num";
+            $q .= " ORDER BY forum.replies";
         else if ($sort == "people")
             $q .= " ORDER BY author.contributions";
+        else if ($sort_down)
+            $q .= " ORDER BY forum.status DESC, forum.time_last_activity ";
         else
-            $q .= " ORDER BY last_reply";
+            $q .= " ORDER BY forum.time_last_activity ";
 
         if($sort_down) $q .= " DESC";
         else $q .= " ASC";
 
+        $q .= " LIMIT ?, 40 ";
         $statement = $pdo->prepare($q);
 
-        if ($category == null) $statement->execute();
-        else $statement->execute(array($category));
+        if ($category == null) $statement->execute(array($skip));
+        else $statement->execute(array($category, $skip));
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($posts as &$post)
+            if($post['stats'])
+                $post = array_merge(array_combine(self::$post_stat_fields, explode(",", $post['stats'])), $post);
+        return $posts;
     }
 
     static function get_post($post_id, $show_hidden=false) {
@@ -94,7 +65,7 @@ class post {
               forum.`id`,
               forum.`title`,
               forum.`message`,
-              forum.`timestamp`,
+              forum.`time_created`,
               forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
@@ -129,7 +100,7 @@ class post {
               forum.`id`,
               forum.`title`,
               forum.`message`,
-              forum.`timestamp`,
+              forum.`time_created`,
               forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
@@ -164,16 +135,6 @@ class post {
     {
         global $pdo;
 
-        if ($cat) {
-            $statement = $pdo->prepare("
-                SELECT id FROM forum WHERE type = 'category' AND title = ?
-            ");
-            $statement->execute(array($cat));
-            $cat = $statement->fetchColumn();
-        } else {
-            $cat = null;
-        }
-
         $q = "
             INSERT INTO  `forum` (
                 `type` ,
@@ -182,9 +143,10 @@ class post {
                 `author_email_hash` ,
                 `title`,
                 `message`,
-                `reply_to`
+                `reply_to`,
+                `time_last_activity`
                 )
-            VALUES ('post', ?, ?, ?, ?, ?, ?);
+            VALUES ('post', ?, ?, ?, ?, ?, ?, NOW());
         ";
 
         $statement = $pdo->prepare($q);
@@ -209,8 +171,11 @@ class post {
 
         $statement = $pdo->prepare($q);
         $statement->execute(array($topic_id, $user_id, $user_name, $user_email_hash, $text));
+        self::refresh_post_stats($topic_id);
+
         return $pdo->lastInsertId();
     }
+
 
     public static function get_author($id) {
         global $pdo;
@@ -246,4 +211,57 @@ class post {
         $statement = $pdo->prepare($q);
         return $statement->execute(array($text, $post_id));
     }
+
+    public static function refresh_post_stats($topic_id) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            UPDATE forum forum
+            LEFT JOIN (
+                 SELECT
+                    MAX(id) as last_reply_id,
+                    count(*) as reply_num,
+                    MAX(time_created) as last_reply_time,
+                    reply_to
+                FROM forum
+                WHERE  `type` =  'reply'
+                AND  `status` >=  'normal'
+                GROUP BY reply_to
+            ) replies ON forum.id = replies.reply_to
+            LEFT JOIN forum category ON forum.reply_to = category.id
+            LEFT JOIN forum last_reply ON replies.last_reply_id = last_reply.id
+            LEFT JOIN (
+                SELECT
+                  replies_per_author.author_name,
+                  replies_per_author.author_email_hash,
+                  max(replies_per_author.replies) as replies_total,
+                  replies_per_author.reply_to
+                FROM (
+                    SELECT author_name, author_email_hash, count(*) as replies, reply_to
+                    FROM forum
+                    WHERE status >= 'normal'
+                    GROUP BY author, reply_to
+                    ORDER BY replies DESC
+                    ) replies_per_author
+                GROUP BY replies_per_author.reply_to
+            ) most_replies on forum.id = most_replies.reply_to
+            SET forum.time_last_activity = replies.last_reply_time,
+                forum.replies = replies.reply_num,
+                forum.stats = CONCAT_WS(',',
+                     last_reply.author_name,
+                     last_reply.author_email_hash,
+                     most_replies.author_name,
+                     most_replies.author_email_hash,
+                     most_replies.replies_total)
+            WHERE forum.id = ?
+        ");
+        $statement->execute(array($topic_id));
+    }
+
+    public static $post_stat_fields = array (
+        "last_replier_name",
+        "last_replier_email_hash",
+        "most_replies_name",
+        "most_replies_email_hash",
+        "most_replies_total",
+    );
 }

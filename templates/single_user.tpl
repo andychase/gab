@@ -3,7 +3,7 @@
         <h3>{$user.author_name}</h3>
     <img src='{$user.author_email_hash|avatar:64}' alt='{$user.author_name|escape}' />
     <ul id="user_stats">
-        <li>Joined: {$user.timestamp|date_format:"%D"}</li>
+        <li>Joined: {$user.time_created|date_format:"%D"}</li>
     </ul>
     <ul id="user_posts">
         {foreach $user_posts as $post}

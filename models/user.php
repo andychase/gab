@@ -18,7 +18,7 @@ class user {
     public static function get_user_info($user_name) {
         global $pdo;
         $q = "
-            SELECT id, `timestamp`, author_name, author_email_hash, ext
+            SELECT id, `time_created`, author_name, author_email_hash, ext
             FROM forum user
             WHERE type = 'user'
             AND author_name = ?
@@ -32,13 +32,13 @@ class user {
     public static function get_user_posts($user_id) {
         global $pdo;
         $q = "
-            SELECT post.`id`, post.`title`, post.`timestamp`, 'post' as type, -1 as reply_id
+            SELECT post.`id`, post.`title`, post.`time_created`, 'post' as type, -1 as reply_id
             FROM forum post
             WHERE post.`type` = 'post'
             AND post.`status` >= 'normal'
             AND post.`author` = ?
             UNION
-            SELECT post.`id`, post.`title`, post.`timestamp`, 'reply' as type, reply.id as reply_id
+            SELECT post.`id`, post.`title`, post.`time_created`, 'reply' as type, reply.id as reply_id
             FROM forum reply
             LEFT JOIN forum post on reply.`reply_to` = post.`id`
             WHERE reply.author = ?

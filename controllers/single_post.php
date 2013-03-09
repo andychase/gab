@@ -23,8 +23,7 @@ if (!$this->isCached()) {
     if($this->hasPermission('see_deleted')) {
         $topic = post::get_post($post_id, true);
         $replies = array_merge(array($topic), post::get_replies($post_id, $skip, true));
-    }
-    else {
+    } else {
         $topic = post::get_post($post_id);
         $replies = array_merge(array($topic), post::get_replies($post_id, $skip));
     }

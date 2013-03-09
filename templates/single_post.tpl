@@ -14,7 +14,7 @@
                     <img src='{$post.author_email_hash|avatar}' class='author_image' alt='{$post.author_name|escape}' />
                 </a>
                 <span class='author_name'>{$post.author_name|escape}</span>
-                <span class='post_time'>{block 'post_time'}{$post.timestamp}{/block}</span>
+                <span class='post_time'>{block 'post_time'}{$post.time_created}{/block}</span>
             </div>
             <div class='post_body'>
                 {if $edit && $edit == $post.id}

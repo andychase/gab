@@ -7,12 +7,12 @@ class category {
             SELECT  forum.`id`,
                     forum.`title`,
                     replies.reply_num as replies,
-                    COALESCE(replies.last_reply, forum.timestamp) as last_reply
+                    COALESCE(replies.last_reply, forum.time_created) as last_reply
             FROM forum forum
             LEFT JOIN
                 (
                    SELECT count(*) as reply_num,
-                          MAX(replies.`timestamp`) as last_reply,
+                          MAX(replies.`time_created`) as last_reply,
                           replies.reply_to
                    FROM forum replies
                    WHERE replies.`type` = "reply"
@@ -64,7 +64,7 @@ class category {
 
     static function get_category_list() {
         global $pdo;
-        $statement = $pdo->prepare("SELECT title FROM forum WHERE type = 'category'");
+        $statement = $pdo->prepare("SELECT id, title FROM forum WHERE type = 'category'");
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }

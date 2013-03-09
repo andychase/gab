@@ -35,13 +35,11 @@
         <tr>
                 <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape}</a></td>
                 <td>
-                    {if $post.category}
-                        <a href='{$base_url}/category/{$post.category|replace:" ":"_"}' class="category {$post.category|replace:" ":"_"|lower}">
-                            {$post.category}
-                        </a>
-                    {/if}
+                    <a href='{$base_url}/category/{$post.category|replace:" ":"_"}' class="category {if $post.category == ""}no_category{/if}">
+                        {$post.category}
+                    </a>
                 </td>
-                <td class='author_name'>
+                <td class='author_name {if $post.last_replier_name}more{/if}'>
                     <a href="{$baseurl}/user/{$post.author_name}"><img title="Author: {$post.author_name}"
                             src="{$post.author_email_hash|avatar:24}"/></a>
                     {if $post.most_replies_name && $post.most_replies_total > 1}
@@ -56,8 +54,6 @@
                 <td class='replies'>{if $post.replies}{$post.replies}{/if}</td>
                 <td class='views'>{if $post.views}{$post.views}{/if}</td>
                 <td class='last_reply'>{if $post.last_reply}{$post.last_reply|timeAgo}{/if}</td>
-            <td>
-            </td>
         </tr>
     {/foreach}
     </tbody>

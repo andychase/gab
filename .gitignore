@@ -4,5 +4,6 @@
 smarty/compile/*
 smarty/cache/*
 extensions/theme-silicone/.sass-cache/*
+extensions/theme-silicone/.sass-cache/
 
 

@@ -82,16 +82,21 @@ class gab extends gab_settings
         $ext = $this->current_extension;
 
         if ($page=='*') {
-            foreach(array_keys($this->templates) as $tpl)
-                $this->addTemplate($tpl, $template_name, $order);
-            return;
+            foreach(array_keys($this->templates) as $page) {
+                $tpl = $this->templates[$page];
+                if (!$order)
+                    $this->templates[$page] .= "|file:$folder/$ext/$template_name";
+                else if ($order == 'pre' && strpos($tpl, '|') !== False)
+                    $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
+            }
         }
-        $tpl = $this->templates[$page];
-        if (!$order)
-            $this->templates[$page] .= "|file:$folder/$ext/$template_name";
-        else if ($order == 'pre' && strpos($tpl, '|') !== False)
-            $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
-
+        else {
+            $tpl = $this->templates[$page];
+            if (!$order)
+                $this->templates[$page] .= "|file:$folder/$ext/$template_name";
+            else if ($order == 'pre' && strpos($tpl, '|') !== False)
+                $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
+        }
     }
 
     function addJavascript($name, $order='') {
@@ -133,8 +138,6 @@ class gab extends gab_settings
     }
 
     function clearCache($page, $cache_id=null) {
-        if ($page == "posts" && function_exists('apc_cache_info'))
-            apc_store('precache', false);
         $this->smarty->clearCache($this->templates[$page], $cache_id);
     }
 
@@ -218,10 +221,6 @@ class gab extends gab_settings
                     require($controller);
             }
             $this->smarty->caching = $this->caching;
-            if($page == "posts" &&
-                $this->cache_id == "category:|sort_down|sort:|" &&
-                !$this->isCached() && function_exists('apc_cache_info'))
-                apc_store("precache", $this->smarty->fetch($this->templates[$page], $this->cache_id));
             $this->smarty->display($this->templates[$page], $this->cache_id);
         }
     }

@@ -34,6 +34,8 @@ class PDOLazyConnector
         // If db handler is not open yet, do it now
         if (empty ($this->dbh)) {
             $this->dbh = new PDO ($this->dsn, $this->username, $this->password, $this->driver_options);
+            $this->dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
     }
 }
