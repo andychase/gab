@@ -58,4 +58,18 @@
     {/foreach}
     </tbody>
     </table>
+    {if $current_skip > 0 || count($posts) > 59}
+    <div class="prev_next_paging">
+        {if $current_skip > 0}
+        <a href="./?skip={$current_skip-60}">&lt- Prev</a>
+        {else}
+        <span>&lt- Prev</span>
+        {/if}
+        {if count($posts) > 59}
+        <a href="./?skip={$current_skip+60}">Next -&gt;</a>
+        {else}
+        <span> Next -&gt;</span>
+        {/if}
+    </div>
+    {/if}
 {/block}

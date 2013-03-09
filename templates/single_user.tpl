@@ -7,10 +7,18 @@
     </ul>
     <ul id="user_posts">
         {foreach $user_posts as $post}
-            {if $post.type == 'post'}
-            <li><a href="{$baseurl}/{$post.id}">{$post.title}</a></li>
+            {if $post.type == "post"}
+            <li>
+                <a href="{$baseurl}/{$post.id}">{$post.title}
+                    <i>{$post.message|truncate:10}</i>
+                </a>
+            </li>
             {else}
-            <li><a href="{$baseurl}/{$post.id}#post{$post.reply_id}">{$post.title}</a></li>
+            <li>
+                <a href="{$baseurl}/{$post.reply_to}#post{$post.id}">
+                    <i>{$post.message|truncate:10}</i>
+                </a>
+            </li>
             {/if}
         {/foreach}
     </ul>

@@ -179,6 +179,9 @@ html, body {
 #forum .category_table .description {
   margin-left: 10px;
 }
+#forum .prev_next_paging {
+  text-align: center;
+}
 #forum .post_replies h2 a {
   position: relative;
   vertical-align: baseline;
@@ -408,6 +411,7 @@ html, body {
   display: inline-block;
   height: 40px;
   width: 40px;
+  margin-bottom: 15px;
 }
 #forum #users_page ul li a {
   display: block;
@@ -417,6 +421,9 @@ html, body {
   font-size: 7pt;
   text-align: center;
   overflow: hidden;
+  position: relative;
+  z-index: 0;
+  font-weight: bold;
 }
 #forum #new_thread #new_thread_title, #forum #new_thread #new_category_description {
   font-size: 20pt;

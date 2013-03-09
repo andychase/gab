@@ -9,14 +9,18 @@ if($sort_down) $this->addCacheId('sort_down');
 $this->addCacheId("category:$category");
 if (!$this->isCached()) {
     $sort_by = $_GET['sort'];
+    $skip = intval($_GET['skip']);
     $this->assign("sort_by", $sort_by);
     $this->assign("sort_down", $sort_down);
     $this->assign("categories", category::get_category_list());
     if($category == null)  {
+        $cat_id = null;
         $this->assign("forum_section", "posts");
     } else {
+        $cat_id = category::get_category_id($category);
         $this->assign("forum_section", "cat");
         $this->assign("category", $category);
     }
-    $this->assign("posts", post::get_posts($category, $sort_by, $sort_down));
+    $this->assign("current_skip", $skip);
+    $this->assign("posts", post::get_posts($cat_id, $sort_by, $sort_down, $skip));
 }

@@ -1,6 +1,6 @@
 <?php
 class post {
-    static function get_posts($category=null, $sort=null, $sort_down=true, $show_hidden=false, $skip=0) {
+    static function get_posts($category=null, $sort=null, $sort_down=true, $skip=0) {
         global $pdo;
         $q = "
             SELECT
@@ -9,6 +9,7 @@ class post {
               category.title AS category,
               forum.author_name,
               forum.author_email_hash,
+              forum.replies,
               forum.views,
               forum.stats,
               forum.time_last_activity as last_reply
@@ -24,8 +25,7 @@ class post {
                 ) author ON author.id = forum.author";
         $q .= " WHERE  forum.type = 'post' ";
         if ($category)
-            $q .= " AND category.title = ? ";
-        $q .= " AND forum.`status` >= 'normal' ";
+            $q .= " AND category.id = ? ";
 
         if ($sort == "title")
             $q .= " ORDER BY title";
@@ -43,7 +43,7 @@ class post {
         if($sort_down) $q .= " DESC";
         else $q .= " ASC";
 
-        $q .= " LIMIT ?, 40 ";
+        $q .= " LIMIT ?, 60 ";
         $statement = $pdo->prepare($q);
 
         if ($category == null) $statement->execute(array($skip));

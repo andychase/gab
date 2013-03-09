@@ -22,7 +22,7 @@
         <a href="{$base_url}/users" class="nav_section users">Users</a>
         {*  Users -> User *}
         {if $user_name}
-            <a href="{$base_url}/users/{$user_name}" class="nav_section users single">{$user_name|escape|truncate:30}</a>
+            <a href="{$base_url}/user/{$user_name}" class="nav_section users single">{$user_name|escape|truncate:30}</a>
         {/if}
 
         {* Messages *}

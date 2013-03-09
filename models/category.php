@@ -4,30 +4,20 @@ class category {
     static function get_post_category($category_id) {
         global $pdo;
         $q = '
-            SELECT  forum.`id`,
-                    forum.`title`,
-                    replies.reply_num as replies,
-                    COALESCE(replies.last_reply, forum.time_created) as last_reply
-            FROM forum forum
-            LEFT JOIN
-                (
-                   SELECT count(*) as reply_num,
-                          MAX(replies.`time_created`) as last_reply,
-                          replies.reply_to
-                   FROM forum replies
-                   WHERE replies.`type` = "reply"
-                   AND replies.`status` >= "normal"
-                   GROUP BY replies.reply_to
-               )  replies ON id = replies.reply_to
-            WHERE forum.`type` = "post"
-            AND forum.`status` >= "normal"
-            AND forum.reply_to
+            SELECT  `id`,
+                    `title`,
+                    replies,
+                    time_last_activity as last_reply
+            FROM forum
+            WHERE type = "post"
+            AND reply_to
             ';
 
         if ($category_id == "") $q .= "is null";
         else $q .= "= ?";
 
-        $q .= " ORDER BY last_reply DESC";
+        $q .= " ORDER BY status DESC, time_last_activity DESC
+                LIMIT 0, 5";
 
         $statement = $pdo->prepare($q);
         if ($category_id == null) $statement->execute();
@@ -38,18 +28,9 @@ class category {
     static function get_categories() {
         global $pdo;
         $q = "
-          SELECT category.id, category.title, category.message, posts.number_of_posts
+          SELECT category.id, category.title, category.message
           FROM forum category
-          LEFT JOIN (
-              SELECT posts.reply_to, count(*) as number_of_posts
-              FROM forum posts
-              WHERE posts.type = 'post'
-              AND status >= 'normal'
-              GROUP BY reply_to
-
-            ) posts on posts.reply_to = category.id
           WHERE category.type = 'category'
-          ORDER BY posts.number_of_posts DESC
         ";
         $statement = $pdo->prepare($q);
         $statement->execute();
@@ -74,6 +55,13 @@ class category {
         $statement = $pdo->prepare("SELECT title FROM forum WHERE type = 'category' and id = ?");
         $statement->execute(array($id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    static function get_category_id($title) {
+        global $pdo;
+        $statement = $pdo->prepare("SELECT id FROM forum WHERE type = 'category' and title = ?");
+        $statement->execute(array($title));
+        return $statement->fetchColumn();
     }
 
     public static function new_category($author, $author_name, $author_email_hash, $title, $description)

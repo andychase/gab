@@ -31,4 +31,5 @@ if (!$this->isCached()) {
     $this->assign("forum_section", "posts");
     $this->assign("topic", $topic);
     $this->assign("replies", $replies);
+    $this->assign("number_of_items", $topic['replies']);
 }

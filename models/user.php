@@ -32,21 +32,23 @@ class user {
     public static function get_user_posts($user_id) {
         global $pdo;
         $q = "
-            SELECT post.`id`, post.`title`, post.`time_created`, 'post' as type, -1 as reply_id
+            SELECT
+             post.`id`,
+             post.`reply_to`,
+             post.`title`,
+             post.`time_last_activity`,
+             post.`status`, post.`type`, post.`message`
             FROM forum post
             WHERE post.`type` = 'post'
-            AND post.`status` >= 'normal'
+            OR post.`type` = 'reply'
             AND post.`author` = ?
-            UNION
-            SELECT post.`id`, post.`title`, post.`time_created`, 'reply' as type, reply.id as reply_id
-            FROM forum reply
-            LEFT JOIN forum post on reply.`reply_to` = post.`id`
-            WHERE reply.author = ?
-            AND reply.type = 'reply'
-            AND reply.`status` >= 'normal'
+            AND status >= 'normal'
+
+            ORDER BY id DESC
+            LIMIT 0, 10
         ";
         $statement = $pdo->prepare($q);
-        $statement->execute(array($user_id, $user_id));
+        $statement->execute(array($user_id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
