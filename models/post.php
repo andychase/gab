@@ -2,6 +2,7 @@
 class post {
     static function get_posts($category=null, $sort=null, $sort_down=true, $skip=0) {
         global $pdo;
+        global $forum_id;
         $q = "
             SELECT
               forum.id,
@@ -19,11 +20,11 @@ class post {
         if ($sort == "people")
             $q .= "
                 LEFT JOIN (
-                SELECT id, count(id) as contributions
+                SELECT id, count(*) as contributions
                 FROM forum
                 GROUP BY author
                 ) author ON author.id = forum.author";
-        $q .= " WHERE  forum.type = 'post' ";
+        $q .= " WHERE  forum.type = 'post' AND forum.`forum_id` = ? ";
         if ($category)
             $q .= " AND category.id = ? ";
 
@@ -46,8 +47,11 @@ class post {
         $q .= " LIMIT ?, 60 ";
         $statement = $pdo->prepare($q);
 
-        if ($category == null) $statement->execute(array($skip));
-        else $statement->execute(array($category, $skip));
+        $inputs = array($forum_id);
+        if ($category != null) $inputs[] = $category;
+        $inputs[] = $skip;
+
+        $statement->execute($inputs);
 
         $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($posts as &$post)
@@ -58,6 +62,7 @@ class post {
 
     static function get_post($post_id, $show_hidden=false) {
         global $pdo;
+        global $forum_id;
         $hideq = " AND forum.`status` >= 'normal' ";
         if ($show_hidden) $hideq = "";
         $q = "
@@ -77,17 +82,19 @@ class post {
                    SELECT count(*) as reply_num, reply_to
                    FROM forum as replies
                    WHERE replies.`type` = 'reply'
+                   AND replies.`forum_id` = ?
                    GROUP BY replies.reply_to
                    ) replies ON id = replies.reply_to
             LEFT JOIN forum category on forum.`reply_to` = category.`id`
             WHERE forum.`type` = 'post'
+            AND forum.`forum_id` = ?
             AND forum.`id` = ?
             $hideq
             LIMIT 1
         ";
 
         $statement = $pdo->prepare($q);
-        $statement->execute(array($post_id));
+        $statement->execute(array($forum_id, $forum_id, $post_id));
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -134,9 +141,11 @@ class post {
     public static function new_thread($user_id, $user_name, $user_email_hash, $title, $text, $cat=null)
     {
         global $pdo;
+        global $forum_id;
 
         $q = "
             INSERT INTO  `forum` (
+                `forum_id` ,
                 `type` ,
                 `author` ,
                 `author_name` ,
@@ -146,19 +155,21 @@ class post {
                 `reply_to`,
                 `time_last_activity`
                 )
-            VALUES ('post', ?, ?, ?, ?, ?, ?, NOW());
+            VALUES (?, 'post', ?, ?, ?, ?, ?, ?, NOW());
         ";
 
         $statement = $pdo->prepare($q);
-        $statement->execute(array($user_id, $user_name, $user_email_hash, $title, $text, $cat));
+        $statement->execute(array($forum_id, $user_id, $user_name, $user_email_hash, $title, $text, $cat));
         return $pdo->lastInsertId();
     }
 
     public static function post_reply($topic_id, $user_id, $user_name, $user_email_hash, $text)
     {
         global $pdo;
+        global $forum_id;
         $q = "
             INSERT INTO  `forum` (
+                `forum_id` ,
                 `type` ,
                 `reply_to` ,
                 `author` ,
@@ -166,14 +177,15 @@ class post {
                 `author_email_hash` ,
                 `message`
                 )
-            VALUES ('reply', ?, ?, ?, ?, ?);
+            VALUES (?, 'reply', ?, ?, ?, ?, ?);
         ";
 
         $statement = $pdo->prepare($q);
-        $statement->execute(array($topic_id, $user_id, $user_name, $user_email_hash, $text));
+        $statement->execute(array($forum_id, $topic_id, $user_id, $user_name, $user_email_hash, $text));
+        $post_id = $pdo->lastInsertId();
         self::refresh_post_stats($topic_id);
 
-        return $pdo->lastInsertId();
+        return $post_id;
     }
 
 
@@ -182,7 +194,7 @@ class post {
         $statement = $pdo->prepare("
             SELECT author
             FROM forum
-            WHERE id = ?");
+            AND id = ?");
         $statement->execute(array($id));
         return $statement->fetchColumn();
     }

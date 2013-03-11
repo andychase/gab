@@ -17,15 +17,17 @@ class user {
 
     public static function get_user_info($user_name) {
         global $pdo;
+        global $forum_id;
         $q = "
             SELECT id, `time_created`, author_name, author_email_hash, ext
             FROM forum user
             WHERE type = 'user'
             AND author_name = ?
+            AND forum_id = ?
             LIMIT 1
         ";
         $statement = $pdo->prepare($q);
-        $statement->execute(array($user_name));
+        $statement->execute(array($user_name, $forum_id));
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -86,49 +88,56 @@ class user {
 
     static function new_user($user_title, $user_name, $user_email_hash) {
         global $pdo;
+        global $forum_id;
         $q = "
             INSERT INTO  `forum` (
+                `forum_id` ,
                 `title` ,
                 `author_name` ,
                 `author_email_hash` ,
                 `type`
                 )
-            VALUES (?, ?, ?, 'user');
+            VALUES (?, ?, ?, ?, 'user');
         ";
 
         $statement = $pdo->prepare($q);
-        $statement->execute(array($user_title, $user_name, $user_email_hash));
+        $statement->execute(array($forum_id, $user_title, $user_name, $user_email_hash));
         return $pdo->lastInsertId();
     }
 
     public static function just_inserted_first_user() {
         global $pdo;
+        global $forum_id;
         $statement = $pdo->prepare("
             SELECT id
             FROM forum
             WHERE type = 'user'
             AND id != ?
+            AND forum_id = ?
         ");
-        $statement->execute(array($pdo->lastInsertId()));
+        $statement->execute(array($pdo->lastInsertId(), $forum_id));
         return !$statement->fetchAll();
     }
 
     public static function get_users() {
         global $pdo;
+        global $forum_id;
         $q = "
             SELECT author, author_name, author_email_hash, ext
             FROM forum
             WHERE type = 'user'
+            AND forum_id = ?
         ";
         $statement = $pdo->prepare($q);
-        $statement->execute();
+        $statement->execute(array($forum_id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function exists_user_name($name) {
         global $pdo;
-        $statement = $pdo->prepare("SELECT id FROM forum WHERE author_name = ? LIMIT 1");
-        $statement->execute(array($name));
+        global $forum_id;
+        $statement = $pdo->prepare("SELECT id FROM forum WHERE author_name = ? AND forum_id = ? LIMIT 1");
+        $statement->execute(array($name, $forum_id));
         return $statement->fetchAll();
     }
 }

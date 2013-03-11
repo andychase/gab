@@ -3,6 +3,7 @@
 
 CREATE TABLE IF NOT EXISTS `forum` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `forum_id` int(11) NOT NULL DEFAULT '2',
   `type` enum('post','reply','message','category','vote','user') CHARACTER SET latin1 NOT NULL,
   `reply_to` int(11) DEFAULT NULL,
   `author` int(11) NOT NULL,
@@ -19,13 +20,14 @@ CREATE TABLE IF NOT EXISTS `forum` (
   `ext` varchar(8000) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `reply_to` (`reply_to`),
-  KEY `message` (`message`(767)),
-  KEY `type` (`type`),
-  KEY `author` (`author`),
-  KEY `views` (`views`),
-  KEY `time_last_activity` (`time_last_activity`),
   KEY `status_time` (`status`,`time_last_activity`),
-  KEY `replies` (`replies`)
+  KEY `all_posts` (`type`,`forum_id`,`status`,`time_last_activity`),
+  KEY `replies` (`forum_id`,`replies`),
+  KEY `views` (`forum_id`,`views`),
+  KEY `title` (`forum_id`,`title`),
+  KEY `message` (`forum_id`,`message`(64)),
+  KEY `forum_id_type` (`forum_id`,`type`,`time_last_activity`),
+  KEY `author` (`author`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 ALTER TABLE `forum`

@@ -138,11 +138,13 @@ class gab extends gab_settings
     }
 
     function clearCache($page, $cache_id=null) {
-        $this->smarty->clearCache($this->templates[$page], $cache_id);
+        global $forum_id;
+        $this->smarty->clearCache($this->templates[$page], "$forum_id|$cache_id");
     }
 
     function isCached() {
-        return $this->smarty->isCached($this->templates[$this->current_page], $this->cache_id);
+        global $forum_id;
+        return $this->smarty->isCached($this->templates[$this->current_page], "$forum_id|".$this->cache_id);
     }
 
     function displayGeneric($template) {
@@ -187,10 +189,13 @@ class gab extends gab_settings
         }
     }
 
-    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {
+    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust, $forum_id=2) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->current_page = $page;
+
+        $GLOBALS['forum_id'] = $forum_id;
+
 
         require_once("min/utils.php");
         $this->assign('js_url', Minify_getUri($this->javascript));
@@ -221,7 +226,7 @@ class gab extends gab_settings
                     require($controller);
             }
             $this->smarty->caching = $this->caching;
-            $this->smarty->display($this->templates[$page], $this->cache_id);
+            $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);
         }
     }
 

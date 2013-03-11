@@ -3,7 +3,7 @@
 <head>
     <title>{block name='title'}Gab Test{/block}</title>
     <meta name="description" content="Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy." />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link rel="stylesheet" type="text/css" href="{$css_url}" />
     <script type="text/javascript" src="{$js_url}"></script>

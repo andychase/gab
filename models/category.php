@@ -3,6 +3,7 @@
 class category {
     static function get_post_category($category_id) {
         global $pdo;
+        global $forum_id;
         $q = '
             SELECT  `id`,
                     `title`,
@@ -10,6 +11,7 @@ class category {
                     time_last_activity as last_reply
             FROM forum
             WHERE type = "post"
+            AND forum_id = ?
             AND reply_to
             ';
 
@@ -20,20 +22,22 @@ class category {
                 LIMIT 0, 5";
 
         $statement = $pdo->prepare($q);
-        if ($category_id == null) $statement->execute();
-        else $statement->execute(array($category_id));
+        if ($category_id == null) $statement->execute(array($forum_id));
+        else $statement->execute(array($forum_id, $category_id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     static function get_categories() {
         global $pdo;
+        global $forum_id;
         $q = "
           SELECT category.id, category.title, category.message
           FROM forum category
           WHERE category.type = 'category'
+          AND forum_id = ?
         ";
         $statement = $pdo->prepare($q);
-        $statement->execute();
+        $statement->execute(array($forum_id));
         $categories = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $categories[''] = array("id" => "", "title" => "", "message" => "");
@@ -45,8 +49,13 @@ class category {
 
     static function get_category_list() {
         global $pdo;
-        $statement = $pdo->prepare("SELECT id, title FROM forum WHERE type = 'category'");
-        $statement->execute();
+        global $forum_id;
+        $statement = $pdo->prepare("
+            SELECT id, title
+            FROM forum
+            WHERE type = 'category'
+            AND forum_id = ?");
+        $statement->execute(array($forum_id));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -59,16 +68,24 @@ class category {
 
     static function get_category_id($title) {
         global $pdo;
-        $statement = $pdo->prepare("SELECT id FROM forum WHERE type = 'category' and title = ?");
-        $statement->execute(array($title));
+        global $forum_id;
+        $statement = $pdo->prepare("
+            SELECT id
+            FROM forum
+            WHERE type = 'category'
+            AND forum_id = ?
+            AND title = ?");
+        $statement->execute(array($forum_id, $title));
         return $statement->fetchColumn();
     }
 
     public static function new_category($author, $author_name, $author_email_hash, $title, $description)
     {
         global $pdo;
+        global $forum_id;
         $q = "
             INSERT INTO  `forum` (
+                `forum_id` ,
                 `type` ,
                 `author` ,
                 `author_name` ,
@@ -77,10 +94,10 @@ class category {
                 `message`,
                 `reply_to`
                 )
-            VALUES ('category', ?, ?, ?, ?, ?, NULL);
+            VALUES (?, 'category', ?, ?, ?, ?, ?, NULL);
         ";
         $statement = $pdo->prepare($q);
-        $statement->execute(array($author, $author_name, $author_email_hash, $title, $description));
+        $statement->execute(array($forum_id, $author, $author_name, $author_email_hash, $title, $description));
         return $pdo->lastInsertId();
     }
 }
