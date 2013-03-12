@@ -25,7 +25,15 @@
                     </form>
                 {else}
                     {if $post.status == 'hidden' || $post.status == 'mod_hidden'}<del>{/if}
-                    {block 'post_body'}{$post.message|parse}{/block}
+                    {block 'post_body'}
+                        {if $post.reply}
+                        <div class="post_at_reply">
+                            <div class='at_reply_message'>{$post.reply.message}</div>
+                            <a href='#post{$post.reply.id}' class='at_reply_link'>Reply to {$post.reply.author_name}</a>
+                        </div>
+                        {/if}
+                        {$post.message|parse}
+                    {/block}
                     {if $post.status == 'hidden' || $post.status == 'mod_hidden'}</del>{/if}
                 {/if}
                 {include 'sections/post_actions.tpl'}

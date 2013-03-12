@@ -245,10 +245,20 @@
     width: 438px;
   }
 
-  .reply_to {
-    @extend .font-awesome;
-    @extend .icon-reply;
+  .post_at_reply {
+    .at_reply_link {
+      @extend .font-awesome;
+      @extend .icon-reply;
+      &::before {
+        padding-right: 5px;
+      }
+    }
     display: block;
+
     background-color: #cbcbcb;
+    .at_reply_message {
+      display: none;
+    }
+
   }
 }

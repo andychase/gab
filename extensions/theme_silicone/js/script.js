@@ -29,7 +29,6 @@ $(document).ready(function () {
                 expires: 1,
                 path: '/'
             });
-            $(".savable #preview").html(marked($(this).val()));
         });
     }
     if ($.cookie("reply_text") && $.cookie("reply_text").trim() !== "" && $.cookie("reply_url") !== "" && $.cookie("reply_url") !== location.pathname) {
@@ -59,7 +58,7 @@ $(document).ready(function () {
     /* Show new Thread composer */
     $("#new_link").attr("href", "javascript:void(0);");
     $("#new_link").click(function () {
-        return $("#new_thread").toggle(200, 'swing');
+        return $("#new_thread").slideToggle(200, 'swing');
     });
 
     /* Auto-open if hash in url */
@@ -101,4 +100,21 @@ $(document).ready(function () {
             return preview_description.html(desc_box.val());
         });
     }
+
+    /* Reply Button */
+    $('.reply').click(function () {
+        var prev = $('#submit_reply textarea').val();
+        var id =
+            $(this).siblings('a.permalink').attr('href').split('#')[1].split('post')[1];
+        var person =
+            $(this).parent().parent().siblings('.post_user').children('.author_name').html();
+        $('#submit_reply textarea').val('@'+person+':'+id+' '+prev);
+    });
+
+    $('.at_reply_link').attr('href', 'javascript:void(0);')
+    $('.at_reply_link').click(function () {
+        $(this).siblings('.at_reply_message').slideToggle('fast');
+    });
+
+
 });

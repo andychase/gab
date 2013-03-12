@@ -28,6 +28,19 @@ if (!$this->isCached()) {
         $replies = array_merge(array($topic), post::get_replies($post_id, $skip));
     }
 
+    // @replies
+    $reply_regex = '/^\@[a-z]+:([0-9]+)/i';
+
+    foreach($replies as &$reply) {
+        if ($reply['message'][0] == "@") {
+            $matches = array();
+            preg_match($reply_regex, $reply['message'], $matches);
+            if(count($matches) > 0)
+                $reply['reply'] = post::get_reply($matches[1]);
+            $reply['message'] = substr($reply['message'], strpos($reply['message'], " "));
+        }
+    }
+
     $this->assign("forum_section", "posts");
     $this->assign("topic", $topic);
     $this->assign("replies", $replies);

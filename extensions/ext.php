@@ -4,8 +4,7 @@ return array(
   "feat_openid",
   "misc_gablogo",
   "parser_embed",
-  "parser_markdown",
   "theme_silicone",
+  "parser_markdown",
   "ux_timeago",
-  "feat_reply",
 );?>

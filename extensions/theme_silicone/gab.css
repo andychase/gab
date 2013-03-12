@@ -35,11 +35,11 @@
   content: "\f040";
 }
 
-.icon-reply:before, #forum .reply_to:before {
+.icon-reply:before, #forum .post_at_reply .at_reply_link:before {
   content: "\f112";
 }
 
-.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .reply_to, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before {
+.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .post_at_reply .at_reply_link, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -380,9 +380,15 @@
   left: 64px;
   width: 438px;
 }
-#forum .reply_to {
+#forum .post_at_reply {
   display: block;
   background-color: #cbcbcb;
+}
+#forum .post_at_reply .at_reply_link::before {
+  padding-right: 5px;
+}
+#forum .post_at_reply .at_reply_message {
+  display: none;
 }
 
 #forum #posts_table, #forum .category_table {

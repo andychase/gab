@@ -126,6 +126,22 @@ class post {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    static function get_reply($id) {
+        global $pdo;
+        global $forum_id;
+        $statement = $pdo->prepare("
+            SELECT id, author_name, message
+            FROM forum
+            WHERE id = ?
+            AND (type = 'reply'
+            OR type = 'post')
+            AND status >= 'normal'
+            AND forum_id = ?
+            ");
+        $statement->execute(array($id, $forum_id));
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
     public static function add_view($post_id)
     {
         global $pdo;

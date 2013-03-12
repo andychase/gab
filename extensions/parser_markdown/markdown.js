@@ -1071,8 +1071,13 @@
     return this || (typeof window !== 'undefined' ? window : global);
 }());
 
+var reply_to_matcher = /\@([a-z]+):([0-9]+)/i;
+var reply_to_replace = "<a href='#post$2' class='at_reply_link'> Reply to $1 </a>";
 $(document).ready(function () {
-    $(".savable textarea").on('input propertychange', function () {
-        $(".savable #preview").html(marked($(this).val()));
+    var preview = $(".savable #preview");
+    var input_area = $(".savable textarea");
+    preview.html(marked(input_area.val()).replace(reply_to_matcher, reply_to_replace));
+    input_area.on('input propertychange', function () {
+        preview.html(marked(input_area.val()).replace(reply_to_matcher, reply_to_replace));
     });
 });
