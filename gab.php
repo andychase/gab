@@ -101,6 +101,7 @@ class gab extends gab_settings
 
     function addJavascript($name, $order='') {
         $path =
+            '//'.
             $this->extensions_folder .
             DIRECTORY_SEPARATOR .
             $this->current_extension .
@@ -113,6 +114,7 @@ class gab extends gab_settings
 
     function addCss($name) {
         $this->css[] =
+            '//'.
             $this->extensions_folder .
                 DIRECTORY_SEPARATOR .
                 $this->current_extension .
@@ -189,6 +191,20 @@ class gab extends gab_settings
         }
     }
 
+    function prepare_static() {
+        // Prepare javascript and css list & hash
+        if (!$this->isCached()) {
+            $js_hash = hash('md4', implode('/',$this->javascript));
+            $css_hash = hash('md4', implode('/',$this->css));
+            if(!is_file('min/groups/'.$js_hash.'.php'))
+                file_put_contents('min/groups/'.$js_hash, serialize(array($js_hash => $this->javascript)));
+            if(!is_file('min/groups/'.$css_hash.'.php'))
+                file_put_contents('min/groups/'.$css_hash, serialize(array($css_hash => $this->css)));
+            $this->assign('js_url', '/min/?g='.$js_hash);
+            $this->assign('css_url', '/min/?g='.$css_hash);
+        }
+    }
+
     function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust, $forum_id=2) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
@@ -196,10 +212,6 @@ class gab extends gab_settings
 
         $GLOBALS['forum_id'] = $forum_id;
 
-
-        require_once("min/utils.php");
-        $this->assign('js_url', Minify_getUri($this->javascript));
-        $this->assign('css_url', Minify_getUri($this->css));
 
         // User
         $this->assign("trust_levels", $this->trust_levels);
@@ -226,6 +238,7 @@ class gab extends gab_settings
                     require($controller);
             }
             $this->smarty->caching = $this->caching;
+            $this->prepare_static();
             $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);
         }
     }

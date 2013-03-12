@@ -27,6 +27,14 @@ class message {
             WHERE mention.message LIKE ?
             AND mention.forum_id = ?
 
+            UNION
+
+            SELECT mention.type, mention.reply_to, mention.id, mention.author_name, mention.message, mention.time_created, category.title
+            FROM forum mention
+            LEFT JOIN forum category on mention.reply_to = category.id
+            WHERE mention.message LIKE ?
+            AND mention.forum_id = ?
+
             ORDER BY time_created DESC
             ';
         $statement = $pdo->prepare($q);
@@ -35,6 +43,8 @@ class message {
         $inputs[] = "@${user_name}\r\n%";
         $inputs[] = $forum_id;
         $inputs[] = "@${user_name}\n%";
+        $inputs[] = $forum_id;
+        $inputs[] = "@${user_name}:%";
         $inputs[] = $forum_id;
         $inputs[] = "@${user_name} %";
         $inputs[] = $forum_id;

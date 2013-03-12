@@ -3,7 +3,7 @@
 .hgignore
 smarty/compile/*
 smarty/cache/*
-extensions/theme-silicone/.sass-cache/*
-extensions/theme-silicone/.sass-cache/
-
+extensions/theme-silicone/css/.sass-cache/*
+extensions/theme-silicone/css/.sass-cache/
+min/groups/*
 

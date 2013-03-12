@@ -1,0 +1,195 @@
+@import 'colors_mixins.scss';
+@import 'icons.scss';
+@import 'save_hover.scss';
+@import 'single_post.scss';
+@import 'posts.scss';
+
+html, body {
+  font: normal 10pt/16pt Georgia, "DejaVu Serif", "Trebuchet MS", Times, serif;
+}
+
+#forum {
+  margin-top: 50px;
+
+  .badge-category, a.category {
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-weight: bold;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    &.no_category {
+      background: none !important;
+      border: none;
+    }
+  }
+
+  .nav_section {
+    color: black;
+    padding: 3px 8px;
+    font-size: 12px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    line-height: 13px;
+  }
+
+  .nav_section.new_link {
+    float: right;
+    text-decoration: none;
+    span {
+      text-decoration: underline;
+    }
+    &::before {
+      font-size: 7pt;
+      padding-right: 5px;
+    }
+  }
+
+  #new_thread {
+    display: none;
+  }
+
+  &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat, &.users .nav_section.users {
+    @extend .badge-category;
+    position: relative;
+    color: white;
+    background-color: $highlight;
+    border-color: darken($highlight, 20);
+    line-height: 13px;
+    z-index: 1;
+    &.single {
+      position: relative;
+      right: 8px;
+      background-color: complement($highlight);
+      border-color: darken(complement($highlight), 10);
+      padding-left: 15px;
+      z-index: 0;
+    }
+  }
+
+  &.cat .nav_section.category.single {
+    border-color: transparent;
+  }
+
+  .category a, a.category {
+    padding: 3px 8px;
+    color: #fff;
+    font-size: 12px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    background-color: black;
+  }
+
+
+
+  #categories_page {
+    margin-top: 10px;
+  }
+
+  .category_table {
+    display: inline-block;
+    width: auto;
+    vertical-align: top;
+    margin-left: 10px;
+    margin-top: 10px;
+    .id {
+      width: 170px;
+    }
+    .description {
+      margin-left: 10px;
+    }
+  }
+
+  .prev_next_paging {
+    text-align: center;
+  }
+
+
+
+  #users_page ul {
+    list-style: none;
+    line-height: 10px;
+    li {
+      display: inline-block;
+      height: 40px;
+      width: 40px;
+      margin-bottom: 15px;
+      a {
+        display: block;
+        height: 54px;
+        text-decoration: none;
+        margin: 0px;
+        font-size: 7pt;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+        z-index: 0;
+        font-weight: bold;
+      }
+    }
+  }
+
+  #new_thread {
+    #new_thread_title, #new_category_description {
+      font-size: 20pt;
+      height: 24pt;
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+
+    form {
+      padding: 0px;
+    }
+
+    label, textarea {
+      width: 100%;
+      position: static;
+
+    }
+
+    #new_thread_preview {
+      border: none;
+    }
+
+    .submit {
+      left: 280px;
+    }
+
+    label {
+      display: inline;
+    }
+
+    input[type="radio"] {
+    }
+
+    input[type="radio"] + label {
+    }
+
+    input[type="radio"]:checked + label a {
+      border: 3px solid black;
+      border-radius: 4px;
+    }
+  }
+
+  .errors {
+    background-color: lighten(red, 50);
+  }
+
+  #save_warning {
+    position: relative;
+    color: grey;
+    font-style: italic;
+  }
+
+  #messages .message {
+    margin-top: 10px;
+    .topic_title {
+      font-style: italic;
+    }
+  }
+}
+
+

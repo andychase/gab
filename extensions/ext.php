@@ -6,5 +6,6 @@ return array(
   "parser_embed",
   "parser_markdown",
   "theme_silicone",
-  "ux_timeago"
+  "ux_timeago",
+  "feat_reply",
 );?>

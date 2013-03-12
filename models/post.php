@@ -194,7 +194,7 @@ class post {
         $statement = $pdo->prepare("
             SELECT author
             FROM forum
-            AND id = ?");
+            WHERE id = ?");
         $statement->execute(array($id));
         return $statement->fetchColumn();
     }
@@ -207,10 +207,12 @@ class post {
         $q = "
             UPDATE forum
             SET status = ?
-            WHERE id = ?;
+            WHERE id = ?
         ";
+
         $statement = $pdo->prepare($q);
-        return $statement->execute(array($hide, $post_id));
+        $statement->execute(array($hide, $post_id));
+        self::refresh_post_stats($post_id, true);
     }
 
     public static function modify_post($post_id, $text) {
@@ -224,9 +226,9 @@ class post {
         return $statement->execute(array($text, $post_id));
     }
 
-    public static function refresh_post_stats($topic_id) {
+    public static function refresh_post_stats($topic_id, $reply=false) {
         global $pdo;
-        $statement = $pdo->prepare("
+        $q = "
             UPDATE forum forum
             LEFT JOIN (
                  SELECT
@@ -264,8 +266,11 @@ class post {
                      most_replies.author_name,
                      most_replies.author_email_hash,
                      most_replies.replies_total)
-            WHERE forum.id = ?
-        ");
+        ";
+
+        if(!$reply) $q .= ' WHERE forum.id = ?';
+        else $q .= ' WHERE forum.id = (SELECT r.reply_to FROM (select reply_to from forum WHERE id = ?) r)';
+        $statement = $pdo->prepare($q);
         $statement->execute(array($topic_id));
     }
 

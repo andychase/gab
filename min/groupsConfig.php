@@ -11,7 +11,5 @@
  * See http://code.google.com/p/minify/wiki/CustomSource for other ideas
  **/
 
-return array(
-    // 'js' => array('//js/file1.js', '//js/file2.js'),
-    // 'css' => array('//css/file1.css', '//css/file2.css'),
-);
+if ($_GET['g'] && is_file("groups".DIRECTORY_SEPARATOR.$_GET['g']))
+    return unserialize(file_get_contents("groups".DIRECTORY_SEPARATOR.$_GET['g']));

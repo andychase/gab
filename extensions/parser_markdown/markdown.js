@@ -1070,3 +1070,9 @@
 }).call(function() {
     return this || (typeof window !== 'undefined' ? window : global);
 }());
+
+$(document).ready(function () {
+    $(".savable textarea").on('input propertychange', function () {
+        $(".savable #preview").html(marked($(this).val()));
+    });
+});

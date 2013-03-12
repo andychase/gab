@@ -1,0 +1,27 @@
+/*  Font Awesome styles    ------------------------------------------------------- */
+$fontAwesomePath:   "font" !default;
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('#{$fontAwesomePath}/fontawesome-webfont.eot?v=3.0.1');
+  src: url('#{$fontAwesomePath}/fontawesome-webfont.eot?#iefix&v=3.0.1') format("embedded-opentype"),
+  url('#{$fontAwesomePath}/fontawesome-webfont.woff?v=3.0.1') format("woff"),
+  url('#{$fontAwesomePath}/fontawesome-webfont.ttf?v=3.0.1') format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+.icon-link:before                 { content: "\f0c1"; }
+.icon-share-alt:before            { content: "\f064"; }
+.icon-flag:before                 { content: "\f024"; }
+.icon-caret-down:before           { content: "\f0d7"; }
+.icon-caret-up:before             { content: "\f0d8"; }
+.icon-ban-circle:before           { content: "\f05e"; }
+.icon-pencil:before               { content: "\f040"; }
+.icon-reply:before                { content: "\f112"; }
+
+.font-awesome  {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+}
