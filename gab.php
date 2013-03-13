@@ -147,7 +147,7 @@ class gab extends gab_settings
 
     function addPostChangedCallback($function_name, $order="") {
         // Called on post creations/update/delete
-        // Callbacks should have signature: function ($gab, $post) {return $post;}
+        // Callbacks should have signature: function ($gab, $post_id) {}
         if ($order == 'pre') array_unshift($this->post_changed_callbacks, $function_name);
         else $this->post_changed_callbacks[] = $function_name;
     }

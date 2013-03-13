@@ -142,8 +142,17 @@ class post {
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function add_view($post_id)
-    {
+    public static function get_simple($id) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            SELECT author, status
+            FROM forum
+            WHERE id = ?");
+        $statement->execute(array($id));
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function add_view($post_id) {
         global $pdo;
         $q = "
           UPDATE forum
@@ -154,8 +163,7 @@ class post {
         $statement->execute(array($post_id));
     }
 
-    public static function new_thread($user_id, $user_name, $user_email_hash, $title, $text, $cat=null)
-    {
+    public static function new_thread($user_id, $user_name, $user_email_hash, $title, $text, $cat=null)  {
         global $pdo;
         global $forum_id;
 
@@ -203,18 +211,6 @@ class post {
 
         return $post_id;
     }
-
-
-    public static function get_author($id) {
-        global $pdo;
-        $statement = $pdo->prepare("
-            SELECT author
-            FROM forum
-            WHERE id = ?");
-        $statement->execute(array($id));
-        return $statement->fetchColumn();
-    }
-
 
     public static function hide_post($post_id, $recover=false) {
         global $pdo;

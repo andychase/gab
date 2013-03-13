@@ -63,7 +63,6 @@ $compile_check = !$live;
 // Gab
 require_once('gab.php');
 $gab = new gab($smarty, $pdo);
-include('private.php');
 
 // Url Definitions
 // Url Regex (Left Side) is routed to a file in controller_folder (Right side)
