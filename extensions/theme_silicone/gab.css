@@ -609,9 +609,13 @@ html, body {
   border: none;
   border-bottom: 1px solid black;
   position: relative;
-  bottom: 1px;
+  bottom: 2px;
+  left: 5px;
+  width: 75px;
 }
 #forum #search .submit {
-  border: 1px solid black;
+  border: none;
+  background: none;
   color: black;
+  text-shadow: 0px 1px 1px rgba(1, 1, 1, 0.3);
 }

@@ -1,5 +1,4 @@
 <?php
-
 if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) > 0) {
 
     // Get information about the post
@@ -15,7 +14,7 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
         else if ($_POST['edit'])
             post::modify_post($post_id, $_POST['text']);
 
-        $this->triggerPostChangedCallback($post_id);
+        $this->changed_post_id = $post_id;
 
         $this->clearCache('single_post', $matches[1]);
         $this->clearCache('posts');
@@ -23,6 +22,6 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
         $this->clearCache('messages');
 
         header("location: ./");
-        if (!$GLOBALS['testing']) exit;
+        $this->redirect = true;
     }
 }

@@ -57,15 +57,17 @@ class gab extends gab_settings
     private $css = array();
     // Every function in here is run for places like posts' message bodies
     private $parsers = array();
-    // Every function in here is run when a post gets added/deleted/updated
-    private $post_changed_callbacks = array();
+    // For extensions to use
+    private $changed_post_id = array();
+    // If using location redirects, don't display page.
+    public $redirect = false;
 
     public $user_id;
     public $user_email_hash;
     public $user_name;
 
     // Extension API /////////////////////////
-    function addController($controller_name, $page, $order="") {
+    function addController($page, $controller_name, $order="") {
         $path =
             $this->extensions_folder .
                 DIRECTORY_SEPARATOR .
@@ -143,18 +145,6 @@ class gab extends gab_settings
             return $_SESSION['user_trust'] >= $this->trust_levels[$permission];
         else
             return false;
-    }
-
-    function addPostChangedCallback($function_name, $order="") {
-        // Called on post creations/update/delete
-        // Callbacks should have signature: function ($gab, $post_id) {}
-        if ($order == 'pre') array_unshift($this->post_changed_callbacks, $function_name);
-        else $this->post_changed_callbacks[] = $function_name;
-    }
-
-    function triggerPostChangedCallback($post_id) {
-        foreach ($this->post_changed_callbacks as $callback)
-            $callback($this, $post_id);
     }
 
     // Template //////////////////////////////
@@ -261,6 +251,7 @@ class gab extends gab_settings
                 else
                     require($controller);
             }
+            if (!$GLOBALS['testing'] && $this->redirect) exit;
             $this->smarty->caching = $this->caching;
             $this->prepare_static();
             $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);

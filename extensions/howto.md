@@ -18,7 +18,7 @@
 
 ## Api
 
-- ``$this->addController($controller_name, $page, [$order=""])``
+- ``$this->addController($page, $controller_name, [$order=""])``
 - ``$this->addPage($page, $callback_function)``
 - ``$this->addSmartyPlugin($plugin_type, $plugin_name, $function_name)``
 - ``$this->addTemplate($page, $template_name, [$order=""])``

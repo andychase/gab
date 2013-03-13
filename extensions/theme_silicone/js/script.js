@@ -45,14 +45,16 @@ $(document).ready(function () {
         $("#save_hover").animate({
             "bottom": "-60px"
         }, 400, 'swing', function () {
-            return $(this).hide();
+            $(this).hide();
         });
         $("#save_hover_clear").animate({
             "bottom": "-60px"
         }, 400, 'swing', function () {
             return $(this).hide();
         });
-        return $("#save_warning").hide(400);
+        $("#save_warning").hide(400, function () {
+            $(this).html("");
+        });
     });
 
     /* Show new Thread composer */

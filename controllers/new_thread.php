@@ -22,7 +22,7 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['message'],
                 $data['cat']);
 
-            $this->triggerPostChangedCallback($post_id);
+            $this->changed_post_id = $post_id;
 
             $this->clearCache("posts");
             $this->clearCache("categories");
@@ -34,7 +34,7 @@ if ($_POST['do'] == 'forum_new_thread') {
 
             // Redirect to new post
             header("Location: {$baseurl}/{$post_id}#post${post_id}");
-            if (!$GLOBALS['testing']) exit;
+            $this->redirect = true;
         } else {
             $this->addCacheId(hash("md4", implode("_", $errors)));
             $this->assign("posterror", true);

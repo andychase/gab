@@ -22,7 +22,7 @@ if (!$data['spam'] && $data['message'] && $data['reply_to'] && $data['author']) 
             $data['author_email_hash'],
             $data['message']);
 
-        $this->triggerPostChangedCallback($post_id);
+        $this->changed_post_id = $post_id;
 
         $this->clearCache('posts');
         $this->clearCache('single_post', $data['reply_to']);
@@ -36,7 +36,7 @@ if (!$data['spam'] && $data['message'] && $data['reply_to'] && $data['author']) 
 
         // Redirect to new reply
         header("Location: {$baseurl}/${data['reply_to']}#post${post_id}");
-        if (!$GLOBALS['testing']) exit;
+        $this->redirect = true;
     } else {
         $this->addCacheId(hash("md4", implode("_", $errors)));
         $this->assign("posterror", true);
