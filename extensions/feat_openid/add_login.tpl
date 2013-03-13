@@ -8,7 +8,6 @@
         <form action="/ext/openid" method="get" id="openid_form">
             <input type="hidden" name="action" value="verify" />
                 <div id="openid_choice">
-                    <p>Please click your account provider:</p>
                     <div id="openid_btns"></div>
                 </div>
                 <div id="openid_input_area">

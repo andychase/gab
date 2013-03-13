@@ -18,4 +18,19 @@ class gab_settings {
         "delete" => 1,
         "see_deleted" => 1
     );
+
+    // Extensions
+    public $ext = array(
+        "feat_openid",
+        "misc_gablogo",
+        "parser_embed",
+        "theme_silicone",
+        "parser_markdown",
+        "ux_timeago",
+        "search_"
+    );
+
+    // Search_ Settings
+    public $search_url  = "";
+    public $search_auth = array(/*Username:*/"", /*Password:*/"");
 }

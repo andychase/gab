@@ -10,6 +10,7 @@ class message {
             LEFT JOIN forum category on mention.reply_to = category.id
             WHERE mention.message LIKE ?
             AND mention.forum_id = ?
+            AND mention.status >= "normal"
 
             UNION
 
@@ -18,6 +19,7 @@ class message {
             LEFT JOIN forum category on mention.reply_to = category.id
             WHERE mention.message LIKE ?
             AND mention.forum_id = ?
+            AND mention.status >= "normal"
 
             UNION
 
@@ -26,6 +28,7 @@ class message {
             LEFT JOIN forum category on mention.reply_to = category.id
             WHERE mention.message LIKE ?
             AND mention.forum_id = ?
+            AND mention.status >= "normal"
 
             UNION
 
@@ -34,6 +37,7 @@ class message {
             LEFT JOIN forum category on mention.reply_to = category.id
             WHERE mention.message LIKE ?
             AND mention.forum_id = ?
+            AND mention.status >= "normal"
 
             ORDER BY time_created DESC
             ';

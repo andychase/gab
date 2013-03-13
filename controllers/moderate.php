@@ -16,5 +16,6 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
         $this->clearCache('single_post', $matches[1]);
         $this->clearCache('posts');
         $this->clearCache('categories');
+        $this->clearCache('messages');
     }
 }

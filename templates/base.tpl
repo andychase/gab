@@ -49,7 +49,8 @@
                 {block 'extra_links'}{/block}
                 {include 'sections/new_thread_cat_msg.tpl'}
             {elseif $forum_section == "msg"}
-                <a href="{$base_url}/new_message" id="new_link" class="nav_section new_link ss-plus"><span>New Message</span></a>
+                {*<a href="{$base_url}/new_message" id="new_link" class="nav_section new_link ss-plus"><span>New Message</span></a>
+                   Not implemented yet*}
                 {$new_name = 'Message'}
                 {block 'extra_links'}{/block}
                 {include 'sections/new_thread_cat_msg.tpl'}

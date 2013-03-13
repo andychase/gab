@@ -57,13 +57,13 @@ require_once('smarty/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->setCompileDir('smarty/compile');
 $smarty->setCacheDir('smarty/cache');
-$smarty->caching = 1;
 $smarty->cache_lifetime = 86400;
 $compile_check = !$live;
 
 // Gab
 require_once('gab.php');
 $gab = new gab($smarty, $pdo);
+include('private.php');
 
 // Url Definitions
 // Url Regex (Left Side) is routed to a file in controller_folder (Right side)

@@ -22,9 +22,11 @@
     {/if}
 {/block}
 {block 'post_actions'}
+    {if $logged_in}
     <a href='{$baseurl}/ext/flag/{$post.id}' class="flag" title="Flag as spam">
         <span class="txt">Flag</span>
     </a>
+    {/if}
     <a href='{$baseurl}/{$topic.id}#post{$post.id}' class="permalink" title="Permanent link for sharing">
         <span class="txt">Permalink</span>
     </a>

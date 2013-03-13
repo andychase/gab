@@ -39,23 +39,32 @@ class gab extends gab_settings
 
     public $smarty;
     public $pdo;
+    // By default, we cache
     public $caching = 1;
 
+    // List of pages provided by extensions
     private $extension_pages = array();
+    // Current extension for each of these pages
     private $extension_pages_ext = array();
+    // When loading up extensions, the extension that is loading is called here
     private $current_extension;
+    // When a page is being processed, it is placed here
     private $current_page;
+    // The id that allows us to have different caches for the same file
     private $cache_id = '';
+    // Extensions can add to these lists to include stuff
     private $javascript = array();
     private $css = array();
+    // Every function in here is run for places like posts' message bodies
     private $parsers = array();
+    // Every function in here is run when a post gets added/deleted/updated
+    private $post_changed_callbacks = array();
 
     public $user_id;
     public $user_email_hash;
     public $user_name;
 
     // Extension API /////////////////////////
-
     function addController($controller_name, $page, $order="") {
         $path =
             $this->extensions_folder .
@@ -122,6 +131,8 @@ class gab extends gab_settings
     }
 
     function addParser($function_name, $order="") {
+        // Callbacks called when message bodies are rendered
+        // Callbacks should have signature: function ($text) {return $text;}
         if ($order == 'pre') array_unshift($this->parsers, $function_name);
         else $this->parsers[] = $function_name;
     }
@@ -132,6 +143,13 @@ class gab extends gab_settings
             return $_SESSION['user_trust'] >= $this->trust_levels[$permission];
         else
             return false;
+    }
+
+    function addPostChangedCallback($function_name, $order="") {
+        // Called on post creations/update/delete
+        // Callbacks should have signature: function ($gab, $post) {return $post;}
+        if ($order == 'pre') array_unshift($this->post_changed_callbacks, $function_name);
+        else $this->post_changed_callbacks[] = $function_name;
     }
 
     // Template //////////////////////////////
@@ -156,7 +174,6 @@ class gab extends gab_settings
     }
 
     function addCacheId($id) {
-        // The most important Cache Id should be added last.
         $this->cache_id = "$id|".$this->cache_id;
     }
 
@@ -180,8 +197,7 @@ class gab extends gab_settings
         $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
 
         // Prepare Extensions ////////////////////////////
-        $ext = include($this->extensions_folder.DIRECTORY_SEPARATOR.'ext.php');
-        foreach($ext as $name) {
+        foreach($this->ext as $name) {
             $this->current_extension = $name;
             require($this->extensions_folder.
                     DIRECTORY_SEPARATOR.
@@ -192,7 +208,9 @@ class gab extends gab_settings
     }
 
     function prepare_static() {
-        // Prepare javascript and css list & hash
+        // Prepare javascript and css list & hash. Why?:
+        //   Basic way of hiding what extensions you are using
+        //   The list can get kinda long
         if (!$this->isCached()) {
             $js_hash = hash('md4', implode('/',$this->javascript));
             $css_hash = hash('md4', implode('/',$this->css));
