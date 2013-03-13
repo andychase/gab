@@ -2,42 +2,45 @@
 
 
 
-function reindex($gab) {
+function search_update_post($gab, $post_id) {
     global $pdo;
     $q = "
-    SELECT id, forum_id, author_name, title, message, time_created, views, replies
+    SELECT id, forum_id, author_name, title, message, time_created, views, replies, status
     FROM forum
-    WHERE id > ?
-    AND (type = 'post'
-         OR type = 'reply'
-         )
-    AND status >= 'normal'
+    WHERE id = ?
+    AND (
+         type = 'post'
+      OR type = 'reply'
+    )
+    LIMIT 1
     ";
     $statement = $pdo->prepare($q);
-    $statement->execute(array(0));
+    $statement->execute(array($post_id));
+    $post = $statement->fetch(PDO::FETCH_ASSOC);
 
     spl_autoload_register(function ($class) {
         include str_replace("_", "/", $class) . '.php';
     });
     require("Requests.php");
 
-    $posts = $statement->fetchAll(PDO::FETCH_ASSOC);
-    $output = "";
-    foreach($posts as $post) {
-       $output .=
-            // { "index" : { "_index" : "test", "_type" : "type1", "_id" : "1" } }
-           json_encode(array(
-             "index" => array( "_index" => "forum", "_type" => "post", "_id" => $post['id']))
-           ) . /* Newline */'
-' .
-           // { "field1" : "value1" }
-           json_encode($post) . /* Newline */ '
-';
-    }
+    if ($post['status'] == 'hidden' || $post['status'] == 'mod_hidden')
+        $method = Requests::DELETE;
+    else
+        $method = Requests::PUT;
 
-    $url = $gab->search_url;
-    $resp = Requests::PUT("$url/forum/post/_bulk", array(), $output, array('auth'=>$gab->search_auth));
-    //print_r($resp);
+    try {
+        // If there seems to be problems,
+        //   a good place to check is capturing the results
+        //   of this function, and print_r()ing it.
+        Requests::request(
+            "{$gab->search_url}/forum/post/{$post['id']}",
+            array(),
+            json_encode($post),
+            $method,
+            array('auth'=>$gab->search_auth));
+    } catch (Exception $e) {
+
+    }
 }
 
-$this->addPage('search_ext', 'reindex');
+$this->addPostChangedCallback('search_update_post');

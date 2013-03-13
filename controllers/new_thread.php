@@ -22,8 +22,7 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['message'],
                 $data['cat']);
 
-            foreach ($this->post_changed_callbacks as $callback)
-                $data = $callback($post_id);
+            $this->triggerPostChangedCallback($post_id);
 
             $this->clearCache("posts");
             $this->clearCache("categories");

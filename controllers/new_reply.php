@@ -22,8 +22,7 @@ if (!$data['spam'] && $data['message'] && $data['reply_to'] && $data['author']) 
             $data['author_email_hash'],
             $data['message']);
 
-        foreach ($this->post_changed_callbacks as $callback)
-            $data = $callback($post_id);
+        $this->triggerPostChangedCallback($post_id);
 
         $this->clearCache('posts');
         $this->clearCache('single_post', $data['reply_to']);

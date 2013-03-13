@@ -15,8 +15,7 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
         else if ($_POST['edit'])
             post::modify_post($post_id, $_POST['text']);
 
-        foreach ($this->post_changed_callbacks as $callback)
-            $data = $callback($post_id);
+        $this->triggerPostChangedCallback($post_id);
 
         $this->clearCache('single_post', $matches[1]);
         $this->clearCache('posts');

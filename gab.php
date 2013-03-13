@@ -152,6 +152,11 @@ class gab extends gab_settings
         else $this->post_changed_callbacks[] = $function_name;
     }
 
+    function triggerPostChangedCallback($post_id) {
+        foreach ($this->post_changed_callbacks as $callback)
+            $callback($this, $post_id);
+    }
+
     // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);
