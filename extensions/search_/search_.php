@@ -43,4 +43,11 @@ function search_update_post($gab, $post_id) {
     }
 }
 
+function display_search_page($gab) {
+    $gab->displayGeneric('search_page.tpl');
+}
+
 $this->addPostChangedCallback('search_update_post');
+$this->addTemplate('*', 'search_link.tpl');
+$this->addJavascript('search_.js');
+$this->addPage('search', 'display_search_page');

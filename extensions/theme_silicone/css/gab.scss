@@ -34,8 +34,11 @@ html, body {
     line-height: 13px;
   }
 
-  .nav_section.new_link {
+  .new_links {
     float: right;
+  }
+
+  .nav_section.new_link {
     text-decoration: none;
     span {
       text-decoration: underline;
@@ -48,6 +51,7 @@ html, body {
 
   #new_thread {
     display: none;
+    width: 100%;
   }
 
   &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat, &.users .nav_section.users {
@@ -188,6 +192,24 @@ html, body {
     margin-top: 10px;
     .topic_title {
       font-style: italic;
+    }
+  }
+
+  #search {
+    display: inline;
+    input {
+      font-size: 8pt;
+      border: none;
+      border-bottom: 1px solid black;
+      position: relative;
+      bottom: 1px;
+    }
+
+    .submit {
+      border: 1px solid black;
+      color: black;
+      @extend .icon-search;
+      @extend .font-awesome;
     }
   }
 }

@@ -174,7 +174,8 @@ class gab extends gab_settings
 
     function displayGeneric($template) {
         $this->addTemplate('posts', $template);
-        $this->smarty->caching = $this->caching;
+        $this->smarty->caching = 0;
+        $this->prepare_static(true);
         $this->smarty->display($this->templates['posts']);
     }
 
@@ -192,8 +193,8 @@ class gab extends gab_settings
         return "http://www.gravatar.com/avatar/{$email_hash}?s={$size}&d={$default_style}";
     }
 
-    function gab(Smarty $smarty, $pdo)
-    {
+    function gab(Smarty $smarty, $pdo) {
+
         $smarty->setTemplateDir($this->templates_folder);
         $this->smarty = $smarty;
         $this->pdo = $pdo;
@@ -212,11 +213,11 @@ class gab extends gab_settings
         }
     }
 
-    function prepare_static() {
+    function prepare_static($skip_caching=false) {
         // Prepare javascript and css list & hash. Why?:
         //   Basic way of hiding what extensions you are using
         //   The list can get kinda long
-        if (!$this->isCached()) {
+        if ($skip_caching || !$this->isCached()) {
             $js_hash = hash('md4', implode('/',$this->javascript));
             $css_hash = hash('md4', implode('/',$this->css));
             if(!is_file('min/groups/'.$js_hash.'.php'))

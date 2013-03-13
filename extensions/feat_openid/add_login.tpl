@@ -1,7 +1,5 @@
 {block 'new_links' append}
     {if !$logged_in}
-    <a href="{$base_url}/login" id="new_link" class="nav_section new_link ss-plus"><span>Login</span></a>
-    {$new_name = 'Login'}
     <div id="new_thread">
         <h2>Login</h2>
         <!-- Simple OpenID Selector -->
@@ -24,7 +22,10 @@
 {/block}
 
 {block 'extra_links' append}
-{if $logged_in}
-    <a href="{$base_url}/ext/openid_logout" class="nav_section new_link"><span>Logout</span></a>
-{/if}
+    {if !$logged_in}
+        <a href="{$base_url}/login" id="new_link" class="nav_section new_link ss-plus"><span>Login</span></a>
+        {$new_name = 'Login'}
+    {else}
+        <a href="{$base_url}/ext/openid_logout" class="nav_section new_link"><span>Logout</span></a>
+    {/if}
 {/block}

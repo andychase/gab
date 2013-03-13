@@ -39,7 +39,11 @@
   content: "\f112";
 }
 
-.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .post_at_reply .at_reply_link, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before {
+.icon-search:before, #forum #search .submit:before {
+  content: "\f002";
+}
+
+.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .post_at_reply .at_reply_link, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before, #forum #search .submit {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -470,8 +474,10 @@ html, body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   line-height: 13px;
 }
-#forum .nav_section.new_link {
+#forum .new_links {
   float: right;
+}
+#forum .nav_section.new_link {
   text-decoration: none;
 }
 #forum .nav_section.new_link span {
@@ -483,6 +489,7 @@ html, body {
 }
 #forum #new_thread {
   display: none;
+  width: 100%;
 }
 #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users {
   position: relative;
@@ -593,4 +600,18 @@ html, body {
 }
 #forum #messages .message .topic_title {
   font-style: italic;
+}
+#forum #search {
+  display: inline;
+}
+#forum #search input {
+  font-size: 8pt;
+  border: none;
+  border-bottom: 1px solid black;
+  position: relative;
+  bottom: 1px;
+}
+#forum #search .submit {
+  border: 1px solid black;
+  color: black;
 }

@@ -34,33 +34,45 @@
     {/block}
 
 
+
     {block 'show_new'}{$show_new=$logged_in}{/block}
     {block 'new_links'}
         {* User specific links (Often on the right side) *}
         {if $show_new}
             {if $forum_section == "posts" && !$topic}
-                <a href="{$base_url}/new_thread" id="new_link" class="nav_section new_link ss-plus"><span>New Thread</span></a>
+                <span class="new_links">
+                    {block 'extra_links'}{/block}
+                    <a href="{$base_url}/new_thread" id="new_link" class="nav_section new_link ss-plus"><span>New Thread</span></a>
+                </span>
                 {$new_name = 'Thread'}
-                {block 'extra_links'}{/block}
                 {include 'sections/new_thread_cat_msg.tpl'}
             {elseif $forum_section == "cat" && $user_trust >= $trust_levels.new_category}
-                <a href="{$base_url}/new_category" id="new_link" class="nav_section new_link ss-plus"><span>New Category</span></a>
+                <span class="new_links">
+                    {block 'extra_links'}{/block}
+                    <a href="{$base_url}/new_category" id="new_link" class="nav_section new_link ss-plus"><span>New Category</span></a>
+                </span>
                 {$new_name = 'Category'}
-                {block 'extra_links'}{/block}
                 {include 'sections/new_thread_cat_msg.tpl'}
             {elseif $forum_section == "msg"}
                 {*<a href="{$base_url}/new_message" id="new_link" class="nav_section new_link ss-plus"><span>New Message</span></a>
                    Not implemented yet*}
+                <span class="new_links">
+                    {block 'extra_links'}{/block}
+                </span>
                 {$new_name = 'Message'}
-                {block 'extra_links'}{/block}
                 {include 'sections/new_thread_cat_msg.tpl'}
             {else}
-                {block 'extra_links'}{/block}
+                <span class="new_links">
+                    {block 'extra_links'}{/block}
+                </span>
             {/if}
         {else}
-            {block 'extra_links'}{/block}
+            <span class="new_links">
+                {block 'extra_links'}{/block}
+            </span>
         {/if}
     {/block}
+
 
     {block 'forum'}{/block}
 </div>
