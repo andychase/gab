@@ -6,8 +6,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 require_once('gab_config.php');
-
-class gab extends gab_settings
+class gab extends gab_config
 {
     /// // ////// /////// ////////////////////
     //     GAB - Tiny Forums by Andy Chase.
@@ -19,7 +18,6 @@ class gab extends gab_settings
         'posts' => array('~new_thread.php', '~posts.php'),
         'single_category' => array('~single_category.php', '~posts.php'),
         'single_post' => array('~moderate.php', '~new_reply.php', '~single_post.php'),
-        'new_thread' => array('~new_thread.php', '~post.php'),
         'categories' => array('~new_category.php', '~categories.php'),
         'users' => array('~users.php'),
         'single_user' => array('~single_user.php'),
@@ -30,17 +28,15 @@ class gab extends gab_settings
         'posts' => 'extends:base.tpl|posts.tpl',
         'single_category' => 'extends:base.tpl|posts.tpl',
         'single_post' => 'extends:base.tpl|single_post.tpl',
-        'new_thread' => 'extends:base.tpl|new_thread_page.tpl',
         'categories' => 'extends:base.tpl|categories.tpl',
         'users' => 'extends:base.tpl|users.tpl',
         'single_user' => 'extends:base.tpl|single_user.tpl',
         'messages' => 'extends:base.tpl|messages.tpl',
     );
 
+    // Internal Variables ////////////////////
     public $smarty;
     public $pdo;
-    // By default, we cache
-    public $caching = 1;
 
     // List of pages provided by extensions
     private $extension_pages = array();
@@ -154,7 +150,8 @@ class gab extends gab_settings
 
     function clearCache($page, $cache_id=null) {
         global $forum_id;
-        $this->smarty->clearCache($this->templates[$page], "$forum_id|$cache_id");
+        if ($cache_id) $cache_id = '|'.$cache_id;
+        $this->smarty->clearCache($this->templates[$page], "{$forum_id}{$cache_id}");
     }
 
     function isCached() {
@@ -252,7 +249,6 @@ class gab extends gab_settings
                     require($controller);
             }
             if (!$GLOBALS['testing'] && $this->redirect) exit;
-            $this->smarty->caching = $this->caching;
             $this->prepare_static();
             $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);
         }

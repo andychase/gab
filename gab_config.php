@@ -1,6 +1,6 @@
 <?php
 
-class gab_settings {
+class gab_config {
     // Do not include the trailing slash on path names
     public $model_folder = "models";
     public $templates_folder = "templates";

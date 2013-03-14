@@ -1076,8 +1076,10 @@ var reply_to_replace = "<a href='#post$2' class='at_reply_link'> Reply to $1 </a
 $(document).ready(function () {
     var preview = $(".savable #preview");
     var input_area = $(".savable textarea");
-    preview.html(marked(input_area.val()).replace(reply_to_matcher, reply_to_replace));
-    input_area.on('input propertychange', function () {
+    if (preview.length && input_area.length) {
         preview.html(marked(input_area.val()).replace(reply_to_matcher, reply_to_replace));
-    });
+        input_area.on('input propertychange', function () {
+            preview.html(marked(input_area.val()).replace(reply_to_matcher, reply_to_replace));
+        });
+    }
 });

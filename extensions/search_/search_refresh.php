@@ -2,7 +2,7 @@
 if ($this->changed_post_id) {
     global $pdo;
     $q = "
-        SELECT id, forum_id, author_name, title, message, time_created, views, replies, status
+        SELECT id, forum_id, author_name, title, message, time_created, views, replies, status, type, reply_to
         FROM forum
         WHERE id = ?
         AND (

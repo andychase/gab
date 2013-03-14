@@ -57,6 +57,7 @@ require_once('smarty/Smarty.class.php');
 $smarty = new Smarty;
 $smarty->setCompileDir('smarty/compile');
 $smarty->setCacheDir('smarty/cache');
+$smarty->caching = 1;
 $smarty->cache_lifetime = 86400;
 $compile_check = !$live;
 
@@ -69,8 +70,8 @@ $gab = new gab($smarty, $pdo);
 // Array variable $matches contains url patterns. $matches[1] contains first () group.
 $urls = array(
     '/' => 'posts',
+    '/new_thread' => 'posts',
     '/([0-9]+)' => 'single_post',
-    '/new_thread' => 'new_thread',
     '/categories' => 'categories',
     '/category/([a-zA-Z0-9_]+)' => 'single_category',
     '/messages' => 'messages',

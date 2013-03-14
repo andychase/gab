@@ -4,3 +4,6 @@
         <button type="submit" value="search" class="submit" title="Search" ></button>
     </form>
 {/block}
+{block 'head' append}
+    <script type='text/javascript'>var search_url="{$search_url}";</script>
+{/block}
