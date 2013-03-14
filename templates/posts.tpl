@@ -33,7 +33,7 @@
     <tbody>
     {foreach from=$posts item=post}
         <tr>
-                <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape}</a></td>
+                <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape|truncate:35}</a></td>
                 <td>
                     <a href='{$base_url}/category/{$post.category|replace:" ":"_"}' class="category {if $post.category == ""}no_category{/if}">
                         {$post.category}

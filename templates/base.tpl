@@ -3,6 +3,7 @@
 
 {block 'top_navigation'}
 <div id="forum" class="{$forum_section}">
+    <div id="navigation">
     {block 'top_navigation_sections'}
         {* Posts *}
         <a href="{$base_url}/" class="nav_section posts">Posts</a>
@@ -30,7 +31,6 @@
         {if $show_messages}
             <a href="{$base_url}/messages" class="nav_section msg">Messages</a>
         {/if}
-
     {/block}
 
 
@@ -45,14 +45,12 @@
                     <a href="{$base_url}/new_thread" id="new_link" class="nav_section new_link ss-plus"><span>New Thread</span></a>
                 </span>
                 {$new_name = 'Thread'}
-                {include 'sections/new_thread_cat_msg.tpl'}
             {elseif $forum_section == "cat" && $user_trust >= $trust_levels.new_category}
                 <span class="new_links">
                     {block 'extra_links'}{/block}
                     <a href="{$base_url}/new_category" id="new_link" class="nav_section new_link ss-plus"><span>New Category</span></a>
                 </span>
                 {$new_name = 'Category'}
-                {include 'sections/new_thread_cat_msg.tpl'}
             {elseif $forum_section == "msg"}
                 {*<a href="{$base_url}/new_message" id="new_link" class="nav_section new_link ss-plus"><span>New Message</span></a>
                    Not implemented yet*}
@@ -60,7 +58,7 @@
                     {block 'extra_links'}{/block}
                 </span>
                 {$new_name = 'Message'}
-                {include 'sections/new_thread_cat_msg.tpl'}
+                
             {else}
                 <span class="new_links">
                     {block 'extra_links'}{/block}
@@ -71,7 +69,13 @@
                 {block 'extra_links'}{/block}
             </span>
         {/if}
+    </div>
+    {if $new_name == 'Thread' || $new_name == 'Category' || $new_name == 'Message'}
+        {include 'sections/new_thread_cat_msg.tpl'}
+    {/if}
     {/block}
+    
+    
 
 
     {block 'forum'}{/block}

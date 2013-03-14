@@ -6,5 +6,5 @@ smarty/cache/*
 extensions/theme-silicone/css/.sass-cache/*
 extensions/theme-silicone/css/.sass-cache/
 min/groups/*
-private.php
+custom_gab.php
 

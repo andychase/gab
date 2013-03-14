@@ -466,6 +466,9 @@ html, body {
   background: none !important;
   border: none;
 }
+#forum a img {
+  border: none;
+}
 #forum .nav_section {
   color: black;
   padding: 3px 8px;
@@ -473,9 +476,17 @@ html, body {
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   line-height: 13px;
+  background-color: white;
 }
 #forum .new_links {
-  float: right;
+  position: absolute;
+  right: 0px;
+  z-index: -1;
+}
+#forum #navigation {
+  position: relative;
+  display: block;
+  z-index: 5;
 }
 #forum .nav_section.new_link {
   text-decoration: none;

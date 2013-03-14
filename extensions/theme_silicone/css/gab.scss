@@ -25,6 +25,10 @@ html, body {
     }
   }
 
+  a img {
+    border: none;
+  }
+
   .nav_section {
     color: black;
     padding: 3px 8px;
@@ -32,10 +36,19 @@ html, body {
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
     line-height: 13px;
+    background-color: white;
   }
 
   .new_links {
-    float: right;
+    position: absolute;
+    right: 0px;
+    z-index: -1;
+  }
+  
+  #navigation {
+    position: relative;
+    display: block;
+    z-index: 5;
   }
 
   .nav_section.new_link {
@@ -194,7 +207,7 @@ html, body {
       font-style: italic;
     }
   }
-
+  
   #search {
     display: inline;
     input {
