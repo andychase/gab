@@ -1,16 +1,13 @@
 <?php
 
 class gab_config {
-    // General Forum Settings
+    // General Forum //// /////////////////////////////////
     public $forum_name = "Gab";
     public $forum_description = "
     Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy.
     ";
 
-
-
-    // Deployment configuration
-
+    // Deployment /////// /////////////////////////////////
     // Do not include the trailing slash on path names
     public $model_folder = "models";
     public $templates_folder = "templates";
@@ -20,30 +17,30 @@ class gab_config {
     // Examples: '' or '/gab'
     public $base_url = "";
 
+    // Moderator //////// ///////////////////////////
     // Defines the actions allowed for each trust level.
     //   Number on left is action, right is minimum trust integer.
-    // NOTE: The openid extension makes the first registered user a lvl 99 mod.
+    // Note: The openid extension makes the first registered user a level 99 mod.
     public $trust_levels = array (
         "new_category" => 1,
         "delete" => 1,
         "see_deleted" => 1
     );
 
-    // Extensions
+    // Extension //////// ///////////////////////////
+    // Active Extensions
     public $ext = array(
+        "feat_options",
         "feat_openid",
         "misc_gablogo",
         "parser_embed",
         "theme_silicone",
         "parser_markdown",
         "ux_timeago",
-        "feat_options",
         "search_",
     );
 
-
-
-    // Search_ Settings
+    // Search_
     public $search_url  = "";
     public $search_auth = array(/*Username:*/"", /*Password:*/"");
 }

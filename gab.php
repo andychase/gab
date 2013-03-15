@@ -1,8 +1,14 @@
 <?php
 /*
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+ persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
 require_once('gab_config.php');
@@ -97,8 +103,7 @@ class gab extends gab_config
                 else if ($order == 'pre' && strpos($tpl, '|') !== False)
                     $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
             }
-        }
-        else {
+        } else {
             $tpl = $this->templates[$page];
             if (!$order)
                 $this->templates[$page] .= "|file:$folder/$ext/$template_name";
@@ -152,7 +157,10 @@ class gab extends gab_config
     function clearCache($page, $cache_id=null) {
         global $forum_id;
         if ($cache_id) $cache_id = '|'.$cache_id;
-        $this->smarty->clearCache($this->templates[$page], "{$forum_id}{$cache_id}");
+        if ($page != null)
+            $this->smarty->clearCache($this->templates[$page], "{$forum_id}{$cache_id}");
+        else
+            $this->smarty->clearCache(null, "{$forum_id}{$cache_id}");
     }
 
     function isCached() {
@@ -171,34 +179,14 @@ class gab extends gab_config
         $this->cache_id = "$id|".$this->cache_id;
     }
 
-    public function parse($text) {
+    function parse($text) {
         foreach($this->parsers as $parser)
             $text = $parser($text);
         return $text;
     }
 
-    public function avatar($email_hash, $size=40, $default_style='retro') {
+    function avatar($email_hash, $size=40, $default_style='retro') {
         return "http://www.gravatar.com/avatar/{$email_hash}?s={$size}&d={$default_style}";
-    }
-
-    function gab(Smarty $smarty, $pdo) {
-
-        $smarty->setTemplateDir($this->templates_folder);
-        $this->smarty = $smarty;
-        $this->pdo = $pdo;
-
-        $this->addSmartyPlugin('modifier', 'avatar', array($this, 'avatar'));
-        $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
-
-        // Prepare Extensions ////////////////////////////
-        foreach($this->ext as $name) {
-            $this->current_extension = $name;
-            require($this->extensions_folder.
-                    DIRECTORY_SEPARATOR.
-                    $name.
-                    DIRECTORY_SEPARATOR.
-                    "$name.php");
-        }
     }
 
     function prepare_static($skip_caching=false) {
@@ -216,6 +204,26 @@ class gab extends gab_config
             $this->assign('css_url', '/min/?g='.$css_hash);
         }
     }
+    
+    function gab(Smarty $smarty, $pdo) {
+
+        $smarty->setTemplateDir($this->templates_folder);
+        $this->smarty = $smarty;
+        $this->pdo = $pdo;
+
+        $this->addSmartyPlugin('modifier', 'avatar', array($this, 'avatar'));
+        $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
+
+        // Prepare Extensions ////////////////////////////
+        foreach($this->ext as $name) {
+            $this->current_extension = $name;
+            require($this->extensions_folder.
+                DIRECTORY_SEPARATOR.
+                $name.
+                DIRECTORY_SEPARATOR.
+                "$name.php");
+        }
+    }
 
     function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust, $forum_id=2) {
         $this->assign('base_url', $this->base_url);
@@ -226,8 +234,6 @@ class gab extends gab_config
 
         $GLOBALS['forum_id'] = $forum_id;
 
-
-        // User
         $this->assign("trust_levels", $this->trust_levels);
         if ($user_id) {
             $this->assign('logged_in', true);
@@ -242,9 +248,7 @@ class gab extends gab_config
             if (array_key_exists($matches[1], $this->extension_pages)) {
                 $this->current_extension = $this->extension_pages_ext[$matches[1]];
                 call_user_func_array($this->extension_pages[$matches[1]], array($this));
-            }
-            else
-                echo "Not found";
+            } else return true;
         } else {
             foreach($this->controllers[$page] as $controller) {
                 if ($controller[0] == "~")
@@ -252,9 +256,10 @@ class gab extends gab_config
                 else
                     require($controller);
             }
-            if (!$GLOBALS['testing'] && $this->redirect) exit;
+            if (!$GLOBALS['testing'] && $this->redirect) return false;
             $this->prepare_static();
             $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);
+            return false;
         }
     }
 

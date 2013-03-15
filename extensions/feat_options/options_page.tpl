@@ -51,7 +51,8 @@
     <a href="?section=ext">Extensions</a>
 </div>
 
-<form action='ext/options' method="post" id="config">
+<form action='' method="post" id="config">
+<input type='hidden' name='do' value='save_config' />
 {if $section == ''}
     {block 'general'}{/block}
 {elseif $section == 'theme'}
@@ -60,7 +61,7 @@
     {block 'ext'}{/block}
 {/if}
 <span class="center">
-    <input type="submit" value="save" class="save" />
+    <input type="submit" value="Save" class="save" />
 </span>
 </form>
 
@@ -105,13 +106,13 @@
 {block 'ext'}
 <h3>Extensions</h3>
 <table>
-    <thead><tr><th>Extension</th><th>On</th><th>Off</th><th>Description</th><th>Link</th></tr></thead>
+    <thead><tr><th>Extension</th><th>On</th><th>Off</th><th>Description</th><th></th></tr></thead>
     <tbody>
         {foreach $exts as $ext}
         <tr>
             <td>{$ext.name}</td>
-            <td><input type="radio" name="{$ext@index}" value="on" {if $ext.active}checked="checked"{/if} /></td>
-            <td><input type="radio" name="{$ext@index}" value="off" {if !$ext.active}checked="checked"{/if} /></td>
+            <td><input type="radio" name="{$ext.name}" value="on" {if $ext.active}checked="checked"{/if} /></td>
+            <td><input type="radio" name="{$ext.name}" value="off" {if !$ext.active}checked="checked"{/if} /></td>
             <td>{$ext.desc}</td>
             <td><a href="http://gabBB.com/ext/{$ext.name}">-&gt;</a></td>
         </tr>

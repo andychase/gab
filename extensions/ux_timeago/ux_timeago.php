@@ -48,4 +48,8 @@ function smarty_modifier_timeAgo( $date)
 }
 
 $this->addSmartyPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
+$this->addTemplate('posts', 'timeago.tpl');
+$this->addTemplate('categories', 'timeago.tpl');
+$this->addTemplate('single_category', 'timeago.tpl');
+$this->addTemplate('messages', 'timeago.tpl');
 $this->addTemplate('single_post', 'timeago.tpl');

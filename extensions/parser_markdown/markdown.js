@@ -1071,7 +1071,7 @@
     return this || (typeof window !== 'undefined' ? window : global);
 }());
 
-var reply_to_matcher = /\@([a-z]+):([0-9]+)/i;
+var reply_to_matcher = /\@([a-z0-9_]+):([0-9]+)/i;
 var reply_to_replace = "<a href='#post$2' class='at_reply_link'> Reply to $1 </a>";
 $(document).ready(function () {
     var preview = $(".savable #preview");

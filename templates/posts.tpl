@@ -53,7 +53,7 @@
                 </td>
                 <td class='replies'>{if $post.replies}{$post.replies}{/if}</td>
                 <td class='views'>{if $post.views}{$post.views}{/if}</td>
-                <td class='last_reply'>{if $post.last_reply}{$post.last_reply|timeAgo}{/if}</td>
+                <td class='last_reply'>{if $post.last_reply}{block 'last_reply'}{$post.last_reply}{/block}{/if}</td>
         </tr>
     {/foreach}
     </tbody>

@@ -46,7 +46,8 @@ function get_exts($gab) {
 }
 
 function feat_options_page($gab) {
-    if($gab->user_trust < 99) return;
+    if ($gab->user_trust < 99) return;
+    if ($_POST['do']) return save_changes($gab);
 
     $gab->assign("section", $_GET['section']);
     $gab->assign("name_disabled", 'disabled="disabled"');
@@ -59,6 +60,54 @@ function feat_options_page($gab) {
         $gab->assign("exts", get_exts($gab));
 
     $gab->displayGeneric('options_page.tpl');
+}
+
+
+function save_changes($gab) {
+    global $forum_id;
+    require(dirname(__FIlE__).'/output_custom_config.php');
+    // Name & Desc
+    if ($_POST['name'])
+        $name = $_POST['name'];
+    else
+        $name = $gab->forum_name;
+    if ($_POST['description'])
+        $desc = $_POST['description'];
+    else
+        $desc = $gab->forum_description;
+    // Trust Levels
+    $new_trust = array();
+    foreach ($gab->trust_levels as $level => $key)
+        if ($_POST[$level])
+            $new_trust[$level] = intval($_POST[$level]);
+        else
+            $new_trust[$level] = $gab->trust_levels[$level];
+    // Theme
+    $new_ext = $gab->ext;
+    if ($_GET['section'] == 'theme') {
+        $new_ext = $gab->ext;
+        foreach ($gab->ext as $ext)
+            if (substr($ext, 0, 6) == 'theme_')
+                unset($new_ext[$ext]);
+        $new_ext[] = $_POST['theme'];
+    }
+    // Ext
+    if ($_GET['section'] == 'ext') {
+        $new_ext = array();
+        foreach ($gab->ext as $ext)
+            if (substr($ext, 0, 6) == 'theme_')
+                $new_ext = array($ext);
+        $exts = get_exts($gab);
+        foreach ($exts as &$ext) {
+            if ($_POST[$ext['name']] == 'on')
+                $new_ext[] = $ext['name'];
+            if (substr($ext['name'], 0, 6) == 'theme_')
+                $new_ext[] = $ext['name'];
+        }
+    }
+    output_custom_config($forum_id, $name, $desc, $new_trust, $new_ext);
+    $gab->clearCache(null, null);
+    header("Location: /ext/options/?section=".$_GET['section']);
 }
 
 

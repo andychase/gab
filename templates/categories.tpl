@@ -30,7 +30,9 @@
                                 {elseif $key == 'title'}
                                     {$value|escape|truncate:30} </a></td>
                             {elseif $key == 'last_reply'}
-                            <td class='{$key}'>{if $value}{$value|timeAgo}{/if}</td>
+                            <td class='{$key}'>
+                                {if $value}{block 'category_last_reply'}{$value}{/block}{/if}
+                            </td>
                             {else}
                             <td class='{$key}'>{$value|escape}</td>
                         {/if}
