@@ -64,6 +64,8 @@ html, body {
   #new_thread {
     display: none;
     width: 100%;
+    overflow: hidden;
+    padding-bottom: 6px;
   }
 
   &.posts .nav_section.posts, &.msg .nav_section.msg, &.cat .nav_section.cat, &.users .nav_section.users {
@@ -100,29 +102,11 @@ html, body {
 
 
 
-  #categories_page {
-    margin-top: 10px;
-  }
 
-  .category_table {
-    display: inline-block;
-    width: auto;
-    vertical-align: top;
-    margin-left: 10px;
-    margin-top: 10px;
-    .id {
-      width: 170px;
-    }
-    .description {
-      margin-left: 10px;
-    }
-  }
 
   .prev_next_paging {
     text-align: center;
   }
-
-
 
   #users_page ul {
     list-style: none;
@@ -176,6 +160,7 @@ html, body {
 
     label {
       display: inline;
+      margin-right: 4px;
     }
 
     input[type="radio"] {

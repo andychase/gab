@@ -399,18 +399,6 @@
   display: none;
 }
 
-#forum .category_table {
-  max-width: 280px;
-}
-#forum .category_table .category {
-  max-width: 135px;
-  overflow: hidden;
-}
-#forum .category_table .id a {
-  max-width: 160px;
-  display: inline-block;
-  white-space: nowrap;
-}
 #forum #posts_table, #forum .category_table {
   margin-top: 10px;
   width: 100%;
@@ -465,6 +453,26 @@
 }
 #forum #posts_table thead tr.headers a:hover, #forum .category_table thead tr.headers a:hover {
   border-bottom: 1px grey dotted;
+}
+#forum #categories_page {
+  margin-top: 10px;
+}
+#forum .category_table {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+  margin-top: 10px;
+  width: auto;
+}
+#forum .category_table .id a {
+  display: inline-block;
+  white-space: nowrap;
+}
+#forum .category_table .id {
+  width: 160px;
+}
+#forum .category_table .description {
+  margin-left: 10px;
 }
 
 html, body {
@@ -521,6 +529,8 @@ html, body {
 #forum #new_thread {
   display: none;
   width: 100%;
+  overflow: hidden;
+  padding-bottom: 6px;
 }
 #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users {
   position: relative;
@@ -549,22 +559,6 @@ html, body {
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
   background-color: black;
-}
-#forum #categories_page {
-  margin-top: 10px;
-}
-#forum .category_table {
-  display: inline-block;
-  width: auto;
-  vertical-align: top;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-#forum .category_table .id {
-  width: 170px;
-}
-#forum .category_table .description {
-  margin-left: 10px;
 }
 #forum .prev_next_paging {
   text-align: center;
@@ -613,6 +607,7 @@ html, body {
 }
 #forum #new_thread label {
   display: inline;
+  margin-right: 4px;
 }
 #forum #new_thread input[type="radio"]:checked + label a {
   border: 3px solid black;

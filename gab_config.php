@@ -1,13 +1,23 @@
 <?php
 
 class gab_config {
+    // General Forum Settings
+    public $forum_name = "Gab";
+    public $forum_description = "
+    Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy.
+    ";
+
+
+
+    // Deployment configuration
+
     // Do not include the trailing slash on path names
     public $model_folder = "models";
     public $templates_folder = "templates";
     public $controller_folder = "controllers";
     public $extensions_folder = "extensions";
 
-    // Ex. '' or '/gab'
+    // Examples: '' or '/gab'
     public $base_url = "";
 
     // Defines the actions allowed for each trust level.
@@ -30,6 +40,8 @@ class gab_config {
         "feat_options",
         "search_",
     );
+
+
 
     // Search_ Settings
     public $search_url  = "";

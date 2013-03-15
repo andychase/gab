@@ -2,20 +2,17 @@
 
 {block "forum"}
 <div id='categories_page'>
-    {foreach from=$categories item=category}
+    {foreach $categories as $category}
             <table class="category_table">
                 <thead>
                 <tr>
                     <th colspan="3">
                         {if $category.title}
-                        <a href='{$base_url}/category/{$category.title|escape}'
-                           class="category">
+                        <a href='{$base_url}/category/{$category.title|escape}' class="category"
+                           title="{$category.message}">
                             {$category.title}
                         </a>
                         {/if}
-                        <span class="description">
-                            {$category.message}
-                        </span>
                     </th>
                  </tr>
                  <tr>

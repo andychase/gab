@@ -88,20 +88,36 @@ $(document).ready(function () {
     $(".category").each(colorizer);
 
     /* New Category Previewer */
-    if ($("#new_category_description").length > 0) {
-        $("#preview").html("<table class=\"category_table\"><thead><tr>\n<th colspan=\"3\"><a href=\"/\" class=\"category\">\n</a><span class=\"description\"></span>\n</th></tr></thead></table>");
+    if ($("#new_category_description").length) {
+        $("#preview").html("<table class=\"category_table\"><thead><tr>\n<th colspan=\"3\"><a href=\"/\" class=\"category\">\n</a>\n</th></tr></thead></table>");
         title_box = $("#new_thread_title");
         desc_box = $("#new_category_description");
         preview_title = $("#preview .category");
-        preview_description = $("#preview .description");
         title_box.keyup(function () {
             preview_title.html(title_box.val());
-            return preview_title.each(colorizer);
-        });
-        return desc_box.keyup(function () {
-            return preview_description.html(desc_box.val());
+            preview_title.each(colorizer);
         });
     }
+
+
+    var warning = $("#new_thread .warning");
+    $("#new_thread_title").bind('input', function (){
+        if ($(this).val().length > 80)
+            warning.html($(this).val().length - 80 + " characters in title will be cut off.  ");
+        else if ($(this).val().length > 65)
+            warning.html(80 - $(this).val().length + " characters left in title. Rest will be cut off.");
+        else
+            warning.html("");
+    });
+    $("#new_thread textarea").bind('input', function (){
+        if ($(this).val().length > 5000)
+            warning.html($(this).val().length - 5000 + " characters in message will be cut off.  ");
+        else if ($(this).val().length > 4950)
+            warning.html(5000 - $(this).val().length + " characters left in message. Rest will be cut off.");
+        else
+            warning.html("");
+    });
+
 
     /* Reply Button */
     $('.reply').click(function () {

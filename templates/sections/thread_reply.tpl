@@ -14,7 +14,7 @@
                 <textarea name="text"></textarea>
             </label>
             <div id="save_warning"></div>
-            <input name="text_b" class="text_b" />
+            <input name="text_b" class="text_b" disabled="disabled" />
             <div id='preview'></div>
             <input type="hidden" name="do" value="forum_reply" />
             <input type="hidden" name="topic_id" value="{$topic.id}" />

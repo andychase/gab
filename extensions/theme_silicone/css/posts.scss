@@ -1,18 +1,4 @@
 #forum {
-
-  .category_table {
-    max-width: 280px;
-    .category {
-      max-width: 135px;
-      overflow: hidden;
-    }
-    .id a {
-      max-width: 160px;
-      display: inline-block;
-      white-space: nowrap;
-    }
-  }
-
   #posts_table, .category_table {
     margin-top: 10px;
     width: 100%;
@@ -87,4 +73,29 @@
       }
     }
   }
+
+
+  #categories_page {
+    margin-top: 10px;
+  }
+
+  .category_table {
+    .id a {
+      display: inline-block;
+      white-space: nowrap;
+    }
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+    margin-top: 10px;
+    width: auto;
+    .id {
+      width: 160px;
+    }
+    .description {
+      margin-left: 10px;
+    }
+  }
+
+
 }

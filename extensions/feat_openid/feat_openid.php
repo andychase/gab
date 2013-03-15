@@ -80,6 +80,7 @@ if ($_COOKIE['PHPSESSID']) {
         $this->assign('logged_in', true);
         $this->assign('user_logged_in', $_SESSION['user_logged_in']);
         $this->assign('user_trust', $_SESSION['user_trust']);
+        $this->user_trust = $_SESSION['user_trust'];
         $this->addCacheId($_SESSION['user_logged_in']);
     }
 }

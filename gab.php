@@ -61,6 +61,7 @@ class gab extends gab_config
     public $user_id;
     public $user_email_hash;
     public $user_name;
+    public $user_trust;
 
     // Extension API /////////////////////////
     function addController($page, $controller_name, $order="") {
@@ -219,6 +220,8 @@ class gab extends gab_config
     function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust, $forum_id=2) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
+        $this->assign('forum_name', $this->forum_name);
+        $this->assign('forum_desc', $this->forum_description);
         $this->current_page = $page;
 
         $GLOBALS['forum_id'] = $forum_id;
@@ -230,6 +233,7 @@ class gab extends gab_config
             $this->assign('logged_in', true);
             $this->assign('user_logged_in', $user_id);
             $this->assign('user_trust', $user_trust);
+            $this->user_trust = $user_trust;
             $this->addCacheId($user_id);
         }
 

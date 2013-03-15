@@ -4,23 +4,21 @@ if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->tr
 
     $data = array(
         "title" => $_POST['title'],
-        "text" => $_POST['description'],
-        "text_b" => $_POST['text_b'],
+        "description" => $_POST['description'],
+        "spam" => $_POST['text_b'],
         "user" => $_SESSION['user_logged_in'],
         "user_name" => $_SESSION['user_name'],
         "user_email_hash" => $_SESSION['user_email_hash'],
     );
 
-    if (!$data['text_b'] && strlen($data['title']) > 0) {
-        $this->caching = 0;
-
+    if (!$data['spam'] && $data['title']) {
         if (empty($errors)) {
             $post_id = category::new_category(
                 $data['user'],
                 $data['user_name'],
                 $data['user_email_hash'],
                 $data['title'],
-                $data['text']
+                $data['description']
                 );
 
             $this->clearCache("categories");

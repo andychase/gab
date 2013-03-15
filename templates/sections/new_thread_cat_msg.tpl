@@ -13,10 +13,11 @@
                 {/foreach}
             </ul>
         {/if}
+        <div class="warning"></div>
          <label>
             {if $new_name == "Message"}To:{/if}
             {if $new_name == "Category"}Name:{/if}
-            <input type="text" name="title" id="new_thread_title" />
+            <input type="text" name="title" id="new_thread_title" /><br />
             {if $new_name == "Thread" && count($categories) > 0}
             {foreach $categories as $category}
                 <input type="radio" name="category" id="category_picker cat{$category@index}" value="{$category.id}" />
@@ -27,10 +28,10 @@
                 </label>
             {/foreach}
             {/if}
-        </label>
+        </label><br />
         <label>
             {if $new_name == "Category"}Description:
-            <input type="text" name="Description" id="new_category_description" />
+            <input type="text" name="description" id="new_category_description" />
             {else}
             {if $new_name == "Message"}Message:{/if}
             <textarea name="text"></textarea>
@@ -40,7 +41,7 @@
         <input type="hidden" name="do" value="forum_new_{$new_name|lower}" />
         <div id="preview">
         </div>
-        <input type="text" name="title_b" class="text_b" />
+        <input type="text" name="title_b" class="text_b" disabled="disabled" />
         <input type="submit" class="submit" value="Submit">
     </form>
 </div>
