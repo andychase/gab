@@ -41,8 +41,8 @@ class user {
              post.`time_last_activity`,
              post.`status`, post.`type`, post.`message`
             FROM forum post
-            WHERE post.`type` = 'post'
-            OR post.`type` = 'reply'
+            WHERE (post.`type` = 'post'
+            OR post.`type` = 'reply')
             AND post.`author` = ?
             AND status >= 'normal'
 

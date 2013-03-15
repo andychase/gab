@@ -31,11 +31,11 @@
         </tr>
     </thead>
     <tbody>
-    {foreach from=$posts item=post}
-        <tr>
-                <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape|truncate:35}</a></td>
+    {foreach $posts as $post}
+        <tr {if $post@index % 2}class="even"{/if}>
+                <td class='id'><a href='{$base_url}/{$post.id}'>{$post.title|escape}</a></td>
                 <td>
-                    <a href='{$base_url}/category/{$post.category|replace:" ":"_"}' class="category {if $post.category == ""}no_category{/if}">
+                    <a href='{$base_url}/category/{$post.category|escape}' class="category {if $post.category == ""}no_category{/if}">
                         {$post.category}
                     </a>
                 </td>

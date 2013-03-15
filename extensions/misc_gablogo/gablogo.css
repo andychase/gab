@@ -46,3 +46,13 @@ body {
     width: 100%;
 }
 
+#posts_table .id a {
+    width: 250px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+#posts_table .category {
+    max-width: 57px;
+    overflow: hidden;
+}

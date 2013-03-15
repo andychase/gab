@@ -1,3 +1,3 @@
 <?php
 
-$category = $matches[1];
+$category = urldecode($matches[1]);

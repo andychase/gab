@@ -20,7 +20,7 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['author_email_hash'],
                 $data['title'],
                 $data['message'],
-                $data['cat']);
+                $data['category']);
 
             $this->changed_post_id = $post_id;
 

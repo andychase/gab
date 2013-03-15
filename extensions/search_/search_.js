@@ -2,10 +2,10 @@
 function prefix_q (q) {return {
     query: {
         text_phrase_prefix : {
-                        title: {
-                            query: q,
-                            max_expansions: 10
-                        }
+            title: {
+                query: q,
+                max_expansions: 10
+            }
         }
     },
     "highlight" : {
@@ -29,24 +29,24 @@ function queryElasticSearch(input, query, success) {
         success: success
     };
     $.ajax(ajaxOptions);
-};
+}
 
 var search_replace_section;
 
 $(document).ready(function () {
-    if ($("#posts_table").length)
-        search_replace_section = $("#posts_table");
-    if($(".post_replies").length)
-        search_replace_section = $(".post_replies");
+    if ($("#forum_content").length)
+        search_replace_section = $("#forum_content");
 
-    
-    function updateSearch() {
-        if ($(this).val().trim() == "") {
+
+    function updateSearch(event) {
+        // If field is now empty
+        if (!$.trim(this.value).length) {
+            // Clear input
             search_replace_section.show();
             $(".prev_next_paging").show();
             $("#search_results").hide();
-            
         } else {
+            // Update search results
             queryElasticSearch($(this).val(), prefix_q, function (data) {
                 search_replace_section.hide();
                 $(".prev_next_paging").hide();
@@ -65,7 +65,6 @@ $(document).ready(function () {
                 if (data.hits && data.hits.hits.length)
                     for (var i = 0; i < data.hits.hits.length; i++) {
                         curr = data.hits.hits[i];
-                        console.log(data.hits);
                         if (curr.highlight)
                             curr_title = curr.highlight.title.join('');
                         else
@@ -82,6 +81,5 @@ $(document).ready(function () {
             });
         }
     }
-    $("#search input").keypress(updateSearch);
-    $("#search input").change(updateSearch);
+    $("#search input").bind('input',updateSearch);
 });

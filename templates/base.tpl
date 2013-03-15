@@ -3,27 +3,27 @@
 
 {block 'top_navigation'}
 <div id="forum" class="{$forum_section}">
-    <div id="navigation">
+    <div id="forum_navigation">
     {block 'top_navigation_sections'}
         {* Posts *}
         <a href="{$base_url}/" class="nav_section posts">Posts</a>
         {* Post -> Topic *}
         {if $topic}
-            <a href="{$base_url}/{$topic.id}" class="nav_section posts single">{$topic.title|escape|truncate:30}</a>
+            <a href="{$base_url}/{$topic.id}" class="nav_section posts single">{$topic.title|escape|truncate:25}</a>
         {/if}
 
         {* Categories *}
         <a href="{$base_url}/categories" class="nav_section cat">Categories</a>
         {*  Categories -> Category *}
         {if $category}
-            <a href="{$base_url}/category/{$category}" class="nav_section category cat single">{$category|escape|truncate:30}</a>
+            <a href="{$base_url}/category/{$category}" class="nav_section category cat single">{$category}</a>
         {/if}
 
         {* Users *}
         <a href="{$base_url}/users" class="nav_section users">Users</a>
         {*  Users -> User *}
         {if $user_name}
-            <a href="{$base_url}/user/{$user_name}" class="nav_section users single">{$user_name|escape|truncate:30}</a>
+            <a href="{$base_url}/user/{$user_name}" class="nav_section users single">{$user_name|escape|truncate:20}</a>
         {/if}
 
         {* Messages *}
@@ -75,13 +75,10 @@
     {/if}
     {/block}
     
-    
-
-
+<div id="forum_content">
     {block 'forum'}{/block}
 </div>
+</div>
 {/block}
-
-{block 'content'}{/block}
 
 {/block}

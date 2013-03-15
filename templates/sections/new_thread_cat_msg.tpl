@@ -19,8 +19,8 @@
             <input type="text" name="title" id="new_thread_title" />
             {if $new_name == "Thread" && count($categories) > 0}
             {foreach $categories as $category}
-                <input type="radio" name="category" id="category_picker {$category.title}" value="{$category.id}" />
-                <label for="category_picker {$category.title}">
+                <input type="radio" name="category" id="category_picker cat{$category@index}" value="{$category.id}" />
+                <label for="category_picker cat{$category@index}">
                     <a class="category {$category.title|replace:" ":"_"}">
                         {$category.title}
                     </a>

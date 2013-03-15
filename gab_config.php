@@ -27,6 +27,7 @@ class gab_config {
         "theme_silicone",
         "parser_markdown",
         "ux_timeago",
+        "feat_options",
         "search_",
     );
 

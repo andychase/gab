@@ -8,8 +8,8 @@
                 <tr>
                     <th colspan="3">
                         {if $category.title}
-                        <a href='{$base_url}/category/{$category.title|replace:" ":"_"}'
-                           class="category {$category.title|replace:" ":"_"}">
+                        <a href='{$base_url}/category/{$category.title|escape}'
+                           class="category">
                             {$category.title}
                         </a>
                         {/if}
@@ -31,7 +31,7 @@
                         {if $key == 'id'}
                             <td class='{$key}'><a href='{$base_url}/{$value}'>
                                 {elseif $key == 'title'}
-                                    {$value|escape} </a></td>
+                                    {$value|escape|truncate:30} </a></td>
                             {elseif $key == 'last_reply'}
                             <td class='{$key}'>{if $value}{$value|timeAgo}{/if}</td>
                             {else}

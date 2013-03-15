@@ -7,10 +7,10 @@ function smarty_modifier_timeAgo( $date)
         's', 's',    // 1,1
         'min','mins',      // 3,3
         'hr', 'hrs',   // 5,5
-        'dy', 'days',         // 7,7
+        'day', 'days',         // 7,7
         'wk', 'wks',      // 9,9
-        'm', 'm',      // 11,12
-        'y','yrs');      // 13,14
+        'mth', 'mths',      // 11,12
+        'yr','yrs');      // 13,14
     $debug = false;
     $sec = time() - (( strtotime($date)) ? strtotime($date) : $date);
 
