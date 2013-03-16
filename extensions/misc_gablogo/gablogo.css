@@ -1,7 +1,6 @@
 body {
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10%;
+    margin-right: 10%;
     margin-top: 125px;
 }
 #gabname {
@@ -47,12 +46,29 @@ body {
 }
 
 #posts_table .id a {
-    width: 250px;
-    overflow: hidden;
-    display: inline-block;
+    word-break: break-all;
+
 }
 
 #posts_table .category {
-    max-width: 57px;
-    overflow: hidden;
+}
+
+@media only screen and (max-width: 1024px) {
+    body {
+        width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #posts_table .category {
+        max-width: 57px;
+        overflow: hidden;
+    }
+
+    #posts_table .id a {
+        word-break: normal;
+        width: 250px;
+        overflow: hidden;
+        display: inline-block;
+    }
 }

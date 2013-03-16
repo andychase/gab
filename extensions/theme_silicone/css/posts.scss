@@ -99,3 +99,11 @@
 
 
 }
+
+@media only screen and (max-width: 1024px) {
+  #forum {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

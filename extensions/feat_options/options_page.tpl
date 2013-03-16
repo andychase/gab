@@ -3,7 +3,6 @@
 #settings_nav {
     margin-top: 0pt;
     text-align: center;
-    border-bottom: 1px solid grey;
 
 }
 #settings_nav a {
