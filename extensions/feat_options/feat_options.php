@@ -36,11 +36,11 @@ function get_exts($gab) {
         }
     }
     // Check to see if they are active
-    foreach($exts as &$ext)
+    foreach($exts as $i => $ext)
         if (in_array($ext['name'], $gab->ext))
-            $ext['active'] = true;
+            $exts[$i]['active'] = true;
         else
-            $ext['active'] = false;
+            $exts[$i]['active'] = false;
 
     return $exts;
 }
@@ -89,7 +89,8 @@ function save_changes($gab) {
         foreach ($gab->ext as $ext)
             if (substr($ext, 0, 6) == 'theme_')
                 unset($new_ext[$ext]);
-        $new_ext[] = $_POST['theme'];
+        if ($_POST['theme'] != 'none')
+            $new_ext[] = $_POST['theme'];
     }
     // Ext
     if ($_GET['section'] == 'ext') {

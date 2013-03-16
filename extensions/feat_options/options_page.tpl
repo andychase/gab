@@ -91,6 +91,12 @@
 
 {block 'theme'}
 <h3>Theme</h3>
+<input type="radio" name="theme" id="theme_none" value="none" />
+<label for="theme_none" class="theme_label">No theme
+    <span class="theme_screenshot_frame">
+        <img src="/extensions/feat_options/none.png" alt="Screenshot of no theme" class="theme_screenshot" />
+    </span>
+</label>
 {foreach $themes as $theme}
 <input type="radio" name="theme" id="theme{$theme@index}" value="{$theme.name}" {if $theme.active}checked="checked"{/if} />
 <label for="theme{$theme@index}" class="theme_label">{$theme.name|substr:6}
