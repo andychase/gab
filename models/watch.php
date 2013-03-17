@@ -1,7 +1,7 @@
 <?php
 
 class watch {
-    function get_user_watching($user_id) {
+    static function get_user_watching($user_id) {
         global $pdo;
         $q = "
             SELECT post.title, post.message
@@ -15,7 +15,7 @@ class watch {
         return $statement->execute(array($user_id));
     }
 
-    function update_watched($author, $topic_id) {
+    static function update_watched($author, $topic_id) {
         global $pdo;
         $q = "
             UPDATE forum watching LEFT JOIN forum post on post.id = watching.reply_to
@@ -27,7 +27,7 @@ class watch {
         return $statement->execute(array($topic_id, $author));
     }
 
-    function new_watching($topic_id, $author, $author_name, $author_email_hash) {
+    static function new_watching($topic_id, $author, $author_name, $author_email_hash) {
         global $pdo;
         global $forum_id;
         $q = "
