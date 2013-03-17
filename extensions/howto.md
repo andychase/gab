@@ -42,17 +42,18 @@
 - ``"pre"`` -- Added to beginning, or just after the base template for addTemplate
 - ``""`` -- Added to the end.
 
-No order is guaranteed among extensions, but the order inside each extension will be honored.
+Extensions should be written so they don't need to be in a specific order,
+but the extensions are loaded in the order they are listed in ``$gab->ext``.
 
 ``$name`` -- file name inside of your directory of your extension.
 
 ``$this->addPage`` -- When ``/ext/$page`` is accessed, calls ``$callback_function``
-This is a string that names a function. This function must accept a ``$gab``
-parameter that contains the gab object. See feat_openid for more an example.
+which is a string that names a function. This function must accept a ``$gab``
+parameter that contains the gab object. See feat_openid for an example.
 
 ## Example
 
-*(You can also download approved extensions and look at them for more examples)*
+*(You can also download gab and look in the /extensions folder for more examples)*
 
 Say you have a directory like this:
 
