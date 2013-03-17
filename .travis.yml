@@ -6,3 +6,5 @@ services: mysql
 before_script:
   - mysql -e 'create database gab_test;'
 script: phpunit --no-globals-backup ./tests
+notifications:
+  email: false
