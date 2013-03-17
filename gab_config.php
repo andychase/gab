@@ -40,7 +40,7 @@ class gab_config {
         "search_",
     );
 
-    // Search_
+    // Search_ extension settings
     public $search_url  = "";
     public $search_auth = array(/*Username:*/"", /*Password:*/"");
 }
