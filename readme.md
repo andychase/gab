@@ -10,8 +10,8 @@ Next generation forum software in PHP5.
 
 ## What does it have?
 
-Info                    |            _
-----                    |    -------------------
+Info                    |      Info
+----------------------  |    -------------------
 Version     	        |	 1
 Release Date        	|	 16 March 2013
 Author              	|	 Andy Chase
@@ -25,15 +25,15 @@ Type	                |	 Flat
 Installation method	    |	 manual
 Upgrade method      	|	 manual
 
-### Data Storage
-
-MySQL	|	  Yes
-Postgres	|	  No
-Oracle	|	  No
-SQLite	|	  No
-Textfiles	|	  No
-other	|	 None
-Hosting available	|	  Yes (youboards.net)
+Data Storage        |  Data Storage
+------------------- | ----------------------
+MySQL               | Yes
+Postgres            | No
+Oracle              | No
+SQLite              | No
+Textfiles           | No
+other               | None
+Hosting available	| Yes (youboards.net)
 
 ### Posts
 BBCode	|	  No
