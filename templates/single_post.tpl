@@ -7,7 +7,7 @@
     </h2>
 
     {foreach $replies as $key => $post}
-        <div class='post_container {if $post.status == 'hidden' || $post.status == 'mod_hidden'}hidden{/if}'>
+        <div class='post_container {if $post.visibility == 'hidden' || $post.visibility == 'mod_hidden'}hidden{/if}'>
             <div class='post_user'>
                 <a class="post_anchor" id="post{$post.id}"></a>
                 <a href="{$baseurl}/user/{$post.author_name}">
@@ -24,7 +24,7 @@
                         <input type="submit" value="submit" />
                     </form>
                 {else}
-                    {if $post.status == 'hidden' || $post.status == 'mod_hidden'}<del>{/if}
+                    {if $post.visibility == 'hidden' || $post.visibility == 'mod_hidden'}<del>{/if}
                     {block 'post_body'}
                         {if $post.reply}
                         <div class="post_at_reply">
@@ -34,7 +34,7 @@
                         {/if}
                         {$post.message|parse}
                     {/block}
-                    {if $post.status == 'hidden' || $post.status == 'mod_hidden'}</del>{/if}
+                    {if $post.visibility == 'hidden' || $post.visibility == 'mod_hidden'}</del>{/if}
                 {/if}
                 {include 'sections/post_actions.tpl'}
             </div>

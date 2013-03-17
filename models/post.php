@@ -37,7 +37,7 @@ class post {
         else if ($sort == "people")
             $q .= " ORDER BY author.contributions";
         else if ($sort_down)
-            $q .= " ORDER BY forum.status DESC, forum.time_last_activity ";
+            $q .= " ORDER BY forum.visibility DESC, forum.time_last_activity ";
         else
             $q .= " ORDER BY forum.time_last_activity ";
 
@@ -63,7 +63,7 @@ class post {
     static function get_post($post_id, $show_hidden=false) {
         global $pdo;
         global $forum_id;
-        $hideq = " AND forum.`status` >= 'normal' ";
+        $hideq = " AND forum.`visibility` >= 'normal' ";
         if ($show_hidden) $hideq = "";
         $q = "
             SELECT
@@ -76,7 +76,7 @@ class post {
               forum.`author_email_hash`,
               replies.reply_num,
               category.title as 'category',
-              forum.`status`
+              forum.`visibility`
             FROM forum forum
             LEFT JOIN (
                    SELECT count(*) as reply_num, reply_to
@@ -100,7 +100,7 @@ class post {
 
     static function get_replies($post_id, $skip=0, $show_hidden=false) {
         global $pdo;
-        $hideq = " AND forum.`status` >= 'normal' ";
+        $hideq = " AND forum.`visibility` >= 'normal' ";
         if ($show_hidden) $hideq = "";
         $q = "
             SELECT
@@ -111,7 +111,7 @@ class post {
               forum.`author`,
               forum.`author_name`,
               forum.`author_email_hash`,
-              forum.`status`
+              forum.`visibility`
             FROM forum forum
             WHERE forum.`type` = 'reply'
             AND forum.`reply_to` = ?
@@ -135,7 +135,7 @@ class post {
             WHERE id = ?
             AND (type = 'reply'
             OR type = 'post')
-            AND status >= 'normal'
+            AND visibility >= 'normal'
             AND forum_id = ?
             ");
         $statement->execute(array($id, $forum_id));
@@ -145,7 +145,7 @@ class post {
     public static function get_simple($id) {
         global $pdo;
         $statement = $pdo->prepare("
-            SELECT author, status
+            SELECT author, visibility
             FROM forum
             WHERE id = ?");
         $statement->execute(array($id));
@@ -218,7 +218,7 @@ class post {
         else $hide = 'hidden';
         $q = "
             UPDATE forum
-            SET status = ?
+            SET visibility = ?
             WHERE id = ?
         ";
 
@@ -250,7 +250,7 @@ class post {
                     reply_to
                 FROM forum
                 WHERE  `type` =  'reply'
-                AND  `status` >=  'normal'
+                AND  `visibility` >=  'normal'
                 GROUP BY reply_to
             ) replies ON forum.id = replies.reply_to
             LEFT JOIN forum category ON forum.reply_to = category.id
@@ -264,7 +264,7 @@ class post {
                 FROM (
                     SELECT author_name, author_email_hash, count(*) as replies, reply_to
                     FROM forum
-                    WHERE status >= 'normal'
+                    WHERE visibility >= 'normal'
                     GROUP BY author, reply_to
                     ORDER BY replies DESC
                     ) replies_per_author

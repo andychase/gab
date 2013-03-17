@@ -18,7 +18,7 @@ class category {
         if ($category_id == "") $q .= "is null";
         else $q .= "= ?";
 
-        $q .= " ORDER BY status DESC, time_last_activity DESC
+        $q .= " ORDER BY visibility DESC, time_last_activity DESC
                 LIMIT 0, 5";
 
         $statement = $pdo->prepare($q);

@@ -6,7 +6,7 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
     $post = post::get_simple($post_id);
     $user_is_author = ($post['author'] == $_SESSION['user_logged_in']);
 
-    if ($this->hasPermission('delete') || ($user_is_author && $post['status'] == "normal")) {
+    if ($this->hasPermission('delete') || ($user_is_author && $post['visibility'] == "normal")) {
         if ($_GET['recover'])
             post::hide_post($post_id, true);
         else if ($_GET['delete'])

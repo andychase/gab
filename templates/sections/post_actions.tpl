@@ -10,7 +10,7 @@
         </a>
     {/if}
     {if $user_trust >= $trust_levels.delete || $post.author == $user_logged_in}
-        {if $post.status == 'hidden' || $post.status == 'mod_hidden'}
+        {if $post.visibility == 'hidden' || $post.visibility == 'mod_hidden'}
             <a href='{$baseurl}/{$topic.id}/?recover={$post.id}#post{$post.id}' class="delete" title="Recover">
                 <span class="txt">Recover</span>
             </a>

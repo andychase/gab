@@ -2,7 +2,7 @@
 if ($this->changed_post_id) {
     global $pdo;
     $q = "
-        SELECT id, forum_id, author_name, title, message, time_created, views, replies, status, type, reply_to
+        SELECT id, forum_id, author_name, title, message, time_created, views, replies, visibility, type, reply_to
         FROM forum
         WHERE id = ?
         AND (
@@ -20,7 +20,7 @@ if ($this->changed_post_id) {
     });
     require("Requests.php");
 
-    if ($post['status'] == 'hidden' || $post['status'] == 'mod_hidden')
+    if ($post['visibility'] == 'hidden' || $post['visibility'] == 'mod_hidden')
         $method = Requests::DELETE;
     else
         $method = Requests::PUT;
