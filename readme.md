@@ -10,18 +10,20 @@ Next generation forum software in PHP5.
 
 ## What does it have?
 
-Version	|	 1
-Release Date	|	 16 March 2013
-Author	|	 Andy Chase
-URL	|	 gab.asperous.us
-Free and Open Source	|	  Yes
-License	|	 MIT Licence
-License cost	|	 0.00
+Info                    |
+----                    | ----
+Version     	        |	 1
+Release Date        	|	 16 March 2013
+Author              	|	 Andy Chase
+URL	                    |	 gab.asperous.us
+Free and Open Source	|	 Yes
+License	                |	 MIT Licence
+License cost	        |	 0.00
 Programming Language	|	 PHP
-UTF-8 Support	|	  Yes
-Type	|	 Flat
-Installation method	|	 manual
-Upgrade method	|	 manual
+UTF-8 Support	        |	 Yes
+Type	                |	 Flat
+Installation method	    |	 manual
+Upgrade method      	|	 manual
 
 ### Data Storage
 
