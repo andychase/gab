@@ -10,8 +10,8 @@ Next generation forum software in PHP5.
 
 ## What does it have?
 
-Info                    |
-----                    | ----
+Info                    |            _
+----                    |    -------------------
 Version     	        |	 1
 Release Date        	|	 16 March 2013
 Author              	|	 Andy Chase
