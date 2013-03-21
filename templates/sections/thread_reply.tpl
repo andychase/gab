@@ -10,7 +10,17 @@
         </ul>
     {/if}
         <form action="{$base_url}/{$topic.id}#reply" method="post" class="savable">
-            <label>
+            {block 'reply_extra_info'}{/block}
+
+            {*<div class="watch">Notified on replies:
+                <label><input type="radio" name="watch" value="no" checked="checked" />No</label>
+                <label><input type="radio" name="watch" value="yes" />Yes</label>
+                <label><input type="radio" name="watch" value="daily" />Daily At Most</label>
+                <br />
+                <label id="watch_email">Email: <input type="text" name="email" />(Not made public)</label>
+            </div>
+            *}
+            <label class="reply_textarea">
                 <textarea name="text"></textarea>
             </label>
             <div id="save_warning"></div>

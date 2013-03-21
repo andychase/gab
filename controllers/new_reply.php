@@ -1,6 +1,6 @@
 <?php
 
-$data = array(
+if (!$data) $data = array(
     "reply_to" => $_POST['topic_id'],
     "author" => $_SESSION['user_logged_in'],
     "author_name" => $_SESSION['user_name'],
@@ -9,7 +9,7 @@ $data = array(
     "spam" => $_POST['text_b'],
 );
 
-if (!$data['spam'] && $data['message'] && $data['reply_to'] && $data['author']) {
+if (!$data['spam'] && $data['message'] && $data['reply_to'] && ($data['author'] || $allow_anonymous)) {
     $this->caching = 0;
 
     //$errors = validateFields($data, $validators);

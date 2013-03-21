@@ -14,6 +14,7 @@ body {
     text-shadow: none;
 }
 #gatname a:visited { color: black;}
+a:active, a:focus {  outline: none;}
 
 
 #gabsite_navlinks {
@@ -43,14 +44,6 @@ body {
     height: 50px;
     padding-bottom: 0px;
     width: 100%;
-}
-
-#posts_table .id a {
-    word-break: break-all;
-
-}
-
-#posts_table .category {
 }
 
 @media only screen and (max-width: 1024px) {

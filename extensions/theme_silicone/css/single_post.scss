@@ -1,3 +1,5 @@
+@import 'colors_mixins';
+
 #forum {
   .post_replies {
     h2 a {
@@ -102,7 +104,7 @@
       }
     }
 
-    .post_container .post_body, #submit_reply label {
+    .post_container .post_body, #submit_reply .reply_textarea {
       position: relative;
       display: inline-block;
       border: 1px solid grey;
@@ -189,14 +191,17 @@
     }
   }
 
+  #submit_reply {
+    width: 71%;
+    margin-left: 63px;
+  }
+
   .post_replies #submit_reply, #new_thread {
     .text_b {
       display: none;
     }
-    label {
+    .reply_textarea {
       display: block;
-      left: 63px;
-      position: relative;
       border: none;
       width: inherit;
       min-height: inherit;
@@ -212,7 +217,7 @@
       left: 63px;
     }
     textarea, #submit_reply #preview, #new_thread_preview {
-      width: 71%;
+      width: 100%;
       min-height: 80px;
       border: 1px solid grey;
       border-radius: 4px;
@@ -241,8 +246,6 @@
 
   .post_replies #submit_reply #preview {
     border: none;
-    position: relative;
-    left: 64px;
     width: 438px;
   }
 
@@ -261,5 +264,10 @@
       display: none;
     }
 
+  }
+
+  #watch_email {
+    position: relative;
+    left: 20px;
   }
 }

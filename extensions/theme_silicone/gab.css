@@ -19,11 +19,11 @@
   content: "\f024";
 }
 
-.icon-caret-down:before, #forum #posts_table thead tr.headers a.down:before, #forum .category_table thead tr.headers a.down:before {
+.icon-caret-down:before, #forum #posts_table thead tr.headers a.down:before, .category_table thead tr.headers a.down:before {
   content: "\f0d7";
 }
 
-.icon-caret-up:before, #forum #posts_table thead tr.headers a.up:before, #forum .category_table thead tr.headers a.up:before {
+.icon-caret-up:before, #forum #posts_table thead tr.headers a.up:before, .category_table thead tr.headers a.up:before {
   content: "\f0d8";
 }
 
@@ -47,7 +47,7 @@
   content: "\f013";
 }
 
-.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .post_at_reply .at_reply_link, #forum #posts_table thead tr.headers a.down::before, #forum .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, #forum .category_table thead tr.headers a.up::before, #forum #search .submit, #forum .nav_section.new_link.options {
+.font-awesome, #forum .post_actions .flag, #forum .post_actions .permalink, #forum .post_actions .reply, #forum .post_actions .delete, #forum .post_actions .edit, #forum .post_at_reply .at_reply_link, #forum #search .submit, #forum .nav_section.new_link.options, #forum #posts_table thead tr.headers a.down::before, .category_table thead tr.headers a.down::before, #forum #posts_table thead tr.headers a.up::before, .category_table thead tr.headers a.up::before {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -282,7 +282,7 @@
   transition-duration: 2s;
   transition-timing-function: linear;
 }
-#forum .post_replies .post_container .post_body, #forum .post_replies #submit_reply label {
+#forum .post_replies .post_container .post_body, #forum .post_replies #submit_reply .reply_textarea {
   position: relative;
   display: inline-block;
   border: 1px solid grey;
@@ -291,10 +291,10 @@
   padding: 10px;
   border-radius: 4px;
 }
-#forum .post_replies .post_container .post_body p, #forum .post_replies #submit_reply label p {
+#forum .post_replies .post_container .post_body p, #forum .post_replies #submit_reply .reply_textarea p {
   margin-top: 0px;
 }
-#forum .post_replies .post_container .post_body:before, #forum .post_replies .post_container .post_body:after, #forum .post_replies #submit_reply label:before, #forum .post_replies #submit_reply label:after {
+#forum .post_replies .post_container .post_body:before, #forum .post_replies .post_container .post_body:after, #forum .post_replies #submit_reply .reply_textarea:before, #forum .post_replies #submit_reply .reply_textarea:after {
   position: absolute;
   width: 0;
   height: 0;
@@ -303,13 +303,13 @@
   border-color: transparent;
   pointer-events: none;
 }
-#forum .post_replies .post_container .post_body:before, #forum .post_replies #submit_reply label:before {
+#forum .post_replies .post_container .post_body:before, #forum .post_replies #submit_reply .reply_textarea:before {
   top: 12px;
   left: -10px;
   border-width: 10px 10px 10px 0;
   border-right-color: grey;
 }
-#forum .post_replies .post_container .post_body:after, #forum .post_replies #submit_reply label:after {
+#forum .post_replies .post_container .post_body:after, #forum .post_replies #submit_reply .reply_textarea:after {
   position: absolute;
   width: 0;
   height: 0;
@@ -337,29 +337,31 @@
 #forum .post_actions .txt {
   display: none;
 }
+#forum #submit_reply {
+  width: 71%;
+  margin-left: 63px;
+}
 #forum .post_replies #submit_reply .text_b, #forum #new_thread .text_b {
   display: none;
 }
-#forum .post_replies #submit_reply label, #forum #new_thread label {
+#forum .post_replies #submit_reply .reply_textarea, #forum #new_thread .reply_textarea {
   display: block;
-  left: 63px;
-  position: relative;
   border: none;
   width: inherit;
   min-height: inherit;
   padding: 0px;
 }
-#forum .post_replies #submit_reply label::after, #forum #new_thread label::after {
+#forum .post_replies #submit_reply .reply_textarea::after, #forum #new_thread .reply_textarea::after {
   left: -8px;
 }
-#forum .post_replies #submit_reply label::before, #forum #new_thread label::before {
+#forum .post_replies #submit_reply .reply_textarea::before, #forum #new_thread .reply_textarea::before {
   left: -9px;
 }
 #forum .post_replies #submit_reply #save_warning, #forum #new_thread #save_warning {
   left: 63px;
 }
 #forum .post_replies #submit_reply textarea, #forum .post_replies #submit_reply #submit_reply #preview, #forum .post_replies #submit_reply #new_thread_preview, #forum #new_thread textarea, #forum #new_thread #submit_reply #preview, #forum #new_thread #new_thread_preview {
-  width: 71%;
+  width: 100%;
   min-height: 80px;
   border: 1px solid grey;
   border-radius: 4px;
@@ -385,8 +387,6 @@
 }
 #forum .post_replies #submit_reply #preview {
   border: none;
-  position: relative;
-  left: 64px;
   width: 438px;
 }
 #forum .post_at_reply {
@@ -399,8 +399,84 @@
 #forum .post_at_reply .at_reply_message {
   display: none;
 }
+#forum #watch_email {
+  position: relative;
+  left: 20px;
+}
 
-#forum #posts_table, #forum .category_table {
+#forum #new_thread {
+  display: none;
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+#forum #new_thread #new_thread_title, #forum #new_thread #new_category_description {
+  font-size: 20pt;
+  height: 24pt;
+  width: 98%;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+#forum #new_thread form {
+  padding: 0px;
+}
+#forum #new_thread label, #forum #new_thread textarea {
+  width: 97%;
+  position: static;
+}
+#forum #new_thread #new_thread_preview {
+  border: none;
+}
+#forum #new_thread label {
+  display: inline;
+  margin-right: 4px;
+}
+#forum #new_thread input[type="radio"]:checked + label a {
+  border: 3px solid black;
+  border-radius: 4px;
+}
+
+#forum #search {
+  display: inline;
+}
+#forum #search input {
+  font-size: 8pt;
+  border: none;
+  border-bottom: 1px solid black;
+  position: relative;
+  bottom: 2px;
+  left: 5px;
+  width: 75px;
+}
+#forum #search .submit {
+  border: none;
+  background: none;
+  color: black;
+  text-shadow: 0px 1px 1px rgba(1, 1, 1, 0.3);
+}
+#forum #search .submit::before {
+  font-size: 14px;
+}
+#forum .nav_section {
+  color: black;
+  padding: 3px 8px;
+  font-size: 12px;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  line-height: 13px;
+  background-color: white;
+}
+#forum .nav_section.new_link.options {
+  text-shadow: 0px 1px 1px rgba(1, 1, 1, 0.3);
+}
+#forum .nav_section.new_link.options::before {
+  font-size: 14px;
+}
+#forum .nav_section.new_link.options .txt {
+  display: none;
+}
+
+#forum #posts_table, .category_table {
   margin-top: 10px;
   width: 100%;
   border-collapse: separate;
@@ -411,10 +487,10 @@
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
 }
-#forum #posts_table .even, #forum .category_table .even {
+#forum #posts_table .even, .category_table .even {
   background-color: #f4f4f4;
 }
-#forum #posts_table thead tr th, #forum .category_table thead tr th {
+#forum #posts_table thead tr th, .category_table thead tr th {
   border-bottom: 1px solid #b5b5b5;
   color: #534d4b;
   font-weight: bold;
@@ -428,33 +504,46 @@
   text-align: center;
   vertical-align: middle;
 }
-#forum #posts_table thead tr th.Title, #forum .category_table thead tr th.Title {
+#forum #posts_table thead tr th.Title, .category_table thead tr th.Title {
   text-align: left;
 }
-#forum #posts_table td, #forum .category_table td {
+#forum #posts_table td, .category_table td {
   text-align: center;
 }
-#forum #posts_table .id, #forum .category_table .id {
+#forum #posts_table .id, .category_table .id {
   text-align: left;
   padding-left: 5px;
 }
-#forum #posts_table .author_name.more, #forum .category_table .author_name.more {
-  min-width: 90px;
+#forum #posts_table .id a, .category_table .id a {
+  word-break: break-all;
+  word-wrap: break-word;
+  display: inline-block;
+  min-width: 100px;
 }
-#forum #posts_table .author_name a img, #forum .category_table .author_name a img {
+#forum #posts_table .author_name, .category_table .author_name {
+  width: 120px;
+}
+#forum #posts_table .author_name a img, .category_table .author_name a img {
   margin-top: 5px;
   border-radius: 2px;
 }
-#forum #posts_table .last_reply, #forum .category_table .last_reply {
-  min-width: 53px;
+#forum #posts_table .last_reply, .category_table .last_reply {
+  width: 53px;
 }
-#forum #posts_table thead tr.headers a, #forum .category_table thead tr.headers a {
+#forum #posts_table .replies, .category_table .replies {
+  width: 75px;
+}
+#forum #posts_table .views, .category_table .views {
+  width: 75px;
+}
+#forum #posts_table thead tr.headers a, .category_table thead tr.headers a {
   color: #534d4b;
   text-decoration: none;
 }
-#forum #posts_table thead tr.headers a:hover, #forum .category_table thead tr.headers a:hover {
+#forum #posts_table thead tr.headers a:hover, .category_table thead tr.headers a:hover {
   border-bottom: 1px grey dotted;
 }
+
 #forum #categories_page {
   margin-top: 10px;
 }
@@ -476,19 +565,18 @@
   margin-left: 10px;
 }
 
-@media only screen and (max-width: 1024px) {
-  #forum {
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
 html, body {
   font: normal 10pt/16pt Georgia, "DejaVu Serif", "Trebuchet MS", Times, serif;
 }
 
 #forum {
   margin-top: 50px;
+}
+#forum a:active, #forum a:focus {
+  outline: none;
+}
+#forum a img {
+  border: none;
 }
 #forum .badge-category, #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users, #forum a.category {
   display: inline-block;
@@ -503,18 +591,6 @@ html, body {
   background: none !important;
   border: none;
 }
-#forum a img {
-  border: none;
-}
-#forum .nav_section {
-  color: black;
-  padding: 3px 8px;
-  font-size: 12px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  line-height: 13px;
-  background-color: white;
-}
 #forum .new_links {
   float: right;
 }
@@ -522,7 +598,6 @@ html, body {
   position: relative;
   display: block;
   z-index: 5;
-  white-space: nowrap;
 }
 #forum .nav_section.new_link {
   text-decoration: none;
@@ -533,12 +608,6 @@ html, body {
 #forum .nav_section.new_link::before {
   font-size: 7pt;
   padding-right: 5px;
-}
-#forum #new_thread {
-  display: none;
-  width: 100%;
-  overflow: hidden;
-  padding-bottom: 6px;
 }
 #forum.posts .nav_section.posts, #forum.msg .nav_section.msg, #forum.cat .nav_section.cat, #forum.users .nav_section.users {
   position: relative;
@@ -593,31 +662,6 @@ html, body {
   z-index: 0;
   font-weight: bold;
 }
-#forum #new_thread #new_thread_title, #forum #new_thread #new_category_description {
-  font-size: 20pt;
-  height: 24pt;
-  width: 98%;
-  border-radius: 4px;
-  margin-bottom: 2px;
-}
-#forum #new_thread form {
-  padding: 0px;
-}
-#forum #new_thread label, #forum #new_thread textarea {
-  width: 97%;
-  position: static;
-}
-#forum #new_thread #new_thread_preview {
-  border: none;
-}
-#forum #new_thread label {
-  display: inline;
-  margin-right: 4px;
-}
-#forum #new_thread input[type="radio"]:checked + label a {
-  border: 3px solid black;
-  border-radius: 4px;
-}
 #forum .errors {
   background-color: white;
 }
@@ -631,34 +675,4 @@ html, body {
 }
 #forum #messages .message .topic_title {
   font-style: italic;
-}
-#forum #search {
-  display: inline;
-}
-#forum #search input {
-  font-size: 8pt;
-  border: none;
-  border-bottom: 1px solid black;
-  position: relative;
-  bottom: 2px;
-  left: 5px;
-  width: 75px;
-}
-#forum #search .submit {
-  border: none;
-  background: none;
-  color: black;
-  text-shadow: 0px 1px 1px rgba(1, 1, 1, 0.3);
-}
-#forum #search .submit::before {
-  font-size: 14px;
-}
-#forum .nav_section.new_link.options {
-  text-shadow: 0px 1px 1px rgba(1, 1, 1, 0.3);
-}
-#forum .nav_section.new_link.options::before {
-  font-size: 14px;
-}
-#forum .nav_section.new_link.options .txt {
-  display: none;
 }

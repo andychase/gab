@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
     `forum_id`           int(11) NOT NULL DEFAULT '2',
     `type`               enum('post','reply','message','category','vote','user','watch') CHARACTER SET latin1 NOT NULL,
     `reply_to`           int(11) DEFAULT NULL,
-    `author`             int(11) NOT NULL,
+    `author`             int(11) DEFAULT NULL,
     `author_email_hash`  varchar(32) CHARACTER SET latin1 NOT NULL,
     `author_name`        varchar(45) CHARACTER SET latin1 NOT NULL,
     `time_created`       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,

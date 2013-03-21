@@ -115,12 +115,12 @@ class gab extends gab_config
     function addJavascript($name, $order='') {
         $path =
             '//'.
-            $this->extensions_folder .
-            DIRECTORY_SEPARATOR .
-            $this->current_extension .
-            DIRECTORY_SEPARATOR . $name;
+                $this->extensions_folder .
+                DIRECTORY_SEPARATOR .
+                $this->current_extension .
+                DIRECTORY_SEPARATOR . $name;
         if ($order == 'pre')
-             array_unshift($this->javascript, $path);
+            array_unshift($this->javascript, $path);
         else
             $this->javascript[] = $path;
     }
@@ -128,7 +128,7 @@ class gab extends gab_config
     function addCss($name) {
         $this->css[] =
             '//'.
-            $this->extensions_folder .
+                $this->extensions_folder .
                 DIRECTORY_SEPARATOR .
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $name;
@@ -206,6 +206,7 @@ class gab extends gab_config
     }
     
     function gab(Smarty $smarty, $pdo) {
+        $GLOBALS['forum_id'] = $this->forum_id;
 
         $smarty->setTemplateDir($this->templates_folder);
         $this->smarty = $smarty;
@@ -217,7 +218,7 @@ class gab extends gab_config
         // Prepare Extensions ////////////////////////////
         foreach($this->ext as $name) {
             $this->current_extension = $name;
-            require($this->extensions_folder.
+            include($this->extensions_folder.
                 DIRECTORY_SEPARATOR.
                 $name.
                 DIRECTORY_SEPARATOR.
@@ -225,14 +226,12 @@ class gab extends gab_config
         }
     }
 
-    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust, $forum_id=2) {
+    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->assign('forum_name', $this->forum_name);
         $this->assign('forum_desc', $this->forum_description);
         $this->current_page = $page;
-
-        $GLOBALS['forum_id'] = $forum_id;
 
         $this->assign("trust_levels", $this->trust_levels);
         if ($user_id) {
@@ -258,7 +257,7 @@ class gab extends gab_config
             }
             if (!$GLOBALS['testing'] && $this->redirect) return false;
             $this->prepare_static();
-            $this->smarty->display($this->templates[$page], "$forum_id|".$this->cache_id);
+            $this->smarty->display($this->templates[$page], "{$this->forum_id}|".$this->cache_id);
             return false;
         }
     }

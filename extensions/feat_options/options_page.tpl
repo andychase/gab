@@ -119,7 +119,7 @@
             <td><input type="radio" name="{$ext.name}" value="on" {if $ext.active}checked="checked"{/if} /></td>
             <td><input type="radio" name="{$ext.name}" value="off" {if !$ext.active}checked="checked"{/if} /></td>
             <td>{$ext.desc}</td>
-            <td><a href="http://gabBB.com/ext/{$ext.name}">-&gt;</a></td>
+            <td>{*<a href="http://gabBB.com/ext/{$ext.name}">-&gt;</a>*}</td>
         </tr>
         {/foreach}
     </tbody>

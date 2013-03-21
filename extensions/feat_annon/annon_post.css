@@ -1,0 +1,19 @@
+
+#annon_post {
+    margin-bottom: 10px;
+    width: 101%;
+}
+
+#annon_post label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#annon_post label:before {
+    border: none;
+}
+
+
+#annon_post .watch label {
+    display: inline;
+}

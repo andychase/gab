@@ -1,5 +1,4 @@
-#forum {
-  #posts_table, .category_table {
+#forum  #posts_table, .category_table {
     margin-top: 10px;
     width: 100%;
     border-collapse: separate;
@@ -35,13 +34,21 @@
       text-align: center;
     }
 
+    // TABLE COLUMNS
     .id {
       text-align: left;
       padding-left: 5px;
     }
 
-    .author_name.more {
-      min-width: 90px;
+    .id a {
+      word-break: break-all;
+      word-wrap: break-word;
+      display:inline-block;
+      min-width: 100px;
+    }
+
+    .author_name {
+      width: 120px;
     }
 
     .author_name a img {
@@ -50,8 +57,16 @@
     }
 
     .last_reply {
-      min-width: 53px;
+      width: 53px;
     }
+
+    .replies {
+      width: 75px;
+     }
+
+    .views {
+      width: 75px;
+     }
 
     thead tr.headers a {
       color: #534d4b;
@@ -72,9 +87,9 @@
         border-bottom: 1px grey dotted;
       }
     }
-  }
+}
 
-
+#forum {
   #categories_page {
     margin-top: 10px;
   }
@@ -95,15 +110,5 @@
     .description {
       margin-left: 10px;
     }
-  }
-
-
-}
-
-@media only screen and (max-width: 1024px) {
-  #forum {
-    width: 600px;
-    margin-left: auto;
-    margin-right: auto;
   }
 }

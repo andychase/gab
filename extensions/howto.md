@@ -6,15 +6,15 @@
 
 ## Categories
 
-- theme_ -- Look & Feel (Anything w/ mostly css & images)
 - feat_ -- Major feature (Anything that adds pages)
-- ux_   -- Small user experience nicety
-- misc_ -- Cosmetic details unrelated to a specific theme
 - hook_ -- Integration with other services
+- lang_ -- Language packs (should mostly extend templates, possibly css & js)
+- misc_ -- Cosmetic details unrelated to a specific theme
 - parser_ -- Anything that transform posts output when they are displayed
 - search_ -- Anything that requires the search service extension
-- lang_ -- Language packs (should mostly extend templates, possibly css & js)
 - pack_ -- A bundle of other extensions above
+- theme_ -- Look & Feel (Anything w/ mostly css & images)
+- ux_   -- Small user experience nicety
 
 ## Api
 

@@ -134,5 +134,11 @@ $(document).ready(function () {
         $(this).siblings('.at_reply_message').slideToggle('fast');
     });
 
+    /* Watch Hider */
+    $('#watch_email').hide();
+    $('.watch').click(function () {
+        $('#watch_email').show('fast');
+    });
+
 
 });

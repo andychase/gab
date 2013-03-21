@@ -1,0 +1,48 @@
+#forum #new_thread {
+    display: none;
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 6px;
+
+  #new_thread_title, #new_category_description {
+    font-size: 20pt;
+    height: 24pt;
+    width: 98%;
+    border-radius: 4px;
+    margin-bottom: 2px;
+  }
+
+  form {
+    padding: 0px;
+  }
+
+  label, textarea {
+    width: 97%;
+    position: static;
+
+  }
+
+  #new_thread_preview {
+    border: none;
+  }
+
+  label {
+    display: inline;
+    margin-right: 4px;
+  }
+
+  input[type="radio"] {
+  }
+
+  input[type="radio"] + label {
+  }
+
+  input[type="radio"]:checked + label a {
+    border: 3px solid black;
+    border-radius: 4px;
+  }
+
+
+
+
+}

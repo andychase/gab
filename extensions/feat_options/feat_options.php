@@ -42,6 +42,7 @@ function get_exts($gab) {
         else
             $exts[$i]['active'] = false;
 
+    sort($exts);
     return $exts;
 }
 
