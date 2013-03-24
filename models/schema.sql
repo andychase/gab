@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `forum` (
     `message`            varchar(10000) CHARACTER SET latin1 DEFAULT NULL,
     `views`              int(11) NOT NULL,
     `visibility`         enum('mod_hidden','hidden','normal','sticky') NOT NULL DEFAULT 'normal',
-    `flags`              enum('daily','answered','closed','pending')   DEFAULT NULL,
+    `badges`             varchar(1000) DEFAULT NULL,
     `stats`              varchar(300)  DEFAULT NULL,
     `ext`                varchar(8000) NOT NULL,
   PRIMARY KEY (`id`),
