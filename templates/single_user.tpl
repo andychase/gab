@@ -1,7 +1,9 @@
 {block "forum"}
 <div id='user_info'>
-        <h3>{$user.author_name}</h3>
+    {if $user.visibility != 'normal'}<del>{/if}
+    <h3>{$user.author_name}</h3>
     <img src='{$user.author_email_hash|avatar:64}' alt='{$user.author_name|escape}' />
+    {include 'sections/user_actions.tpl'}
     <ul id="user_stats">
         <li>Joined: {$user.time_created|date_format:"%D"}</li>
     </ul>
@@ -22,5 +24,6 @@
             {/if}
         {/foreach}
     </ul>
+    {if $user.visibility != 'normal'}</del>{/if}
 </div>
 {/block}

@@ -11,45 +11,6 @@ The above copyright notice and this permission notice shall be included in all c
  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
-
-
-class gab_user {
-    public $id;
-    public $name;
-    public $email_hash;
-    public $badges;
-    function __construct($id, $name, $email_hash, $badges) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email_hash = $email_hash;
-        foreach($badges as $badge)
-            $this->badges[$badge] = true;
-    }
-    function isOwn($author, $visibility) {
-        if ($visibility && $author &&
-            permission::MODIFY_OWN == '*' &&
-            $visibility == 'normal' &&
-            $author == $this->id)
-            return true;
-        else
-            return false;
-    }
-    function hasPermission($permission, $category=null, $author=null, $visibility=null) {
-        return $this->badges[$permission]  == true ||
-               $this->isOwn($author, $visibility) ||
-               $this->badges[$category . '_' . $permission] == true;
-    }
-    function permissionHash() {
-        // Gets a number or string representing the unique permissions this user has
-        // For caching purposes
-        if ($this->badges['mod'] && $this->badges['owner']) return 3;
-        if ($this->badges['owner']) return 2;
-        if ($this->badges['mod']) return 1;
-        if ($this->id) return 0;
-        else return -1;
-    }
-}
-
 require_once('gab_config.php');
 class gab extends gab_config {
     /// // ////// /////// ////////////////////
@@ -299,5 +260,44 @@ class gab extends gab_config {
         }
         return false;
     }
-    // ////// /////// ////////////////////////
+
 }
+
+// User object //// ///////////////////////////////////
+class gab_user {
+    public $id;
+    public $name;
+    public $email_hash;
+    public $badges;
+    function __construct($id, $name, $email_hash, $badges) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->email_hash = $email_hash;
+        foreach($badges as $badge)
+            $this->badges[$badge] = true;
+    }
+    function isOwn($author, $visibility) {
+        if ($visibility && $author &&
+            permission::MODIFY_OWN == '*' &&
+            $visibility == 'normal' &&
+            $author == $this->id)
+            return true;
+        else
+            return false;
+    }
+    function hasPermission($permission, $category=null, $author=null, $visibility=null) {
+        return $this->badges[$permission]  == true ||
+            $this->isOwn($author, $visibility) ||
+            $this->badges[$category . '_' . $permission] == true;
+    }
+    function permissionHash() {
+        // Gets a number or string representing the unique permissions this user has
+        // For caching purposes
+        if ($this->badges['mod'] && $this->badges['owner']) return 3;
+        if ($this->badges['owner']) return 2;
+        if ($this->badges['mod']) return 1;
+        if ($this->id) return 0;
+        else return -1;
+    }
+}
+// ////// /////// //////////////////////////////////////

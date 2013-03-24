@@ -43,5 +43,7 @@ class permission {
     CONST SEE_DELETED = 'mod';
     CONST MODIFY_OWN =  '*'; // <- Star means everyone.
     CONST OPTIONS = 'owner';
-    const NEW_CATEGORY = 'mod';
+    CONST NEW_CATEGORY = 'mod';
+    CONST ASSIGN_MODS = 'mod';
+    CONST BAN = 'mod';
 }

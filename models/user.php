@@ -1,36 +1,36 @@
 <?php
 
 class user {
-    static function get_user($user_title) {
+    static function get_user($user_id=null, $user_name=null, $user_title=null) {
         global $pdo;
+        global $forum_id;
+
+        $find_by_item = $user_id . $user_name . $user_title;
+        if ($user_id)
+            $find_by = ' WHERE id = ?';
+        else if ($user_name)
+            $find_by = ' WHERE author_name = ?';
+        else if ($user_title)
+            $find_by = ' WHERE title = ?';
+        else
+            return null;
+
         $q = "
-             SELECT id, title, author, author_name, author_email_hash, badges
+             SELECT id, `time_created`, author_name, author_email_hash, visibility, badges, ext
              FROM forum user
-             WHERE title = ?
+             $find_by
              AND type = 'user'
+             AND forum_id = ?
              LIMIT 1
          ";
         $statement = $pdo->prepare($q);
-        $statement->execute(array($user_title));
+        $statement->execute(array($find_by_item, $forum_id));
         $user = $statement->fetch(PDO::FETCH_ASSOC);
-        $user['badges'] = explode(',', $user['badges']);
+        if(strlen($user['badges']))
+            $user['badges'] = explode(',', $user['badges']);
+        else
+            $user['badges'] = array();
         return $user;
-    }
-
-    public static function get_user_info($user_name) {
-        global $pdo;
-        global $forum_id;
-        $q = "
-            SELECT id, `time_created`, author_name, author_email_hash, ext
-            FROM forum user
-            WHERE type = 'user'
-            AND author_name = ?
-            AND forum_id = ?
-            LIMIT 1
-        ";
-        $statement = $pdo->prepare($q);
-        $statement->execute(array($user_name, $forum_id));
-        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function get_user_posts($user_id) {
@@ -129,6 +129,7 @@ class user {
             FROM forum
             WHERE type = 'user'
             AND forum_id = ?
+            AND visibility >= 'normal'
         ";
         $statement = $pdo->prepare($q);
         $statement->execute(array($forum_id));
@@ -147,19 +148,33 @@ class user {
         global $pdo;
         $statement = $pdo->prepare("
             UPDATE forum
-            SET badges = CONCAT_WS(REPLACE(REPLACE(badges,?,''), ',,', ''), ?)
+            SET badges = CONCAT_WS(',', badges, ?)
             WHERE id = ?
         ");
-        return $statement->execute(array($user_id, $user_id, $badge));
+        return $statement->execute(array($badge, $user_id));
     }
 
     public static function remove_badge($user_id, $badge) {
         global $pdo;
         $statement = $pdo->prepare("
             UPDATE forum
-            SET badges = REPLACE(REPLACE(badges,?,''))
+            SET badges = REPLACE(REPLACE(REPLACE(badges, ?, ''), ?, ''), ?, '')
             WHERE id = ?
         ");
-        return $statement->execute(array($badge, $user_id));
+        return $statement->execute(array(','.$badge, $badge.',', $badge, $user_id));
+    }
+
+    public static function ban($user_id, $recover=false) {
+        global $pdo;
+        if ($recover) $hide = 'normal';
+        else $hide = 'hidden';
+        $q = "
+            UPDATE forum
+            SET visibility = ?
+            WHERE id = ?
+        ";
+
+        $statement = $pdo->prepare($q);
+        $statement->execute(array($hide, $user_id));
     }
 }

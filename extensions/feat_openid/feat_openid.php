@@ -4,7 +4,7 @@ function gab_successful_login($user_title, $gab) {
     session_set_cookie_params(0);
     session_start();
     $baseurl = $gab->base_url;
-    $user = user::get_user($user_title);
+    $user = user::get_user(null, null, $user_title);
     $_SESSION['badges'] = $user['badges'];
     $_SESSION['user_title'] = $user_title;
     if (empty($user)) {
