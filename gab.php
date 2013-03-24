@@ -11,9 +11,47 @@ The above copyright notice and this permission notice shall be included in all c
  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
 */
 
+
+
+class gab_user {
+    public $id;
+    public $name;
+    public $email_hash;
+    public $badges;
+    function __construct($id, $name, $email_hash, $badges) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->email_hash = $email_hash;
+        foreach($badges as $badge)
+            $this->badges[$badge] = true;
+    }
+    function isOwn($author, $visibility) {
+        if ($visibility && $author &&
+            permission::MODIFY_OWN == '*' &&
+            $visibility == 'normal' &&
+            $author == $this->id)
+            return true;
+        else
+            return false;
+    }
+    function hasPermission($permission, $category=null, $author=null, $visibility=null) {
+        return $this->badges[$permission]  == true ||
+               $this->isOwn($author, $visibility) ||
+               $this->badges[$category . '_' . $permission] == true;
+    }
+    function permissionHash() {
+        // Gets a number or string representing the unique permissions this user has
+        // For caching purposes
+        if ($this->badges['mod'] && $this->badges['owner']) return 3;
+        if ($this->badges['owner']) return 2;
+        if ($this->badges['mod']) return 1;
+        if ($this->id) return 0;
+        else return -1;
+    }
+}
+
 require_once('gab_config.php');
-class gab extends gab_config
-{
+class gab extends gab_config {
     /// // ////// /////// ////////////////////
     //     GAB - Tiny Forums by Andy Chase.
 
@@ -28,6 +66,7 @@ class gab extends gab_config
         'users' => array('~users.php'),
         'single_user' => array('~single_user.php'),
         'messages' => array('~new_message.php', '~messages.php'),
+        'ext' => array()
     );
 
     public $templates = array(
@@ -64,10 +103,7 @@ class gab extends gab_config
     // If using location redirects, don't display page.
     public $redirect = false;
 
-    public $user_id;
-    public $user_email_hash;
-    public $user_name;
-    public $user_trust;
+    public $user;
 
     // Extension API /////////////////////////
     function addController($page, $controller_name, $order="") {
@@ -76,10 +112,13 @@ class gab extends gab_config
                 DIRECTORY_SEPARATOR .
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $controller_name;
-        if ($order == "pre")
-            array_unshift($this->controllers[$page], $path);
-        else
-            $this->controllers[$page][] = $path;
+        if ($page == '*') $pages = array_keys($this->controllers);
+        else $pages = (array) $page;
+        foreach ($pages as $page)
+            if ($order == "pre")
+                array_unshift($this->controllers[$page], $path);
+            else
+                $this->controllers[$page][] = $path;
     }
 
     function addPage($page, $callback_function) {
@@ -141,14 +180,6 @@ class gab extends gab_config
         else $this->parsers[] = $function_name;
     }
 
-    function hasPermission($permission) {
-        // Returns true if current user has permissions greater than or higher than $permission
-        if(array_key_exists($permission, $this->trust_levels))
-            return $_SESSION['user_trust'] >= $this->trust_levels[$permission];
-        else
-            return false;
-    }
-
     // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);
@@ -190,7 +221,8 @@ class gab extends gab_config
     }
 
     function prepare_static($skip_caching=false) {
-        // Prepare javascript and css list & hash. Why?:
+        // Prepare javascript and css list & hash.
+        // Why?:
         //   Basic way of hiding what extensions you are using
         //   The list can get kinda long
         if ($skip_caching || !$this->isCached()) {
@@ -203,6 +235,13 @@ class gab extends gab_config
             $this->assign('js_url', '/min/?g='.$js_hash);
             $this->assign('css_url', '/min/?g='.$css_hash);
         }
+    }
+
+    function prepare_user($id, $name, $email_hash, array $badges) {
+        $this->user = new gab_user($id, $name, $email_hash, $badges);
+        $this->assign('logged_in', $id != null);
+        $this->addCacheId('r:'.$this->user->permissionHash());
+        $this->assign('user_logged_in', $this->user);
     }
     
     function gab(Smarty $smarty, $pdo) {
@@ -226,41 +265,39 @@ class gab extends gab_config
         }
     }
 
-    function run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust) {
+    function run($page, $matches, $user_id, $user_email_hash, $user_name, $badges) {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->assign('forum_name', $this->forum_name);
         $this->assign('forum_desc', $this->forum_description);
         $this->current_page = $page;
 
-        $this->assign("trust_levels", $this->trust_levels);
-        if ($user_id) {
-            $this->assign('logged_in', true);
-            $this->assign('user_logged_in', $user_id);
-            $this->assign('user_trust', $user_trust);
-            $this->user_trust = $user_trust;
-            $this->addCacheId($user_id);
-        }
+        // Permissions
+        $perm = new ReflectionClass('permission');
+        $this->assign('permissions', $perm->getConstants());
+        // User
+        if (!$badges) $badges = array();
+        $this->prepare_user($user_id, $user_name, $user_email_hash, $badges);
 
+        // Load Models
         require_once($this->model_folder.DIRECTORY_SEPARATOR."model.php");
-        if ($page == "ext") {
-            if (array_key_exists($matches[1], $this->extension_pages)) {
-                $this->current_extension = $this->extension_pages_ext[$matches[1]];
-                call_user_func_array($this->extension_pages[$matches[1]], array($this));
-            } else return true;
+        // Run Controller
+        foreach($this->controllers[$page] as $controller) {
+            if ($controller[0] == "~")
+                require($this->controller_folder.DIRECTORY_SEPARATOR.substr($controller, 1));
+            else
+                require($controller);
+        }
+        if ($page == 'ext' && array_key_exists($matches[1], $this->extension_pages)) {
+            $this->current_extension = $this->extension_pages_ext[$matches[1]];
+            call_user_func_array($this->extension_pages[$matches[1]], array($this));
         } else {
-            foreach($this->controllers[$page] as $controller) {
-                if ($controller[0] == "~")
-                    require($this->controller_folder.DIRECTORY_SEPARATOR.substr($controller, 1));
-                else
-                    require($controller);
-            }
             if (!$GLOBALS['testing'] && $this->redirect) return false;
+            // Run View
             $this->prepare_static();
             $this->smarty->display($this->templates[$page], "{$this->forum_id}|".$this->cache_id);
-            return false;
         }
+        return false;
     }
-
     // ////// /////// ////////////////////////
 }

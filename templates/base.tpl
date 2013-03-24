@@ -45,7 +45,7 @@
                     <a href="{$base_url}/new_thread" id="new_link" class="nav_section new_link ss-plus"><span>New Thread</span></a>
                 </span>
                 {$new_name = 'Thread'}
-            {elseif $forum_section == "cat" && $user_trust >= $trust_levels.new_category}
+            {elseif $forum_section == "cat" && $user_logged_in->hasPermission($permissions.NEW_CATEGORY)}
                 <span class="new_links">
                     {block 'extra_links'}{/block}
                     <a href="{$base_url}/new_category" id="new_link" class="nav_section new_link ss-plus"><span>New Category</span></a>

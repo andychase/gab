@@ -5,8 +5,7 @@ function gab_successful_login($user_title, $gab) {
     session_start();
     $baseurl = $gab->base_url;
     $user = user::get_user($user_title);
-    $user_ext = user::get_user_ext($user['id']);
-    $_SESSION['user_trust'] = $user_ext['trust'];
+    $_SESSION['badges'] = $user['badges'];
     $_SESSION['user_title'] = $user_title;
     if (empty($user)) {
         header("Location: {$baseurl}/ext/openid_signup");
@@ -45,10 +44,7 @@ function gab_openid_logout($gab) {
     $_SESSION['user_title'] = "";
     $_SESSION['user_name'] = "";
     $_SESSION['user_email_hash'] = "";
-    $_SESSION['user_trust'] = "";
-    $gab->assign('logged_in', false);
-    $gab->assign('user_logged_in', "");
-    $gab->assign('user_trust', "");
+    $_SESSION['badges'] = "";
     setcookie("PHPSESSID", '', time() - 3600, '/');
     header('Location: /');
 }
@@ -61,27 +57,17 @@ function gab_setup_account($gab) {
         $gab->assign("errors", array("That name is already taken"));
         $gab->displayGeneric('signup.tpl');
     } else {
-        $user_id = user::new_user($_SESSION['user_title'], trim($_POST['name']), md5(strtolower(trim($_POST['email']))));
-        if (user::just_inserted_first_user()) {
-            // First user on forum is lvl 99 moderator.
-            $ext = user::get_user_ext_lock($user_id);
-            $ext['trust'] = 99;
-            user::set_user_ext($user_id, $ext);
-        }
+        $email = strtolower(trim($_POST['email']));
+        if ($email)
+            $email_hash = md5($email);
+        else
+            $email_hash = md5(uniqid());
+        $user_id = user::new_user($_SESSION['user_title'], trim($_POST['name']), $email_hash);
+        if (user::just_inserted_first_user())
+            // First user on forum is moderator and owner.
+            user::add_badge($user_id, 'mod,owner');
         $gab->clearCache('users');
         gab_successful_login($_SESSION['user_title'], $gab);
-    }
-}
-
-if ($_COOKIE['PHPSESSID']) {
-    session_set_cookie_params(0);
-    session_start();
-    if ($_SESSION['user_logged_in']) {
-        $this->assign('logged_in', true);
-        $this->assign('user_logged_in', $_SESSION['user_logged_in']);
-        $this->assign('user_trust', $_SESSION['user_trust']);
-        $this->user_trust = $_SESSION['user_trust'];
-        $this->addCacheId($_SESSION['user_logged_in']);
     }
 }
 
@@ -94,3 +80,4 @@ $this->addTemplate("*", "add_login.tpl");
 $this->addPage('openid', 'gab_openid_callback');
 $this->addPage('openid_logout', 'gab_openid_logout');
 $this->addPage('openid_signup', 'gab_setup_account');
+$this->addController('*', 'prepare_user.php', 'pre');

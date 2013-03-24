@@ -7,8 +7,7 @@ $post_id = $matches[1];
 $skip = intval($_GET['skip']);
 $edit = intval($_GET['edit']);
 $this->addCacheId('e:'.$edit);
-$this->addCacheId('u:'.$_SESSION['user_logged_in']);
-$this->addCacheId("t:".$_SESSION['user_trust']);
+$this->addCacheId('u:'.$this->user->id);
 $this->addCacheId("$post_id|$skip");
 
 if($edit) {
@@ -20,13 +19,21 @@ if($edit) {
 
 if (!$this->isCached()) {
     post::add_view($post_id);
-    if($this->hasPermission('see_deleted')) {
-        $topic = post::get_post($post_id, true);
-        $replies = array_merge(array($topic), post::get_replies($post_id, $skip, true));
-    } else {
-        $topic = post::get_post($post_id);
-        $replies = array_merge(array($topic), post::get_replies($post_id, $skip));
+
+    // Merge topic & replies and add permissions
+    $can_see_deleted = $this->user->hasPermission(permission::SEE_DELETED);
+    $topic = post::get_post($post_id);
+    $replies = array_merge(array($topic), post::get_replies($post_id, $skip, $can_see_deleted));
+    foreach($replies as &$reply) {
+        $reply['actions'] = array();
+        if ($this->user->hasPermission(permission::DELETE,  $topic['reply_to'], $reply['author'], $reply['visibility']))
+            $reply['actions'][] = 'delete';
+        if ($this->user->hasPermission(permission::RECOVER, $topic['reply_to'], $reply['author'], $reply['visibility']))
+            $reply['actions'][] = 'recover';
+        if ($this->user->hasPermission(permission::EDIT,    $topic['reply_to'], $reply['author'], $reply['visibility']))
+            $reply['actions'][] = 'edit';
     }
+
 
     // @replies
     $reply_regex = '/^\@[a-z]+:([0-9]+)/i';

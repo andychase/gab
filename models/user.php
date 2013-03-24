@@ -4,7 +4,7 @@ class user {
     static function get_user($user_title) {
         global $pdo;
         $q = "
-             SELECT id, title, author, author_name, author_email_hash
+             SELECT id, title, author, author_name, author_email_hash, badges
              FROM forum user
              WHERE title = ?
              AND type = 'user'
@@ -12,7 +12,9 @@ class user {
          ";
         $statement = $pdo->prepare($q);
         $statement->execute(array($user_title));
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $user = $statement->fetch(PDO::FETCH_ASSOC);
+        $user['badges'] = explode(',', $user['badges']);
+        return $user;
     }
 
     public static function get_user_info($user_name) {
@@ -139,5 +141,25 @@ class user {
         $statement = $pdo->prepare("SELECT id FROM forum WHERE author_name = ? AND forum_id = ? LIMIT 1");
         $statement->execute(array($name, $forum_id));
         return $statement->fetchAll();
+    }
+
+    public static function add_badge($user_id, $badge) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            UPDATE forum
+            SET badges = CONCAT_WS(REPLACE(REPLACE(badges,?,''), ',,', ''), ?)
+            WHERE id = ?
+        ");
+        return $statement->execute(array($user_id, $user_id, $badge));
+    }
+
+    public static function remove_badge($user_id, $badge) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            UPDATE forum
+            SET badges = REPLACE(REPLACE(badges,?,''))
+            WHERE id = ?
+        ");
+        return $statement->execute(array($badge, $user_id));
     }
 }

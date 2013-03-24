@@ -44,7 +44,7 @@ SQLite              | No
 Textfiles           | No
 other               | None
 Hosting available	| Yes (youboards.net)
-**Posts**               |  **Posts**W
+**Posts**               |  **Posts**
 BBCode              | No
 HTML                | Ext
 Emoticons           | No

@@ -42,13 +42,12 @@ function array_to_phparray($array) {
     return $output . ')';
 }
 
-function output_custom_config($forum_id, $name, $description, $trust_levels, $ext) {
+function output_custom_config($forum_id, $name, $description, $ext) {
     // Safety features
     $name = addcslashes($name, "'");
     $description = addcslashes($description, "'");
     foreach($ext as &$e)
         addslashes($e);
-    $trust_levels = assocarray_to_phparray($trust_levels);
     $ext  = array_to_phparray($ext);
     file_put_contents_atomic("custom_gab.php", <<<EOT
 <?php
@@ -56,7 +55,6 @@ class custom_gab extends gab {
     public \$forum_id = $forum_id;
     public \$forum_name = '$name';
     public \$forum_description = '$description';
-    public \$trust_levels = $trust_levels;
     public \$ext = $ext;
 }
 EOT

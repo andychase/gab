@@ -16,11 +16,6 @@
     color: grey;
     width: 100%;
 }
-#mod_trust_levels input {
-    width: 25px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
 .theme_screenshot {
     width: 512px;
     float: right;
@@ -75,18 +70,6 @@
 <label for="description">Description:<br />
     <textarea rows="4" cols="70" id="description" name="description">{$forum_desc|trim}</textarea>
 </label>
-<h3>Moderation Trust Levels</h3>
-<table id="mod_trust_levels">
-    <thead><tr><th>Permission</th><th>Level</th></tr></thead>
-    <tbody>
-    {foreach $trust_permissions as $permission => $level}
-    <tr>
-        <td>{$permission|replace:"_":" "}</td>
-        <td class="lvl"><input type="text" name="{$permission}" value="{$level}" /></td>
-    </tr>
-    {/foreach}
-    </tbody>
-</table>
 {/block}
 
 {block 'theme'}

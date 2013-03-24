@@ -47,12 +47,11 @@ function get_exts($gab) {
 }
 
 function feat_options_page($gab) {
-    if ($gab->user_trust < 99) return;
+    if (!$gab->user->hasPermission(permission::OPTIONS)) return;
     if ($_POST['do']) return save_changes($gab);
 
     $gab->assign("section", $_GET['section']);
     $gab->assign("name_disabled", 'disabled="disabled"');
-    $gab->assign("trust_permissions",$gab->trust_levels);
     if ($_GET['section'] == "theme") {
         $gab->assign("exts", $gab->ext);
         $gab->assign("themes", get_themes($gab));
@@ -76,13 +75,6 @@ function save_changes($gab) {
         $desc = $_POST['description'];
     else
         $desc = $gab->forum_description;
-    // Trust Levels
-    $new_trust = array();
-    foreach ($gab->trust_levels as $level => $key)
-        if ($_POST[$level])
-            $new_trust[$level] = intval($_POST[$level]);
-        else
-            $new_trust[$level] = $gab->trust_levels[$level];
     // Theme
     $new_ext = $gab->ext;
     if ($_GET['section'] == 'theme') {
@@ -107,7 +99,7 @@ function save_changes($gab) {
                 $new_ext[] = $ext['name'];
         }
     }
-    output_custom_config($forum_id, $name, $desc, $new_trust, $new_ext);
+    output_custom_config($forum_id, $name, $desc, $new_ext);
     $gab->clearCache(null, null);
     header("Location: /ext/options/?section=".$_GET['section']);
 }

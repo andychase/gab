@@ -1,7 +1,8 @@
 <?php
 
-$user_name = $matches[1];
+$user_name = urldecode($matches[1]);
 $this->addCacheId($user_name);
+
 if (!$this->isCached()) {
     $user = user::get_user_info(trim($user_name));
     $this->assign("user", $user);

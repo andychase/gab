@@ -17,16 +17,6 @@ class gab_config {
     // Examples: '' or '/gab'
     public $base_url = "";
 
-    // Moderator //////// ///////////////////////////
-    // Defines the actions allowed for each trust level.
-    //   Number on left is action, right is minimum trust integer.
-    // Note: The openid extension makes the first registered user a level 99 mod.
-    public $trust_levels = array (
-        "new_category" => 1,
-        "delete" => 1,
-        "see_deleted" => 1
-    );
-
     // Extension //////// ///////////////////////////
     // Active Extensions
     public $ext = array(
@@ -43,4 +33,15 @@ class gab_config {
     // Search_ extension settings
     public $search_url  = "";
     public $search_auth = array(/*Username:*/"", /*Password:*/"");
+}
+
+// Permissions ////// ///////////////////////////////
+class permission {
+    CONST DELETE = 'mod';
+    CONST RECOVER = 'mod';
+    CONST EDIT = 'mod';
+    CONST SEE_DELETED = 'mod';
+    CONST MODIFY_OWN =  '*'; // <- Star means everyone.
+    CONST OPTIONS = 'owner';
+    const NEW_CATEGORY = 'mod';
 }

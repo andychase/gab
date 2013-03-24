@@ -1,6 +1,6 @@
 <?php
 
-if ($_POST['do'] == 'forum_new_category' && $_SESSION['user_trust'] >= $this->trust_levels['new_category']) {
+if ($_POST['do'] == 'forum_new_category' && $this->user->hasPermission(permission::NEW_CATEGORY)) {
 
     $data = array(
         "title" => $_POST['title'],

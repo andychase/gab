@@ -35,10 +35,10 @@ $urls = array(
     '/new_thread' => 'posts',
     '/([0-9]+)' => 'single_post',
     '/categories' => 'categories',
-    '/category/([a-zA-Z0-9_,\%.\-\']+)' => 'single_category',
+    '/category/([a-zA-Z0-9_,\%.\-\'\+]+)' => 'single_category',
     '/messages' => 'messages',
     '/users' => 'users',
-    '/user/([a-zA-Z0-9_]+)' => 'single_user',
+    '/user/([a-zA-Z0-9_,\%.\-\'\+]+)' => 'single_user',
     '/ext/([a-zA-Z0-9_]+)' => 'ext',
 );
 
@@ -48,7 +48,7 @@ foreach ($urls as $regex => $page) {
     $regex = '^' . str_replace('/', '\/', $regex) . '(\/)?(\?[a-zA-Z0-9]+=.*)?$';
     if (preg_match("/$regex/i", $_SERVER['REQUEST_URI'], $matches)) {
         $page_found = true;
-        $gab->run($page, $matches, $user_id, $user_email_hash, $user_name, $user_trust);
+        $gab->run($page, $matches, $user_id, $user_email_hash, $user_name, $user_badges);
         break;
     }
 }

@@ -1,4 +1,5 @@
 {block 'thread_reply_section'}
+
     <div id='submit_reply'>
         <a id="reply"></a>
         <h3>Reply</h3>
