@@ -9,7 +9,6 @@
         {strip}
             <div id="gabsite_navsection">
                 <h1 id="gabname"><a href="/">Gab</a></h1>
-
                 <div id="gabsite_navlinks">
                     <a href="/">community</a>
                     {*<a href="/ext">ext marketplace</a>*}
