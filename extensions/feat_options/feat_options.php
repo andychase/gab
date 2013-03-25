@@ -18,6 +18,8 @@ function get_themes($gab) {
     return $themes;
 }
 
+
+
 function get_exts($gab) {
     $exts = array();
     // Populate ext from ext folder
@@ -42,16 +44,22 @@ function get_exts($gab) {
         else
             $exts[$i]['active'] = false;
 
+    // Don't display exts that we want blacklisted
+    if ($gab->ext_blacklist)
+        foreach($exts as $i => $ext)
+            if (in_array($ext['name'], $gab->ext_blacklist))
+                unset($exts[$i]);
     sort($exts);
     return $exts;
 }
 
 function feat_options_page($gab) {
-    if (!$gab->user->hasPermission(permission::OPTIONS)) return;
+    if ($gab->user_trust < 99) return;
     if ($_POST['do']) return save_changes($gab);
 
     $gab->assign("section", $_GET['section']);
     $gab->assign("name_disabled", 'disabled="disabled"');
+    $gab->assign("trust_permissions",$gab->trust_levels);
     if ($_GET['section'] == "theme") {
         $gab->assign("exts", $gab->ext);
         $gab->assign("themes", get_themes($gab));
@@ -75,13 +83,20 @@ function save_changes($gab) {
         $desc = $_POST['description'];
     else
         $desc = $gab->forum_description;
+    // Trust Levels
+    $new_trust = array();
+    foreach ($gab->trust_levels as $level => $key)
+        if ($_POST[$level])
+            $new_trust[$level] = intval($_POST[$level]);
+        else
+            $new_trust[$level] = $gab->trust_levels[$level];
     // Theme
     $new_ext = $gab->ext;
     if ($_GET['section'] == 'theme') {
         $new_ext = $gab->ext;
-        foreach ($gab->ext as $ext)
+        foreach ($gab->ext as $i => $ext)
             if (substr($ext, 0, 6) == 'theme_')
-                unset($new_ext[$ext]);
+                unset($new_ext[$i]);
         if ($_POST['theme'] != 'none')
             $new_ext[] = $_POST['theme'];
     }
@@ -98,12 +113,15 @@ function save_changes($gab) {
             if (substr($ext['name'], 0, 6) == 'theme_')
                 $new_ext[] = $ext['name'];
         }
+
+        // Add in blacklisted exts
+        if ($gab->ext_blacklist)
+            $new_ext = array_merge($new_ext, $gab->ext_blacklist);
     }
-    output_custom_config($forum_id, $name, $desc, $new_ext);
+    output_custom_config($forum_id, $name, $desc, $new_trust, $new_ext);
     $gab->clearCache(null, null);
     header("Location: /ext/options/?section=".$_GET['section']);
 }
-
 
 $this->addTemplate('*', 'options_link.tpl');
 $this->addPage('options', 'feat_options_page');

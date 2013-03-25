@@ -4,7 +4,8 @@
 smarty/compile/*
 smarty/cache/*
 extensions/theme-silicone/css/.sass-cache/*
-extensions/theme-silicone/css/.sass-cache/
+extensions/theme-silicone/css/.sass-cache
 min/groups/*
 custom_gab.php
-
+yb/*
+extensions/yb_*

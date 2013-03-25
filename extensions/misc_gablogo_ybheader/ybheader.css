@@ -1,0 +1,29 @@
+#gabname {
+    font-family: "Geo", sans-serif;
+    font-size: 24pt;
+}
+
+#gabname a {
+    display: inline-block;
+    text-align: center;
+    min-width: 100px;
+    color: black; text-decoration: none;
+    text-shadow: none;
+    background-color: black;
+    color: white;
+    padding: 3px;
+    position: relative;
+    border-radius: 2px;
+}
+
+#gabname a:after {
+    content:"";
+    display:block; /* reduce the damage in FF3.0 */
+    position:absolute;
+    bottom:-15px;
+    left:50px;
+    width:0;
+    border-width:15px 15px 0;
+    border-style:solid;
+    border-color: black transparent;
+}

@@ -14,6 +14,7 @@ function gab_successful_login($user_title, $gab) {
     $_SESSION['user_logged_in'] = $user['id'];
     $_SESSION['user_name'] = $user['author_name'];
     $_SESSION['user_email_hash'] = $user['author_email_hash'];
+    $_SESSION['forum_id'] = $GLOBALS['forum_id'];
     $gab->assign('logged_in', 'true');
     $gab->assign('user_logged_in', 'true');
     header("Location: {$baseurl}/");
