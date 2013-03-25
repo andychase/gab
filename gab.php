@@ -49,7 +49,7 @@ class gab extends gab_config {
     // Current extension for each of these pages
     private $extension_pages_ext = array();
     // When loading up extensions, the extension that is loading is called here
-    private $current_extension;
+    public $current_extension;
     // When a page is being processed, it is placed here
     private $current_page;
     // The id that allows us to have different caches for the same file

@@ -45,9 +45,9 @@ function get_exts($gab) {
             $exts[$i]['active'] = false;
 
     // Don't display exts that we want blacklisted
-    if ($gab->ext_blacklist)
+    if ($gab->ext_options_blacklist)
         foreach($exts as $i => $ext)
-            if (in_array($ext['name'], $gab->ext_blacklist))
+            if (in_array($ext['name'], $gab->ext_options_blacklist))
                 unset($exts[$i]);
     sort($exts);
     return $exts;

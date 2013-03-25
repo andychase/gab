@@ -26,10 +26,12 @@ class user {
         $statement = $pdo->prepare($q);
         $statement->execute(array($find_by_item, $forum_id));
         $user = $statement->fetch(PDO::FETCH_ASSOC);
-        if(strlen($user['badges']))
-            $user['badges'] = explode(',', $user['badges']);
-        else
-            $user['badges'] = array();
+        if ($user) {
+            if(strlen($user['badges']))
+                $user['badges'] = explode(',', $user['badges']);
+            else
+                $user['badges'] = array();
+        }
         return $user;
     }
 
