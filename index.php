@@ -24,8 +24,12 @@ $compile_check = !$live;
 
 // Gab
 require_once('gab.php');
-require_once('custom_gab.php');
-$gab = new custom_gab($smarty, $pdo);
+if (is_file('custom_gab.php')) {
+    require('custom_gab.php');
+    $gab = new custom_gab($smarty, $pdo);
+}
+else
+    $gab = new gab($smarty, $pdo);
 
 // Url Definitions
 // Url Regex (Left Side) is routed to a file in controller_folder (Right side)

@@ -83,13 +83,6 @@ function save_changes($gab) {
         $desc = $_POST['description'];
     else
         $desc = $gab->forum_description;
-    // Trust Levels
-    $new_trust = array();
-    foreach ($gab->trust_levels as $level => $key)
-        if ($_POST[$level])
-            $new_trust[$level] = intval($_POST[$level]);
-        else
-            $new_trust[$level] = $gab->trust_levels[$level];
     // Theme
     $new_ext = $gab->ext;
     if ($_GET['section'] == 'theme') {
@@ -118,7 +111,13 @@ function save_changes($gab) {
         if ($gab->ext_blacklist)
             $new_ext = array_merge($new_ext, $gab->ext_blacklist);
     }
-    output_custom_config($forum_id, $name, $desc, $new_trust, $new_ext);
+    output_custom_config(
+        $forum_id,
+        $name,
+        $desc,
+        $new_ext,
+        $gab->ext_options_extends,
+        $gab->ext_options_options_class);
     $gab->clearCache(null, null);
     header("Location: /ext/options/?section=".$_GET['section']);
 }

@@ -2,6 +2,7 @@
 
 class gab_config {
     // General Forum //// /////////////////////////////////
+    public $forum_id = 1;
     public $forum_name = "Gab";
     public $forum_description = "
     Embeddable, Extendable, Minimal next-gen forum software that's easy to deploy.
@@ -33,6 +34,11 @@ class gab_config {
     // Search_ extension settings
     public $search_url  = "";
     public $search_auth = array(/*Username:*/"", /*Password:*/"");
+
+    // Ext options settings
+    public $ext_options_blacklist = array();
+    public $ext_options_extends = 'gab';
+    public $ext_options_options_class = 'custom_gab';
 }
 
 // Permissions ////// ///////////////////////////////

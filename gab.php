@@ -198,7 +198,7 @@ class gab extends gab_config {
         }
     }
 
-    function prepare_user($id, $name, $email_hash, array $badges) {
+    function prepare_user($id, $name, $email_hash, $badges) {
         $this->user = new gab_user($id, $name, $email_hash, $badges);
         $this->assign('logged_in', $id != null);
         $this->addCacheId('r:'.$this->user->permissionHash());
@@ -237,7 +237,6 @@ class gab extends gab_config {
         $perm = new ReflectionClass('permission');
         $this->assign('permissions', $perm->getConstants());
         // User
-        if (!$badges) $badges = array();
         $this->prepare_user($user_id, $user_name, $user_email_hash, $badges);
 
         // Load Models
@@ -273,8 +272,9 @@ class gab_user {
         $this->id = $id;
         $this->name = $name;
         $this->email_hash = $email_hash;
-        foreach($badges as $badge)
-            $this->badges[$badge] = true;
+        if ($badges)
+            foreach($badges as $badge)
+                $this->badges[$badge] = true;
     }
     function isOwn($author, $visibility) {
         if ($visibility && $author &&
