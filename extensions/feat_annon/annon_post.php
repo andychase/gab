@@ -11,6 +11,6 @@ if(!$this->user->id) {
         "author_email_hash" => $email,
         "message" => $_POST['text'],
         "spam" => $_POST['text_b'],
-
     );
+    $allow_anonymous = true;
 }

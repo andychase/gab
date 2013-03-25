@@ -5,5 +5,5 @@
     </form>
 {/block}
 {block 'head' append}
-    <script type='text/javascript'>var search_url="{$search_url}";</script>
+    <script type='text/javascript'>var search_url="{$search_url}";var search_forum_id={$forum_id};</script>
 {/block}

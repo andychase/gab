@@ -230,6 +230,7 @@ class gab extends gab_config {
         $this->assign('base_url', $this->base_url);
         $this->assign('ext_url', $this->base_url . '/' . $this->extensions_folder);
         $this->assign('forum_name', $this->forum_name);
+        $this->assign('forum_id', $this->forum_id);
         $this->assign('forum_desc', $this->forum_description);
         $this->current_page = $page;
 
