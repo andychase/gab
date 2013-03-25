@@ -54,7 +54,7 @@ function get_exts($gab) {
 }
 
 function feat_options_page($gab) {
-    if ($gab->user_trust < 99) return;
+    if (!$gab->user->hasPermission(permission::OPTIONS)) return;
     if ($_POST['do']) return save_changes($gab);
 
     $gab->assign("section", $_GET['section']);
