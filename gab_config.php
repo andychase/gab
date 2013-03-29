@@ -39,6 +39,7 @@ class gab_config {
     public $ext_options_blacklist = array();
     public $ext_options_extends = 'gab';
     public $ext_options_options_class = 'custom_gab';
+    public $ext_options_filename = 'custom_gab.php';
 }
 
 // Permissions ////// ///////////////////////////////

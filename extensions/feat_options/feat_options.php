@@ -108,8 +108,8 @@ function save_changes($gab) {
         }
 
         // Add in blacklisted exts
-        if ($gab->ext_blacklist)
-            $new_ext = array_merge($new_ext, $gab->ext_blacklist);
+        if ($gab->ext_options_blacklist)
+            $new_ext = array_merge($new_ext, $gab->ext_options_blacklist);
     }
     output_custom_config(
         $forum_id,
@@ -117,7 +117,8 @@ function save_changes($gab) {
         $desc,
         $new_ext,
         $gab->ext_options_extends,
-        $gab->ext_options_options_class);
+        $gab->ext_options_options_class,
+        $gab->ext_options_filename);
     $gab->clearCache(null, null);
     header("Location: /ext/options/?section=".$_GET['section']);
 }
