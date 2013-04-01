@@ -77,15 +77,10 @@
         }
       }
 
-      &:hover {
-        .post_body {
+        .post_body:hover {
           height: auto;
           min-height: auto;
         }
-        .post_user {
-          height: auto;
-        }
-      }
 
       .post_body {
         color: gray;

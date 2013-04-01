@@ -43,6 +43,7 @@
     <a href="?section=">General</a>
     <a href="?section=theme">Theme</a>
     <a href="?section=ext">Extensions</a>
+    <a href="?section=ext_options">Extension Options</a>
 </div>
 
 <form action='' method="post" id="config">
@@ -53,6 +54,8 @@
     {block 'theme'}{/block}
 {elseif $section == 'ext'}
     {block 'ext'}{/block}
+{elseif $section == 'ext_options'}
+    {block 'ext_options'}{/block}
 {/if}
 <span class="center">
     <input type="submit" value="Save" class="save" />
@@ -107,6 +110,27 @@
         {/foreach}
     </tbody>
 </table>
+{/block}
+
+{block 'ext_options'}
+<h3>Extension Options</h3>
+{foreach $ext_options_config as $ext_name => $ext_configs}
+    <h4>{$ext_name}</h4>
+    {foreach $ext_configs as $config_name => $config}
+        <label><b>{$config_name}</b>
+            {if $config[4] == 'textarea'}
+                <br />
+                <textarea rows='10' cols='50' name="{$ext_name}^{$config_name}">{$config[0]}</textarea>
+            {else}
+                <input type="text" name="{$ext_name}^{$config_name}" value={$config[0]} />
+            {/if}
+        </label>
+        <br />
+    {/foreach}
+{/foreach}
+{if !count($ext_options_config)}
+    <i>None of your active extensions have options to configure.</i>
+{/if}
 {/block}
 
 

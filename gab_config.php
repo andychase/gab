@@ -36,10 +36,24 @@ class gab_config {
     public $search_auth = array(/*Username:*/"", /*Password:*/"");
 
     // Ext options settings
+    public $ext_options = array(
+        '_search' => array (
+            'url' => '',
+            'auth' => array(/*Username:*/"", /*Password:*/"")
+        ),
+        'feat_options' => array(
+            'blacklist' => array(),
+            'extends' => 'gab',
+            'options_class' => 'custom_gab',
+            'filename' => 'custom_gab.php'
+        )
+    );
+    public $ext_options_config = array();
+
     public $ext_options_blacklist = array();
     public $ext_options_extends = 'gab';
-    public $ext_options_options_class = 'custom_gab';
     public $ext_options_filename = 'custom_gab.php';
+    public $ext_options_options_class = 'custom_gab';
 }
 
 // Permissions ////// ///////////////////////////////

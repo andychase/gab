@@ -141,6 +141,17 @@ class gab extends gab_config {
         else $this->parsers[] = $function_name;
     }
 
+    function getOption($name) {
+        return $this->ext_options[$this->current_extension][$name];
+    }
+
+    function addOption($name, $default, $choices=null, $range_low=null, $range_right=null, $type=null) {
+        if($this->getOption($name))
+            $this->ext_options_config[$this->current_extension][$name] = array($this->getOption($name), $choices, $range_low, $range_right, $type);
+        else
+            $this->ext_options_config[$this->current_extension][$name] = array($default, $choices, $range_low, $range_right, $type);
+    }
+
     // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);

@@ -18,8 +18,6 @@ function get_themes($gab) {
     return $themes;
 }
 
-
-
 function get_exts($gab) {
     $exts = array();
     // Populate ext from ext folder
@@ -45,9 +43,9 @@ function get_exts($gab) {
             $exts[$i]['active'] = false;
 
     // Don't display exts that we want blacklisted
-    if ($gab->ext_options_blacklist)
+    if ($gab->getOption("blacklist"))
         foreach($exts as $i => $ext)
-            if (in_array($ext['name'], $gab->ext_options_blacklist))
+            if (in_array($ext['name'], $gab->getOption("blacklist")))
                 unset($exts[$i]);
     sort($exts);
     return $exts;
@@ -66,6 +64,12 @@ function feat_options_page($gab) {
     }
     if ($_GET['section'] == "ext")
         $gab->assign("exts", get_exts($gab));
+    if ($_GET['section'] == "ext_options") {
+        $gab->assign("ext_options_config",
+            array_diff_key($gab->ext_options_config,
+                       $gab->getOption("blacklist")));
+        $gab->assign("ext_options_defaults", $gab->ext_options_defaults);
+    }
 
     $gab->displayGeneric('options_page.tpl');
 }
@@ -108,17 +112,27 @@ function save_changes($gab) {
         }
 
         // Add in blacklisted exts
-        if ($gab->ext_options_blacklist)
-            $new_ext = array_merge($new_ext, $gab->ext_options_blacklist);
+        if ($gab->getOption("blacklist"))
+            $new_ext = array_merge($new_ext, $gab->getOption("blacklist"));
     }
+    // Ext Options
+    $options = array();
+    if ($_GET['section'] == 'ext_options') {
+        foreach($gab->ext_options_config as $ext_name => $ext_configs) {
+            foreach($ext_configs as $config_name => $config)
+                $options[$ext_name][$config_name] = $_POST[$ext_name.'^'.$config_name];
+        }
+    }
+    $options = array_merge($gab->ext_options, $options);
     output_custom_config(
         $forum_id,
         $name,
         $desc,
         $new_ext,
-        $gab->ext_options_extends,
-        $gab->ext_options_options_class,
-        $gab->ext_options_filename);
+        $options,
+        $gab->getOption("extends"),
+        $gab->getOption("options_class"),
+        $gab->getOption("filename"));
     $gab->clearCache(null, null);
     header("Location: /ext/options/?section=".$_GET['section']);
 }

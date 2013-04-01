@@ -233,12 +233,9 @@
   position: relative;
   z-index: -1;
 }
-#forum .post_replies .post_container.hidden:hover .post_body {
+#forum .post_replies .post_container.hidden .post_body:hover {
   height: auto;
   min-height: auto;
-}
-#forum .post_replies .post_container.hidden:hover .post_user {
-  height: auto;
 }
 #forum .post_replies .post_container.hidden .post_body {
   color: gray;
