@@ -22,7 +22,7 @@ function queryElasticSearch(input, query, success) {
     ajaxOptions = {
         dataType: "jsonp",
         type: "GET",
-        url: search_url+"/forum/post/_search",
+        url: search_url+"/forum/"+search_forum_id+"/_search",
         data: {
             source: JSON.stringify(query(input))
         },

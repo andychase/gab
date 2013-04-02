@@ -42,6 +42,10 @@
         bottom: 16px;
       }
 
+      .post_body {
+        background-color: white;
+      }
+
       .post_body.highlight {
         box-shadow: 0px 0px 20px 4px transparentize($highlight, 0.5);
         @include mix-transition(box-shadow, 0.5s);
@@ -67,7 +71,7 @@
 
   /* 'Deleted' Posts - Shown to mods*/
     .post_container.hidden {
-      box-shadow: inset -7px -13px 14px 8px white;
+      opacity: 0.5;
       .post_user {
         height: 27px;
         overflow: hidden;

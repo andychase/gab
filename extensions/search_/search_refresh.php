@@ -1,6 +1,7 @@
 <?php
 if ($this->changed_post_id) {
     global $pdo;
+    global $forum_id;
     $q = "
         SELECT id, forum_id, author_name, title, message, time_created, views, replies, visibility, type, reply_to
         FROM forum
@@ -10,7 +11,7 @@ if ($this->changed_post_id) {
           OR type = 'reply'
         )
         LIMIT 1
-        ";
+    ";
     $statement = $pdo->prepare($q);
     $statement->execute(array($this->changed_post_id));
     $post = $statement->fetch(PDO::FETCH_ASSOC);
@@ -30,7 +31,7 @@ if ($this->changed_post_id) {
         //   a good place to check is capturing the results
         //   of this function, and print_r()ing it.
         Requests::request(
-            "{$this->search_url}/forum/post/{$post['id']}",
+            "{$this->search_url}/forum/{$forum_id}/{$post['id']}",
             array(),
             json_encode($post),
             $method,

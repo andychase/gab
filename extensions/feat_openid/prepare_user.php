@@ -1,7 +1,7 @@
 <?php
 
 if ($_COOKIE['PHPSESSID']) {
-    session_set_cookie_params(0);
+    session_set_cookie_params(999999);
     session_start();
     if ($_SESSION['user_logged_in']) {
         global $forum_id;
