@@ -1,1 +1,0 @@
-Allows anonymous replies

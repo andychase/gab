@@ -132,6 +132,7 @@ class user {
             WHERE type = 'user'
             AND forum_id = ?
             AND visibility >= 'normal'
+            LIMIT 300
         ";
         $statement = $pdo->prepare($q);
         $statement->execute(array($forum_id));
@@ -141,7 +142,13 @@ class user {
     public static function exists_user_name($name) {
         global $pdo;
         global $forum_id;
-        $statement = $pdo->prepare("SELECT id FROM forum WHERE author_name = ? AND forum_id = ? LIMIT 1");
+        $statement = $pdo->prepare("
+            SELECT id
+            FROM forum
+            WHERE author_name = ?
+            AND forum_id = ?
+            LIMIT 1
+        ");
         $statement->execute(array($name, $forum_id));
         return $statement->fetchAll();
     }
@@ -178,5 +185,15 @@ class user {
 
         $statement = $pdo->prepare($q);
         $statement->execute(array($hide, $user_id));
+    }
+
+    public static function change_email_hash($author_id, $new_email_hash) {
+        global $pdo;
+        $statement = $pdo->prepare("
+            UPDATE forum
+            SET author_email_hash = ?
+            WHERE author = ?
+        ");
+        return $statement->execute(array($new_email_hash, $author_id));
     }
 }

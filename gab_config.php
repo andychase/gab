@@ -14,6 +14,7 @@ class gab_config {
     public $templates_folder = "templates";
     public $controller_folder = "controllers";
     public $extensions_folder = "extensions";
+    public $uploads_folder = "uploads";
 
     // Examples: '' or '/gab'
     public $base_url = "";
@@ -31,14 +32,10 @@ class gab_config {
         "search_",
     );
 
-    // Search_ extension settings
-    public $search_url  = "";
-    public $search_auth = array(/*Username:*/"", /*Password:*/"");
-
     // Ext options settings
     public $ext_options = array(
-        '_search' => array (
-            'url' => '',
+        'search_' => array (
+            'url' => 'http://localhost:9200',
             'auth' => array(/*Username:*/"", /*Password:*/"")
         ),
         'feat_options' => array(

@@ -22,7 +22,7 @@ if ($_POST['do'] == 'forum_new_thread') {
                 $data['message'],
                 $data['category']);
 
-            $this->changed_post_id = $post_id;
+            $this->trigger('new_post', $post_id);
 
             $this->clearCache("posts");
             $this->clearCache("categories");

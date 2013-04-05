@@ -121,6 +121,12 @@
             {if $config[4] == 'textarea'}
                 <br />
                 <textarea rows='10' cols='50' name="{$ext_name}^{$config_name}">{$config[0]}</textarea>
+            {elseif $config[4] == 'boolean'}
+                {if $config[0]}{$yes = 'checked'}{$no = ''}
+                {else}         {$no  = 'checked'}{$yes= ''}
+                {/if}
+                <label><input type="radio" name="{$ext_name}^{$config_name}" value="true"  {$yes}>yes</label>
+                <label><input type="radio" name="{$ext_name}^{$config_name}" value=""      {$no}>no</label>
             {else}
                 <input type="text" name="{$ext_name}^{$config_name}" value={$config[0]} />
             {/if}

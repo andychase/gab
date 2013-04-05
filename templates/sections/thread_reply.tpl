@@ -10,7 +10,7 @@
             {/foreach}
         </ul>
     {/if}
-        <form action="{$base_url}/{$topic.id}#reply" method="post" class="savable">
+        <form action="{$base_url}/{$topic.id}#reply" method="post" class="savable" enctype="multipart/form-data">
             {block 'reply_extra_info'}{/block}
 
             {*<div class="watch">Notified on replies:
@@ -24,6 +24,7 @@
             <label class="reply_textarea">
                 <textarea name="text"></textarea>
             </label>
+            {block 'reply_actions'}{/block}
             <div id="save_warning"></div>
             <input name="text_b" class="text_b" disabled="disabled" />
             <div id='preview'></div>

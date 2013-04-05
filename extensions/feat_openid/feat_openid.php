@@ -72,13 +72,15 @@ function gab_setup_account($gab) {
     }
 }
 
-$this->assign("openid-selector", dirname(__FIlE__)."/openid-selector/demo.html");
-$this->addJavascript("openid-selector/js/openid-jquery.js");
-$this->addJavascript("openid-selector/js/openid-en.js");
-$this->addJavascript("openid-activate.js");
-$this->addCss("openid-selector/css/openid.css");
-$this->addTemplate("*", "add_login.tpl");
-$this->addPage('openid', 'gab_openid_callback');
-$this->addPage('openid_logout', 'gab_openid_logout');
-$this->addPage('openid_signup', 'gab_setup_account');
-$this->addController('*', 'prepare_user.php', 'pre');
+$gab->assign("openid-selector", dirname(__FIlE__)."/openid-selector/demo.html");
+$gab->addJavascript("openid-selector/js/openid-jquery.js");
+$gab->addJavascript("openid-selector/js/openid-en.js");
+$gab->addJavascript("openid-activate.js");
+$gab->addCss("openid-selector/css/openid.css");
+$gab->addTemplate("*", "add_login.tpl");
+$gab->addPage('openid', 'gab_openid_callback');
+$gab->addPage('openid_logout', 'gab_openid_logout');
+$gab->addPage('openid_signup', 'gab_setup_account');
+
+function prepare_user ($gab) { include 'prepare_user.php'; }
+$gab->bindTrigger('*', 'prepare_user');

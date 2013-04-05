@@ -7,7 +7,7 @@ if ($_COOKIE['PHPSESSID']) {
         global $forum_id;
         // Fixes a security problem if a user copies over the php session id
         if ($forum_id != $_SESSION['forum_id']) exit;
-        $this->prepare_user(
+        $gab->prepare_user(
             $_SESSION['user_logged_in'],
             $_SESSION['user_name'],
             $_SESSION['user_email_hash'],

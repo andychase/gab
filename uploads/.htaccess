@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^safe/(.*) safe/$1 [last]
+RewriteRule !(index.php) index.php

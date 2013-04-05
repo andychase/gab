@@ -19,14 +19,13 @@ class gab extends gab_config {
     // Page Controllers
     // Controllers are loaded left to right
     public $controllers = array(
-        // ~ Represents the path of the $controller_folder
-        'posts' => array('~new_thread.php', '~posts.php'),
-        'single_category' => array('~single_category.php', '~posts.php'),
-        'single_post' => array('~moderate.php', '~new_reply.php', '~single_post.php'),
-        'categories' => array('~new_category.php', '~categories.php'),
-        'users' => array('~users.php'),
-        'single_user' => array('~single_user.php'),
-        'messages' => array('~new_message.php', '~messages.php'),
+        'posts' => array('new_thread.php', 'posts.php'),
+        'single_category' => array('single_category.php', 'posts.php'),
+        'single_post' => array('moderate.php', 'new_reply.php', 'single_post.php'),
+        'categories' => array('new_category.php', 'categories.php'),
+        'users' => array('users.php'),
+        'single_user' => array('single_user.php'),
+        'messages' => array('new_message.php', 'messages.php'),
         'ext' => array()
     );
 
@@ -48,7 +47,7 @@ class gab extends gab_config {
     private $extension_pages = array();
     // Current extension for each of these pages
     private $extension_pages_ext = array();
-    // When loading up extensions, the extension that is loading is called here
+    // Name the extension running, this is what makes the api nice to use
     public $current_extension;
     // When a page is being processed, it is placed here
     private $current_page;
@@ -59,12 +58,14 @@ class gab extends gab_config {
     private $css = array();
     // Every function in here is run for places like posts' message bodies
     private $parsers = array();
-    // For extensions to use
-    private $changed_post_id = array();
     // If using location redirects, don't display page.
     public $redirect = false;
-
+    // The user object of the current user accessing the page
     public $user;
+    // Associative array of functions to call during certain events
+    //   Structure: "name" => array($current_extension => callback)
+    private $triggers = array();
+
 
     // Extension API /////////////////////////
     function addController($page, $controller_name, $order="") {
@@ -152,6 +153,40 @@ class gab extends gab_config {
             $this->ext_options_config[$this->current_extension][$name] = array($default, $choices, $range_low, $range_right, $type);
     }
 
+    function requireExt($name) {
+        $calling_from_ext = $this->current_extension;
+        $this->current_extension = $name;
+        include_once($this->extensions_folder.
+            DIRECTORY_SEPARATOR.
+            $name.
+            DIRECTORY_SEPARATOR.
+            "$name.php");
+        $this->current_extension = $calling_from_ext;
+    }
+
+    function bindTrigger($event_name, $callback) {
+        $this->triggers[$event_name][] = array($this->current_extension, $callback);
+    }
+
+    function trigger($event_name, $object=null) {
+        $calling_from_ext = $this->current_extension;
+        if(array_key_exists($event_name, $this->triggers)) {
+            foreach($this->triggers[$event_name] as $trigger) {
+                $this->current_extension = $trigger[0];
+                $callback = $trigger[1];
+                if ($object) {
+                    $return = $callback($this, $object);
+                    if (!is_null($return))
+                        $object = $return;
+                } else {
+                    $callback($this);
+                }
+            }
+        }
+        $this->current_extension = $calling_from_ext;
+        return $object;
+    }
+
     // Template //////////////////////////////
     function assign($var_name, $var) {
         $this->smarty->assign($var_name, $var);
@@ -183,9 +218,8 @@ class gab extends gab_config {
     }
 
     function parse($text) {
-        foreach($this->parsers as $parser)
-            $text = $parser($text);
-        return $text;
+        $text = htmlentities($text);
+        return $this->trigger('parse', $text);
     }
 
     function avatar($email_hash, $size=40, $default_style='retro') {
@@ -227,9 +261,10 @@ class gab extends gab_config {
         $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
 
         // Prepare Extensions ////////////////////////////
+        $gab = $this;
         foreach($this->ext as $name) {
             $this->current_extension = $name;
-            include($this->extensions_folder.
+            include_once($this->extensions_folder.
                 DIRECTORY_SEPARATOR.
                 $name.
                 DIRECTORY_SEPARATOR.
@@ -244,34 +279,29 @@ class gab extends gab_config {
         $this->assign('forum_id', $this->forum_id);
         $this->assign('forum_desc', $this->forum_description);
         $this->current_page = $page;
+        $gab = $this;
 
-        // Permissions
         $perm = new ReflectionClass('permission');
         $this->assign('permissions', $perm->getConstants());
-        // User
         $this->prepare_user($user_id, $user_name, $user_email_hash, $badges);
 
-        // Load Models
         require_once($this->model_folder.DIRECTORY_SEPARATOR."model.php");
-        // Run Controller
-        foreach($this->controllers[$page] as $controller) {
-            if ($controller[0] == "~")
-                require($this->controller_folder.DIRECTORY_SEPARATOR.substr($controller, 1));
-            else
-                require($controller);
-        }
+        $this->trigger('*');
+        $this->trigger($page);
+        foreach($this->controllers[$page] as $controller)
+            require($this->controller_folder.DIRECTORY_SEPARATOR.$controller);
+        $this->trigger('post_'.$page);
+
         if ($page == 'ext' && array_key_exists($matches[1], $this->extension_pages)) {
             $this->current_extension = $this->extension_pages_ext[$matches[1]];
             call_user_func_array($this->extension_pages[$matches[1]], array($this));
         } else {
             if (!$GLOBALS['testing'] && $this->redirect) return false;
-            // Run View
             $this->prepare_static();
             $this->smarty->display($this->templates[$page], "{$this->forum_id}|".$this->cache_id);
         }
         return false;
     }
-
 }
 
 // User object //// ///////////////////////////////////

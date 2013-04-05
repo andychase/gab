@@ -6,11 +6,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link rel="stylesheet" type="text/css" href="{$css_url}" />
-    <script type="text/javascript" src="{$js_url}"></script>
-
     {block name='head'}{/block}
 </head>
 <body>
 {block 'body'}{/block}
+<script type="text/javascript" src="{$js_url}"></script>
 </body>
 </html>

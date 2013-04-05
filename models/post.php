@@ -145,7 +145,7 @@ class post {
     public static function get_simple($id) {
         global $pdo;
         $statement = $pdo->prepare("
-            SELECT author, visibility
+            SELECT author, visibility, type
             FROM forum
             WHERE id = ?");
         $statement->execute(array($id));

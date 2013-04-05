@@ -2,7 +2,7 @@
 
 1. Make directory titled with a category & name. Example: theme_silicone
 2. Make php file inside directory with the same name as that directory. Example: theme_silicone.php
-3. Add gab api calls that extend gab.
+3. Add gab api calls in that file to extend gab.
 
 ## Categories
 
@@ -18,12 +18,18 @@
 
 ## Api
 
-- ``$this->addController($page, $controller_name, [$order=""])``
-- ``$this->addPage($page, $callback_function)``
-- ``$this->addSmartyPlugin($plugin_type, $plugin_name, $function_name)``
-- ``$this->addTemplate($page, $template_name, [$order=""])``
-- ``$this->addJavascript($name, [$order=""])``
-- ``$this->addCss($name)``
+$gab is defined before your extensions are ``include``d to be the Gab object.
+
+- ``$gab->requireExt($extension_name)``
+- ``$gab->bindTrigger($event or $page, $callback)``
+- ``$gab->trigger($event or $page)``
+- ``$gab->getOption($option_name)``
+- ``$gab->addOption($option_name, [... arguments still under consideration])``
+- ``$gab->addPage($page, $callback_function)``
+- ``$gab->addSmartyPlugin($plugin_type, $plugin_name, $function_name)``
+- ``$gab->addTemplate($page, $template_name, [$order=""])``
+- ``$gab->addJavascript($name, [$order=""])``
+- ``$gab->addCss($name)``
 - ``$gab->displayGeneric($template_name)`` - Push ``$template_name`` to the stack for "posts" and display it. ($template_name is relative to your extension path)
 
 ``$page``
@@ -42,12 +48,17 @@
 - ``"pre"`` -- Added to beginning, or just after the base template for addTemplate
 - ``""`` -- Added to the end.
 
-Extensions should be written so they don't need to be in a specific order,
-but the extensions are loaded in the order they are listed in ``$gab->ext``.
+If your extension depends on the functionality of another extension,
+be sure to run ``$gab->requireExt($extension_name)`` at the beginning of your
+main extension script. This will import that extension first before running yours.
 
+As a convention, if reasonable prefix the name of your extension with the extension you depend upon.
+For example, if you are providing a login with facebook functionality onto the ``feat_openid``
+extension, name it ``feat_openid_facebook``.
+ 
 ``$name`` -- file name inside of your directory of your extension.
 
-``$this->addPage`` -- When ``/ext/$page`` is accessed, calls ``$callback_function``
+``$gab->addPage`` -- When ``/ext/$page`` is accessed, calls ``$callback_function``
 which is a string that names a function. This function must accept a ``$gab``
 parameter that contains the gab object. See feat_openid for an example.
 
@@ -66,12 +77,8 @@ Your ``ux_timeago.php`` file will look like this:
     function smarty_modifier_timeAgo($date)
     {...}
 
-    $this->addSmartyPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
-    $this->addTemplate('single_post', 'timeago.tpl');
-
-
-
-
+    $gab->addSmartyPlugin("modifier", "timeAgo", "smarty_modifier_timeAgo");
+    $gab->addTemplate('single_post', 'timeago.tpl');
 
 
 

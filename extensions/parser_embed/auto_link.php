@@ -1,5 +1,5 @@
 <?php
-// Straight from http://stackoverflow.com/questions/1925455/how-to-mimic-stackoverflow-auto-link-behavior
+// http://stackoverflow.com/questions/1925455/how-to-mimic-stackoverflow-auto-link-behavior
 
 function auto_link_text($text) {
     $pattern  = '#\b(([\w-]+://?|www[.])[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/)))#';
@@ -47,6 +47,9 @@ function auto_link_text_callback($matches) {
     } else {
         $url_short = $url_full;
     }
+    if (in_array(substr($url_full, -4), array('.png', '.jpg', '.gif')))
+        return "<img src=\"$url_full\" />";
+    else
+        return "<a href=\"$url_full\">$url_short</a>";
 
-    return "<a href=\"$url_full\">$url_short</a>";
 }

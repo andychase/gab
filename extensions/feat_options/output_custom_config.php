@@ -28,11 +28,15 @@ function file_put_contents_atomic($filename, $content) {
 
 }
 
+function clean($input) {
+    return addcslashes(addcslashes($input, '\\'), "'");
+}
+
 function assocarray_to_phparray($array) {
     $output = "array(";
     foreach($array as $key => $value) {
         if (is_string($value) || is_null($value))
-            $value = "'" . addcslashes($value, "'") . "'";
+            $value = "'" . clean($value) . "'";
         else if (is_array($value))
             $value = assocarray_to_phparray($value);
 
@@ -44,14 +48,14 @@ function assocarray_to_phparray($array) {
 function array_to_phparray($array) {
     $output = "array(";
     foreach($array as $value)
-        $output .= "'$value' ,";
+        $output .= "'" . clean($value) . "', ";
     return $output . ')';
 }
 
 function output_custom_config($forum_id, $name, $description, $ext, $options, $extends, $class, $filename="custom_gab.php") {
     // Safety features
-    $name = addcslashes($name, "'");
-    $description = addcslashes($description, "'");
+    $name = clean($name);
+    $description = clean($description);
     foreach($ext as &$e)
         addslashes($e);
     $ext  = array_to_phparray($ext);

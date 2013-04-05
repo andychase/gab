@@ -1,15 +1,15 @@
 <?php
 
-function parser_embed($message) {
-    require_once(dirname(__dir__)."/parser_embed/auto_video_embed_view.php");
-    return parser_video_embed($message);
+function parser_embed($gab, $text) {
+    require_once 'auto_video_embed_view.php';
+    return parser_video_embed($text);
 }
 
-function auto_link($text) {
-    require_once(dirname(__dir__)."/parser_embed/auto_link.php");
+function auto_link($gab, $text) {
+    require_once 'auto_link.php';
     return auto_link_text($text);
 }
 
-$this->addParser("auto_link");
-$this->addParser("parser_embed");
+$gab->bindTrigger('parse', "auto_link");
+$gab->bindTrigger('parse', "parser_embed");
 

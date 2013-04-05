@@ -5,6 +5,7 @@
 @import 'new_thread.scss';
 @import 'navigation.scss';
 @import 'posts.scss';
+@import 'users.scss';
 
 html, body {
   font: normal 10pt/16pt Georgia, "DejaVu Serif", "Trebuchet MS", Times, serif;
@@ -91,29 +92,6 @@ html, body {
 
   .prev_next_paging {
     text-align: center;
-  }
-
-  #users_page ul {
-    list-style: none;
-    line-height: 10px;
-    li {
-      display: inline-block;
-      height: 40px;
-      width: 40px;
-      margin-bottom: 15px;
-      a {
-        display: block;
-        height: 54px;
-        text-decoration: none;
-        margin: 0px;
-        font-size: 7pt;
-        text-align: center;
-        overflow: hidden;
-        position: relative;
-        z-index: 0;
-        font-weight: bold;
-      }
-    }
   }
 
   .errors {

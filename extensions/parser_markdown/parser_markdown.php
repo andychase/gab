@@ -11,6 +11,5 @@ function purify_html($text) {
     return $purifier->purify($text);
 }
 
-$this->addParser("purify_html", "pre");
-$this->addParser("smarty_modifier_markdown", "pre");
-$this->addJavascript('markdown.js');
+$gab->bindTrigger('parse', "smarty_modifier_markdown");
+$gab->addJavascript('markdown.js');

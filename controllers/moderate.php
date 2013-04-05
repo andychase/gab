@@ -11,7 +11,7 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
     else if ($_POST['edit'] && $this->user->hasPermission(permission::EDIT, $post['author'], $post['visibility']))
         post::modify_post($post_id, $_POST['text']);
 
-    $this->changed_post_id = $post_id;
+    $this->trigger('moderate', $post_id);
 
     $this->clearCache('single_post', $matches[1]);
     $this->clearCache('posts');
