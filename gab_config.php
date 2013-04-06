@@ -35,7 +35,7 @@ class gab_config {
     // Ext options settings
     public $ext_options = array(
         'search_' => array (
-            'url' => 'http://localhost:9200',
+            'url' => '',
             'auth' => array(/*Username:*/"", /*Password:*/"")
         ),
         'feat_options' => array(

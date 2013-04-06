@@ -341,6 +341,9 @@
   width: 71%;
   margin-left: 63px;
 }
+#forum .post_body textarea {
+  width: 100%;
+}
 #forum .post_replies #submit_reply .text_b, #forum #new_thread .text_b {
   display: none;
 }

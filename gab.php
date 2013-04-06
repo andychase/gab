@@ -28,16 +28,21 @@ class gab extends gab_config {
         'messages' => array('new_message.php', 'messages.php'),
         'ext' => array()
     );
-
+    
+    public $baseTemplate = 'base.tpl';
     public $templates = array(
-        'posts' => 'extends:base.tpl|posts.tpl',
-        'single_category' => 'extends:base.tpl|posts.tpl',
-        'single_post' => 'extends:base.tpl|single_post.tpl',
-        'categories' => 'extends:base.tpl|categories.tpl',
-        'users' => 'extends:base.tpl|users.tpl',
-        'single_user' => 'extends:base.tpl|single_user.tpl',
-        'messages' => 'extends:base.tpl|messages.tpl',
+        '*' => '',
+        'posts' => '|posts.tpl',
+        'single_category' => '|posts.tpl',
+        'single_post' => '|single_post.tpl',
+        'categories' => '|categories.tpl',
+        'users' => '|users.tpl',
+        'single_user' => '|single_user.tpl',
+        'messages' => '|messages.tpl',
     );
+    private function buildTemplate($page) {
+        return 'extends:'.$this->baseTemplate.$this->templates['*'].$this->templates[$page];
+    }
 
     // Internal Variables ////////////////////
     public $smarty;
@@ -51,13 +56,11 @@ class gab extends gab_config {
     public $current_extension;
     // When a page is being processed, it is placed here
     private $current_page;
-    // The id that allows us to have different caches for the same file
+    // The id that allows us to have different caches for the same template
     private $cache_id = '';
     // Extensions can add to these lists to include stuff
     private $javascript = array();
     private $css = array();
-    // Every function in here is run for places like posts' message bodies
-    private $parsers = array();
     // If using location redirects, don't display page.
     public $redirect = false;
     // The user object of the current user accessing the page
@@ -66,23 +69,7 @@ class gab extends gab_config {
     //   Structure: "name" => array($current_extension => callback)
     private $triggers = array();
 
-
     // Extension API /////////////////////////
-    function addController($page, $controller_name, $order="") {
-        $path =
-            $this->extensions_folder .
-                DIRECTORY_SEPARATOR .
-                $this->current_extension .
-                DIRECTORY_SEPARATOR . $controller_name;
-        if ($page == '*') $pages = array_keys($this->controllers);
-        else $pages = (array) $page;
-        foreach ($pages as $page)
-            if ($order == "pre")
-                array_unshift($this->controllers[$page], $path);
-            else
-                $this->controllers[$page][] = $path;
-    }
-
     function addPage($page, $callback_function) {
         $this->extension_pages[$page] = $callback_function;
         $this->extension_pages_ext[$page] = $this->current_extension;
@@ -92,32 +79,20 @@ class gab extends gab_config {
         $this->smarty->registerPlugin($plugin_type, $plugin_name, $function_name);
     }
 
-    function addTemplate($page, $template_name, $order="") {
-        $folder = $this->extensions_folder;
-        $ext = $this->current_extension;
-
-        if ($page=='*') {
-            foreach(array_keys($this->templates) as $page) {
-                $tpl = $this->templates[$page];
-                if (!$order)
-                    $this->templates[$page] .= "|file:$folder/$ext/$template_name";
-                else if ($order == 'pre' && strpos($tpl, '|') !== False)
-                    $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
-            }
-        } else {
-            $tpl = $this->templates[$page];
-            if (!$order)
-                $this->templates[$page] .= "|file:$folder/$ext/$template_name";
-            else if ($order == 'pre' && strpos($tpl, '|') !== False)
-                $this->templates[$page] = substr_replace($tpl, "|file:$folder/$ext/$template_name", strpos($tpl, '|'), 0);
-        }
+    function addTemplate($page, $template_name, $order='') {
+        if ($order == 'pre')
+            $this->templates[$page] =
+                "|file:{$this->extensions_folder}/{$this->current_extension}/$template_name"
+                 . $this->templates[$page];
+        else
+            $this->templates[$page] .=
+                "|file:{$this->extensions_folder}/{$this->current_extension}/$template_name";
     }
 
     function addJavascript($name, $order='') {
-        $path =
-            '//'.
+        $path = '//'.
                 $this->extensions_folder .
-                DIRECTORY_SEPARATOR .
+                DIRECTORY_SEPARATOR      .
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $name;
         if ($order == 'pre')
@@ -126,20 +101,16 @@ class gab extends gab_config {
             $this->javascript[] = $path;
     }
 
-    function addCss($name) {
-        $this->css[] =
-            '//'.
+    function addCss($name, $order='') {
+        $path = '//'.
                 $this->extensions_folder .
-                DIRECTORY_SEPARATOR .
+                DIRECTORY_SEPARATOR      .
                 $this->current_extension .
                 DIRECTORY_SEPARATOR . $name;
-    }
-
-    function addParser($function_name, $order="") {
-        // Callbacks called when message bodies are rendered
-        // Callbacks should have signature: function ($text) {return $text;}
-        if ($order == 'pre') array_unshift($this->parsers, $function_name);
-        else $this->parsers[] = $function_name;
+        if ($order == 'pre')
+            array_unshift($this->css, $path);
+        else
+            $this->css[] = $path;
     }
 
     function getOption($name) {
@@ -194,23 +165,23 @@ class gab extends gab_config {
 
     function clearCache($page, $cache_id=null) {
         global $forum_id;
-        if ($cache_id) $cache_id = '|'.$cache_id;
+        if($cache_id) $cache_id = "|$cache_id";
         if ($page != null)
-            $this->smarty->clearCache($this->templates[$page], "{$forum_id}{$cache_id}");
+            $this->smarty->clearCache($this->buildTemplate($page), "{$forum_id}{$cache_id}");
         else
             $this->smarty->clearCache(null, "{$forum_id}{$cache_id}");
     }
 
     function isCached() {
         global $forum_id;
-        return $this->smarty->isCached($this->templates[$this->current_page], "$forum_id|".$this->cache_id);
+        return $this->smarty->isCached($this->buildTemplate($this->current_page), "{$forum_id}|{$this->cache_id}");
     }
 
     function displayGeneric($template) {
         $this->addTemplate('posts', $template);
         $this->smarty->caching = 0;
         $this->prepare_static(true);
-        $this->smarty->display($this->templates['posts']);
+        $this->smarty->display($this->buildTemplate('posts'));
     }
 
     function addCacheId($id) {
@@ -218,8 +189,8 @@ class gab extends gab_config {
     }
 
     function parse($text) {
-        $text = htmlentities($text);
-        return $this->trigger('parse', $text);
+        $text = htmlspecialchars($text);
+        return $this->trigger(gab_triggers::PARSE, $text);
     }
 
     function avatar($email_hash, $size=40, $default_style='retro') {
@@ -230,7 +201,7 @@ class gab extends gab_config {
         // Prepare javascript and css list & hash.
         // Why?:
         //   Basic way of hiding what extensions you are using
-        //   The list can get kinda long
+        //   The list can get kinda long, has to be served on each request
         if ($skip_caching || !$this->isCached()) {
             $js_hash = hash('md4', implode('/',$this->javascript));
             $css_hash = hash('md4', implode('/',$this->css));
@@ -258,17 +229,16 @@ class gab extends gab_config {
         $this->pdo = $pdo;
 
         $this->addSmartyPlugin('modifier', 'avatar', array($this, 'avatar'));
-        $this->addSmartyPlugin('modifier', 'parse', array($this, 'parse'));
+        $this->addSmartyPlugin('modifier', 'parse',  array($this, 'parse'));
 
         // Prepare Extensions ////////////////////////////
         $gab = $this;
         foreach($this->ext as $name) {
             $this->current_extension = $name;
-            include_once($this->extensions_folder.
-                DIRECTORY_SEPARATOR.
-                $name.
-                DIRECTORY_SEPARATOR.
-                "$name.php");
+            include_once($this->extensions_folder .
+                DIRECTORY_SEPARATOR . $name .
+                DIRECTORY_SEPARATOR . "$name.php"
+            );
         }
     }
 
@@ -278,16 +248,17 @@ class gab extends gab_config {
         $this->assign('forum_name', $this->forum_name);
         $this->assign('forum_id', $this->forum_id);
         $this->assign('forum_desc', $this->forum_description);
-        $this->current_page = $page;
-        $gab = $this;
-
         $perm = new ReflectionClass('permission');
         $this->assign('permissions', $perm->getConstants());
-        $this->prepare_user($user_id, $user_name, $user_email_hash, $badges);
+        $this->current_page = $page;
 
+        $this->prepare_user($user_id, $user_name, $user_email_hash, $badges);
+        // Load models
         require_once($this->model_folder.DIRECTORY_SEPARATOR."model.php");
+        // Page triggers
         $this->trigger('*');
         $this->trigger($page);
+        // Load controllers
         foreach($this->controllers[$page] as $controller)
             require($this->controller_folder.DIRECTORY_SEPARATOR.$controller);
         $this->trigger('post_'.$page);
@@ -298,10 +269,15 @@ class gab extends gab_config {
         } else {
             if (!$GLOBALS['testing'] && $this->redirect) return false;
             $this->prepare_static();
-            $this->smarty->display($this->templates[$page], "{$this->forum_id}|".$this->cache_id);
+            $this->smarty->display($this->buildTemplate($page), "{$this->forum_id}|{$this->cache_id}");
         }
         return false;
     }
+}
+// Trigger Enum //// //////////////////////////////////
+class gab_triggers {
+    const PARSE = 'parse';
+    const AVATAR = 'avatar';
 }
 
 // User object //// ///////////////////////////////////

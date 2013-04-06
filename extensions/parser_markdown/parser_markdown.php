@@ -1,15 +1,9 @@
 <?php
 
-function smarty_modifier_markdown($text) {
-    require_once(dirname(__dir__)."/parser_markdown/markdown.php");
+function smarty_modifier_markdown($gab, $text) {
+    require_once 'markdown.php';
     return Markdown($text);
 }
 
-function purify_html($text) {
-    require_once(dirname(__dir__)."/parser_markdown/HTMLPurifier.standalone.php");
-    $purifier = new HTMLPurifier;
-    return $purifier->purify($text);
-}
-
-$gab->bindTrigger('parse', "smarty_modifier_markdown");
+$gab->bindTrigger(gab_triggers::PARSE, "smarty_modifier_markdown");
 $gab->addJavascript('markdown.js');

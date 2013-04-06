@@ -10,6 +10,6 @@ function auto_link($gab, $text) {
     return auto_link_text($text);
 }
 
-$gab->bindTrigger('parse', "auto_link");
-$gab->bindTrigger('parse', "parser_embed");
+$gab->bindTrigger(gab_triggers::PARSE, "auto_link");
+$gab->bindTrigger(gab_triggers::PARSE, "parser_embed");
 

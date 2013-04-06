@@ -6,9 +6,9 @@ if (($_GET['delete'] || $_GET['recover'] || $_POST['edit']) && count($matches) >
 
     if ($_GET['recover'] && $this->user->hasPermission(permission::RECOVER))
         post::hide_post($post_id, true);
-    else if ($_GET['delete'] && $this->user->hasPermission(permission::DELETE, $post['author'], $post['visibility']))
+    else if ($_GET['delete'] && $this->user->hasPermission(permission::DELETE, null, $post['author'], $post['visibility']))
         post::hide_post($post_id);
-    else if ($_POST['edit'] && $this->user->hasPermission(permission::EDIT, $post['author'], $post['visibility']))
+    else if ($_POST['edit'] && $this->user->hasPermission(permission::EDIT, null, $post['author'], $post['visibility']))
         post::modify_post($post_id, $_POST['text']);
 
     $this->trigger('moderate', $post_id);
