@@ -1,6 +1,7 @@
 RewriteEngine On
 RewriteRule ^extensions/(.*[png|jpg|gif]) extensions/$1 [last]
 RewriteRule ^min/(.*) min/$1 [last]
+RewriteRule ^static/(.*) static/$1 [last]
 RewriteRule ^uploads/(.*) uploads/$1 [last]
 RewriteRule !(index.php) /index.php
 
