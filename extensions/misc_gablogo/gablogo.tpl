@@ -12,7 +12,7 @@
                 <div id="gabsite_navlinks">
                     <a href="/">community</a>
                     {*<a href="/ext">ext marketplace</a>*}
-                    <a href="http://github.com/asperous/gab" class="last">source/download</a>
+                    <a href="http://github.com/andychase/gab" class="last">source/download</a>
                 </div>
             </div>
         {/strip}
