@@ -1,6 +1,4 @@
-[http://asperous.github.com/gab](http://asperous.github.com/gab)
-
-[![Build Status](https://travis-ci.org/asperous/gab.png?branch=master)](https://travis-ci.org/asperous/gab)
+[![Build Status](https://travis-ci.org/andychase/gab.png?branch=master)](https://travis-ci.org/andychase/gab)
 
 # GAB
 
