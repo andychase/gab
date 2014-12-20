@@ -1,3 +1,5 @@
+![screenshot of theme silicone](/extensions/theme_silicone/screenshot.png)
+
 [![Build Status](https://travis-ci.org/andychase/gab.png?branch=master)](https://travis-ci.org/andychase/gab)
 
 # GAB
@@ -6,6 +8,8 @@ Embeddable, <br />
 Extendable, <br />
 Minimal. <br />
 Next generation forum software in PHP5.
+
+Only uses one database table!
 
 
 ## Installation
