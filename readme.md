@@ -46,7 +46,7 @@ Oracle              | No
 SQLite              | No
 Textfiles           | No
 other               | None
-Hosting available	| Yes (youboards.net)
+Hosting available	| No
 **Posts**               |  **Posts**
 BBCode              | No
 HTML                | Ext
