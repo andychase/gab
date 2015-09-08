@@ -1,5 +1,7 @@
 # GAB
 
+** This forum software is depreciated and not being actively developed. If you'd like to pick up on this project left off contact me and I'd be glad to talk! **
+
 Embeddable, <br />
 Extendable, <br />
 Minimal. <br />
